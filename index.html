@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0a1d12">
-<title>KG ผู้จัดการทีม ไทยลีก</title>
+<title>KG ผู้จัดการทีม</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -118,7 +118,7 @@ table.tb{width:100%;border-collapse:collapse;font-size:13px}
 .zone1 td:first-child{box-shadow:3px 0 0 var(--ac) inset}
 .zoneR td:first-child{box-shadow:3px 0 0 var(--bad) inset}
 .live .clock{font-size:13px;color:var(--ac2);font-weight:600}
-.feed{max-height:42vh;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
+.feed{max-height:34vh;overflow-y:auto;display:flex;flex-direction:column;gap:2px}
 .ev{font-size:14px;padding:6px 8px;border-radius:8px;background:#0b1d12;display:flex;gap:8px}
 .ev .m{color:var(--mut);min-width:28px;font-size:12px;padding-top:2px}
 .ev.g{background:#173d25;font-weight:600}
@@ -149,6 +149,20 @@ table.tb{width:100%;border-collapse:collapse;font-size:13px}
 .champ .tro{font-size:54px}
 .warn{background:#3a2a07;border:1px solid #7a5f10;color:#fde68a;border-radius:10px;padding:8px 10px;font-size:13px;margin-bottom:10px}
 .foot{text-align:center;color:#4f7a5e;font-size:11px;padding:18px 0 6px}
+.pl.bn{border-color:#6b5a12;background:#262110}
+.pl .tog.tb{font-size:13px;width:34px}
+.pl.bn .tog.tb{background:var(--ac2);color:#2b2100;border-color:var(--ac2);font-weight:700}
+.bench{background:var(--pan);border:1px solid var(--line);border-radius:12px;padding:8px 10px;margin-top:8px}
+.bchips{display:flex;flex-wrap:wrap;gap:6px}
+.bchip{border:1px solid #6b5a12;background:#262110;border-radius:999px;padding:5px 10px;font-size:12px;cursor:pointer}
+.lrow{display:flex;align-items:center;gap:8px;padding:6px 4px;border-bottom:1px solid #1b3826;font-size:13px;width:100%;background:none;border-left:0;border-right:0;border-top:0;text-align:left}
+.lrow.btnrow{cursor:pointer;border-radius:8px;padding:10px 6px}
+.lrow.btnrow:active{background:var(--pan2)}
+.lrow.dead{opacity:.45;text-decoration:line-through}
+.ev.sb{background:#13263a}
+.ctl{border-color:#2e8b52}
+.mini{cursor:pointer}.mini.me{background:#12301f;border-radius:6px}
+code{background:#0a1c11;padding:1px 5px;border-radius:5px}
 </style>
 </head>
 <body>
@@ -157,13 +171,16 @@ table.tb{width:100%;border-collapse:collapse;font-size:13px}
 <div id="toast"></div>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script>
+const DB={"th":[["บุรีรัมย์ ยูไนเต็ด","BRU","#1d4ed8","#f59e0b",76,"GK|Neil Etheridge|PHI|28|74;GK|Korraphat Nareechan|THA|26|71;GK|Chatchai Budprom|THA|31|70;DF|Sasalak Haiprakhon|THA|22|71;DF|Pansa Hemviboon|THA|20|72;DF|Nathan Pelae|BRA|30|70;DF|Curtis Good|AUS|31|73;DF|Narubadin Weerawatnodom|THA|20|71;DF|Marc Navarro|ESP|28|77;DF|Uros Radakovic|SRB|30|74;DF|Wanderson Caju|BRA|28|71;DF|Jakkapan Praisuwan|THA|31|69;DF|Eduardo Mancha|BRA|28|70;DF|Theerathon Bunmathan|THA|25|75;MF|Paulinho|BRA|27|73;MF|Sebas Moyano|ESP|29|72;MF|Anan Yodsangwal|THA|25|70;MF|Kenny Dougall|AUS|29|76;MF|Vukan Savićević|MNE|32|75;MF|Kingsley Schindler|GHA|28|78;MF|Goran Čaušić|SRB|30|77;MF|Phitiwat Sukjitthammakul|THA|29|72;MF|Darlan Mendes|BRA|25|76;FW|Guilherme Bissoli|BRA|27|78;FW|Supachai Chaided|THA|27|74;FW|Rubén Sánchez|ESP|27|73;FW|Stefan Schimmer|GER|31|76;FW|Alexandru Tudorie|ROU|30|74"],["บีจี ปทุม ยูไนเต็ด","BGP","#2563eb","#e5e7eb",73,"GK|Saranon Anuin|THA|30|70;GK|Nalawich Intacharoen|THA|30|66;GK|Chanasorn Kaewyos|THA|26|67;DF|Sanchai Nontasila|THA|21|70;DF|Nathan James|THA|29|70;DF|Waris Choolthong|THA|29|68;DF|Chanapach Buaphan|THA|30|71;DF|Takahiro Yanagi|JPN|32|73;DF|Marko Nikolić|SRB|27|71;DF|Edin Osmanovic|LUX|28|69;MF|Kritsada Kaman|THA|20|71;MF|Sarach Yooyen|THA|23|70;MF|Chanathip Songkrasin|THA|30|76;MF|Itthimon Tippanet|THA|27|67;MF|Akarapong Pumwisat|THA|28|71;MF|Leon James|THA|29|68;MF|Lucas Andersen|DEN|27|73;MF|Ryan Edwards|AUS|28|73;MF|Anthony Belmonte|FRA|26|68;FW|Raniel|BRA|31|71;FW|Surachat Sareepim|THA|20|70;FW|Patrik Gustavsson|THA|29|71;FW|Tomoyuki Doi|JPN|30|75;FW|Pichaya Chaiwarangkun|THA|28|67;FW|Siwakorn Ponsan|THA|32|67;FW|Witthawat Phraothaisong|THA|27|67;FW|Ikhsan Fandi|SGP|27|74;FW|João Magno|BRA|26|69"],["การท่าเรือ เอฟซี","PRT","#f97316","#1e3a8a",73,"GK|Somporn Yos|THA|27|69;GK|Sarawut Konglarp|THA|32|71;GK|Michael Falkesgaard|PHI|26|72;DF|Asnawi Mangkualam|IDN|30|73;DF|Suphanan Bureerat|THA|28|71;DF|Matheus Lins|BRA|29|72;DF|Manuel Bihr|THA|22|66;DF|Chinnawat Wongchai|THA|22|70;DF|Rebin Sulaka|IRQ|28|67;DF|Chaiyaphon Otton|THA|26|70;DF|Noboru Shimura|JPN|27|75;DF|Nitipong Selanon|THA|32|69;DF|Peerawat Akkratum|THA|30|70;MF|Peeradol Chamrasamee|THA|26|71;MF|Tanaboon Kesarat|THA|25|70;MF|Bordin Phala|THA|28|72;MF|Bruno Moreira|BRA|27|69;MF|Kaká Mendes|BRA|27|72;MF|Sivakorn Tiatrakul|THA|29|70;MF|Jakkaphan Kaewprom|THA|31|66;MF|Lucas Tocantins|BRA|25|70;MF|Worachit Kanitsribampen|THA|27|72;MF|Sittha Boonlha|THA|20|65;FW|Issam Al-Sabhi|OMA|32|71;FW|Ruan Ribeiro|BRA|29|67;FW|Teerasak Poeiphimai|THA|32|71;FW|Jude Soonsup-Bell|THA|29|70;FW|Natthakit Phosri|THA|25|70"],["ทรู แบงค็อก ยูไนเต็ด","TBU","#dc2626","#111827",72,"GK|Patiwat Khammai|THA|23|72;GK|Phuwadol Pholsongkram|THA|20|68;GK|Supanut Sudathip|THA|21|64;DF|Everton|BRA|28|72;DF|Philipe Maia|BRA|25|71;DF|Wichan Inaram|THA|20|68;DF|Lee Ki-je|KOR|25|72;DF|Wanchai Jarunongkran|THA|32|64;DF|Surachai Booncharee|THA|21|64;MF|Weerathep Pomphan|THA|20|73;MF|John-Patrick Strauß|PHI|28|73;MF|Kakana Khamyok|THA|26|67;MF|Thitiphan Puangchan|THA|22|69;MF|Wisarut Imura|THA|28|70;MF|Yonatan Cohen|ISR|29|75;MF|Anthony Caceres|AUS|28|69;MF|Kritsada Nontharat|THA|28|66;MF|Pokklaw Anan|THA|29|65;MF|Krit Klangpan|THA|21|64;MF|Aekkarat Sansuwan|THA|25|65;FW|Teerasil Dangda|THA|26|72;FW|Muhsen Al-Ghassani|OMA|25|66;FW|Willian Popp|BRA|28|71;FW|Marc Cardona|ESP|27|70;FW|Achita Nawathit|THA|23|68;FW|Thanawat Deelert|THA|24|65;FW|Arthur Moura|BRA|32|72;FW|Felipe Santos|BRA|29|71"],["ราชบุรี เอฟซี","RBR","#0ea5e9","#facc15",70,"GK|Ukrit Wongmeema|THA|25|62;GK|Kampol Pathomakkakul|THA|20|60;DF|Jonathan Khemdee|THA|30|69;DF|Daniel Ting|MAS|29|67;DF|Adisorn Promrak|THA|32|67;DF|Kevin Deeromram|THA|32|69;DF|Kiatisak Jiamudom|THA|20|64;DF|Pethey Promjan|THA|20|66;DF|Tarek Aggoun|ALG|31|70;MF|Tana|ESP|28|64;MF|Thanawat Suengchitthawon|THA|27|65;MF|Roque Mesa|ESP|27|75;MF|Siwakorn Jakkuprasat|THA|27|69;MF|Teeraphol Yoryoei|THA|23|66;MF|Jesse Curran|PHI|25|64;MF|Thossawat Limwannasathian|THA|23|61;MF|Kritsananon Srisuwan|THA|20|61;MF|Faiq Bolkiah|BRU|31|72;MF|Chotipat Poomkaew|THA|26|60;MF|Njiva Rakotoharimalala|MAD|27|64;MF|Sorawit Panthong|THA|20|62;MF|Akinkunmi Amoo|NGA|27|64;MF|Jonathan Viera|ESP|30|76;FW|Denílson|BRA|31|70;FW|Gleyson|BRA|32|71;FW|Jordan Gele|FRA|30|68;FW|Rafael Bilú|BRA|32|70;FW|Harhys Stewart|SGP|27|67"],["สิงห์ เชียงราย ยูไนเต็ด","CRU","#0369a1","#f97316",68,"GK|Apirak Worawong|THA|25|58;GK|Farus Patee|THA|30|59;GK|Sirassawut Wongruankhum|THA|27|61;GK|Jetnipat Khomsom|THA|25|64;DF|Banphakit Phormmanee|THA|24|58;DF|Tanasak Srisai|THA|25|63;DF|Piyaphon Phanichakul|THA|31|64;DF|Victor Cardozo|BRA|26|62;DF|Hélio|BRA|32|64;DF|Ongsa Singthong|THA|22|64;DF|Jordan Emaviwe|SGP|32|69;MF|Settasit Suvannaseat|THA|28|60;MF|Dudu|BRA|29|66;MF|Gionata Verzura|THA|21|58;MF|Thakdanai Jaihan|THA|20|59;MF|Montree Promsawat|THA|32|59;MF|Phoptham Pornkod|THA|26|64;MF|Gabriel Henrique|BRA|29|66;FW|Lee Seung-won|KOR|30|65;FW|Carlos Iury|BRA|27|68;FW|Chinngoen Phutonyong|THA|26|66"],["ชลบุรี เอฟซี","CBR","#1e40af","#f8fafc",67,"GK|Kevin Ray Mendoza|PHI|31|65;GK|Siwat Chomphooviset|THA|22|60;GK|Thanawat Panthong|THA|20|58;DF|Kike Linares|PHI|28|67;DF|Peerapat Notchaiya|THA|29|65;DF|Kittipong Sansanit|THA|26|64;DF|Tristan Do|THA|26|70;DF|Suksan Bunta|THA|20|63;DF|Santiphap Channgom|THA|23|59;DF|Rachata Moraksa|THA|26|63;DF|Nattapong Sayriya|THA|25|62;DF|Jorge Fellipe|BRA|32|61;DF|Thanphisit Peanksikum|THA|22|62;DF|Wathanyu Nairatsami|THA|24|62;MF|Wellington Priori|BRA|28|66;MF|Channarong Promsrikaew|THA|31|64;MF|Chaowat Veerachat|THA|25|65;MF|Saharat Sontisawat|THA|27|59;MF|Siraphop Wandee|THA|31|58;MF|Richmond Darko|GHA|32|64;MF|Tanakon Pinkaew|THA|29|64;MF|Chayathorn Tapsuvanavon|THA|20|63;FW|Yotsakorn Burapha|THA|30|61;FW|Dennis Murillo|BRA|30|65;FW|Korawich Tasa|THA|20|62;FW|Stênio Júnior|BRA|30|62;FW|Sittichok Paso|THA|22|59;FW|Ryoma Ito|JPN|32|68"],["พีที ประจวบ เอฟซี","PTP","#b91c1c","#fde047",67,"GK|Soponwit Rakyart|THA|21|65;GK|Wattanachai Srathongjan|THA|31|64;GK|Abdulfarus Sama-Ae|THA|28|58;DF|Oussama Thiangkham|THA|32|63;DF|Bernardo Vilar|BRA|25|68;DF|Airton|BRA|30|69;DF|Jesper Nyholm|PHI|25|65;DF|Prommin Pinkaew|THA|32|63;DF|Wanchat Choosong|THA|29|63;DF|Pittawat Jeenthai|THA|28|60;DF|Aymen Thiangkham|THA|27|59;DF|Lucas Grossi|BRA|26|63;DF|Nick Taylor|CAM|31|61;DF|Phon-Ek Maneekorn|THA|32|60;DF|Jirapan Phasukkhan|THA|22|61;MF|Saharat Kanyarot|THA|29|59;MF|Tauã|BRA|32|65;MF|Rei Tachikawa|JPN|27|62;MF|Tailson|BRA|30|68;MF|Kannarin Thawornsak|THA|25|64;MF|Jittiphat Wasungnoen|THA|32|64;MF|Wuttikai Sritong|THA|31|59;FW|Lee Jeong-hyeop|KOR|27|63;FW|Andros Townsend|ENG|27|75;FW|Édgar Méndez|ESP|31|69;FW|Phanthamit Praphanth|THA|22|60;FW|Chitsanuphong Phimpsang|THA|32|61;FW|Jehhanafee Mamah|THA|32|57"],["อุทัยธานี เอฟซี","UTH","#ea580c","#fef3c7",66,"GK|Boonyakait Wongsajaem|THA|30|58;GK|Chirawat Wangthaphan|THA|20|61;DF|Martin Angha|SUI|29|64;DF|Possawee Muanmart|THA|26|60;DF|Thitathorn Aksornsri|THA|21|61;DF|Suporn Peenagatapho|THA|21|64;MF|William Weidersjö|THA|32|56;MF|Ben Davis|THA|23|61;MF|Sumanya Purisai|THA|29|69;MF|Jakkit Wachpirom|THA|25|62;MF|Wattana Playnum|THA|28|58;MF|Sirimongkol Rattanapoom|THA|20|64;MF|Pavarit Boonmalert|THA|31|58;MF|Atikun Mheetuam|THA|30|64;MF|Ratthanakorn Maikami|THA|22|57;FW|Amornthep Muangdee|THA|20|58;FW|Nonthaphat Naksawad|THA|21|56;FW|Kelvin Oliveira|BRA|29|67;FW|Siroch Chatthong|THA|21|68;FW|Arthit Boodjinda|THA|27|60"],["ลำพูน วอริเออร์","LPW","#7c3aed","#facc15",66,"GK|Nont Muangngam|THA|31|58;GK|Kwanchai Suklom|THA|30|60;DF|Witthaya Moonwong|THA|22|56;DF|Todsapol Lated|THA|31|57;DF|Tossaporn Chuchin|THA|28|58;DF|Aly Cissokho|FRA|29|67;DF|Charlie Clough|ENG|26|63;DF|Noppol Kerdkaew|THA|27|59;DF|Nuttee Noiwilai|THA|29|60;DF|Suriya Singmui|THA|28|64;DF|Putthinan Wannasri|THA|23|56;MF|Dominik Schad|GER|27|65;MF|Mohammed Osman|SYR|31|60;MF|Ralph|BRA|28|63;MF|Baworn Tapla|THA|23|56;MF|Oskari Kekkonen|PHI|27|60;MF|Chatmongkol Thongkiri|THA|31|62;MF|Purachet Thodsanit|THA|30|56;MF|Osarenren Okungbowa|AUT|31|60;FW|Kenshiro Daniels|PHI|31|65;FW|Tawan Khotrsupho|THA|27|62;FW|Surat Suriyachai|THA|28|61;FW|Willen Mota|BRA|27|68;FW|Athit Berg|THA|27|59;FW|Rodrigo Maranhão|BRA|27|67"],["สุโขทัย เอฟซี","SKT","#facc15","#dc2626",65,"GK|Phanuphong Sunon|THA|26|59;GK|Supazin Hnupichai|THA|22|58;GK|Thitikit Samerjai|THA|30|55;GK|Kittipun Saensuk|THA|26|55;DF|Surawich Logarwit|THA|27|63;DF|Pattarapon Suksakit|THA|22|59;DF|Saringkan Promsupa|THA|32|55;DF|Tassanapong Muaddarak|THA|22|60;DF|Pharadon Phatthaphon|THA|29|57;DF|Sarawut Kanlayanabandit|THA|29|58;DF|Thiti Thumporn|THA|21|58;DF|Cláudio|BRA|30|61;MF|Romeu|BRA|27|64;MF|Lursan Thiamrat|THA|31|57;MF|Ratchanat Aranpiroj|THA|26|57;MF|Nalu Jandke|THA|30|59;MF|Apichart Denman|THA|24|55;MF|Phattharaphon Jansuwan|THA|24|56;MF|Athirat Jantrapho|THA|20|55;MF|Mateusinho|BRA|28|65;MF|Lucas Barreto|BRA|25|64;FW|João Paredes|POR|29|67;FW|John Baggio|MAD|30|66;FW|Gildo|BRA|27|65;FW|Phiraphat Khamphaeng|THA|26|57"],["ระยอง เอฟซี","RYG","#0d9488","#fde68a",64,"GK|Wichaya Gantong|THA|25|58;GK|Worawut Srisupha|THA|24|56;GK|Ketanuson Junrung|THA|30|55;GK|Chainarong Boonkerd|THA|21|61;DF|Stefan Cebara|CAN|31|64;DF|Supawit Romphopak|THA|28|61;DF|Leonardo Justiniano|BOL|32|61;DF|Parkin Harape|THA|24|62;MF|João Afonso|BRA|32|59;MF|Keven Alemán|CAN|29|63;MF|Somkaet Kunmee|THA|32|54;MF|Nonthawat Bathong|THA|31|54;MF|Porrameth Ittiprasert|THA|24|61;MF|Wattanapong Withunat|THA|30|62;MF|Manuel Ott|PHI|30|61;MF|Peerapat Kaminthong|THA|25|58;MF|Parndecha Ngernprasert|THA|24|61;MF|Yeo Hong-gyu|KOR|25|65;FW|Mehti Sarakham|THA|29|60;FW|Thanphisit Hempandan|THA|27|56;FW|Weslen Júnior|BRA|29|62"],["อยุธยา ยูไนเต็ด","AYU","#991b1b","#facc15",64,"GK|Warut Mekmusik|THA|29|62;GK|Teerath Nakchamnarn|THA|27|54;DF|Hwang Hyun-soo|KOR|30|58;DF|Atsadawut Changthong|THA|32|60;DF|Kitphom Bunsan|THA|21|54;DF|Worawut Sataporn|THA|31|57;DF|Chatnipat Janpong|THA|24|59;MF|Nattapon Worasut|THA|22|54;MF|Anucha Sakaekum|THA|28|61;MF|Chakkit Laptrakul|THA|29|59;MF|Sanrawat Dechmitr|THA|20|54;MF|Veeraphong Aon-pean|THA|20|55;FW|Kritsana Kasemkulvilai|THA|21|61;FW|Thanet Suknate|THA|22|59;FW|Caíque Lemes|BRA|29|64"],["ศรีสะเกษ ยูไนเต็ด","SSK","#f59e0b","#7c2d12",64,"GK|Victor Golas|BRA|28|61;GK|Phiyawat Intarapim|THA|23|54;GK|Natthasan Pakkarano|THA|28|59;GK|Steven van Dijk|NED|32|62;DF|Guilherme Borech|BRA|25|66;DF|Pakornkiat Kaena|THA|25|54;DF|Isaac Honny|GHA|29|62;DF|Anusak Jaiphet|THA|31|58;DF|Chutikom Klinchampasri|THA|29|58;DF|Arthit Buangam|THA|32|56;DF|Sakkarawit Nimma|THA|32|61;MF|Denis Darbellay|THA|24|59;MF|Hikaru Matsui|JPN|30|59;MF|Phattharpong Phengchaem|THA|24|55;MF|Narongrit Kamnet|THA|26|60;MF|Suphaphon Sutthisak|THA|32|57;MF|Kritidet Nanthawong|THA|20|55;MF|Suttichai Pongson|THA|24|55;FW|Alex Mermoz|CMR|30|66;FW|Jefesson Vieira|BRA|27|58;FW|Deyvison Fernandes|BRA|26|60;FW|Wongsakorn Saenruecha|THA|20|55;FW|Kittipong Wongma|THA|20|54;FW|Patrick Valverde|BRA|28|64;FW|Mahamadou Doucouré|MLI|29|58;FW|Sittichok Kannoo|THA|27|54"],["ราษีไศล ยูไนเต็ด","RSL","#16a34a","#fef08a",63,"GK|Pongsakorn Buatab|THA|31|58;GK|Sakkongpop Sukprasert|THA|24|55;DF|Ramon Mesquita|BRA|29|59;DF|Apsit Nusonsala|THA|24|54;DF|Apirak Thongjan|THA|23|57;DF|Chawanthananchai Sirichoo|THA|28|57;DF|Thitiphong Photumtha|THA|24|55;DF|Hamed Bakhtiari|IRN|29|61;DF|Yingyong Butngam|THA|28|57;DF|Puttiphong Sriputta|THA|29|56;DF|Nelson Orji|NGA|28|64;DF|Nattapon Malapun|THA|25|55;MF|Natchanon Yongsakool|THA|27|60;MF|Gilberto Macena|BRA|25|57;MF|Nakhwan Gamol|THA|25|61;MF|Wichit Thanee|THA|29|56;MF|Jirawat Chingchaiyaphum|THA|27|61;MF|Thanongsak Khrutthasarn|THA|32|55;MF|Teerapol Anupan|THA|26|56;MF|Somyot Pongsuwan|THA|22|58;MF|Matias Panigazzi|ARG|26|65;MF|Wichit Kongsinkaew|THA|28|58;MF|Natthaphob Chaimongkhon|THA|28|60;FW|Yuga Watanabe|JPN|31|63;FW|Ricardo Cardoso|STP|26|60;FW|Phitchanon Chanluang|THA|21|58;FW|Supab Muengchan|THA|25|54;FW|Kim Ji-min|KOR|31|63"],["ปัตตานี เอฟซี","PTN","#15803d","#ffffff",63,"GK|Ninuruddin Nideha|THA|32|61;GK|Amran Bungosayu|THA|25|54;GK|Muhammat Mamah|THA|26|60;DF|Ekkachai Sumrei|THA|31|58;DF|Afis Waeyama|THA|29|54;DF|Tinnakorn Asurin|THA|28|54;DF|Ratthakron Thongkae|THA|26|59;DF|Abdulhakim Cehsani|THA|31|54;DF|Ittipon Khampliw|THA|21|61;DF|Nasree Dueloh|THA|32|56;DF|Marlon Silva|BRA|28|59;DF|Anuwa Koowing|THA|29|57;DF|Kittipong Buathong|THA|32|58;MF|Muhammadnasay Kolaeh|THA|21|54;MF|Felipe Nunes|BRA|29|62;MF|Shuto Ono|JPN|31|63;MF|Adam Lassamano|THA|31|58;MF|Kirati Kaewnongdang|THA|21|55;MF|Naruephon Proomimas|THA|20|60;FW|Adithep Chaipraman|THA|32|54;FW|Janepob Phokhi|THA|28|53;FW|Rushdan Katemmadee|THA|20|54;FW|Rico Andes|PHI|30|62;FW|Imron Hayiyusoh|THA|23|58;FW|Carlos Neto|BRA|30|65"]],"epl":[["Arsenal","ARS","#ef0107","#ffffff",84,"GK|David Raya|ESP|30|86;GK|Kepa Arrizabalaga|ESP|31|79;GK|Illan Meslier|FRA|26|77;GK|Tommy Setford|ENG|20|64;DF|William Saliba|FRA|25|88;DF|Cristhian Mosquera|ESP|22|79;DF|Ben White|ENG|28|81;DF|Piero Hincapié|ECU|24|82;DF|Gabriel Magalhães|BRA|28|87;DF|Jurriën Timber|NED|25|84;DF|Ezri Konsa|ENG|28|82;DF|Riccardo Calafiori|ITA|24|81;DF|Myles Lewis-Skelly|ENG|19|78;MF|Martin Ødegaard|NOR|27|86;MF|Eberechi Eze|ENG|28|84;MF|Mikel Merino|ESP|30|82;MF|Martín Zubimendi|ESP|27|85;MF|Bruno Guimarães|BRA|28|86;MF|Declan Rice|ENG|27|88;MF|Ethan Nwaneri|ENG|19|79;FW|Bukayo Saka|ENG|25|88;FW|Viktor Gyökeres|SWE|28|85;FW|Christos Tzolis|GRE|24|79;FW|Noni Madueke|ENG|24|81;FW|Kai Havertz|GER|27|83"],["Aston Villa","AVL","#670e36","#95bfe5",79,"GK|Zion Suzuki|JPN|24|80;GK|Marco Bizot|NED|35|75;GK|James Wright|ENG|21|60;DF|Matty Cash|POL|29|79;DF|Victor Lindelöf|SWE|32|77;DF|Taylor Harwood-Bellis|ENG|24|76;DF|Tyrone Mings|ENG|33|76;DF|Matteo Ruggeri|ITA|24|77;DF|Pau Torres|ESP|29|81;DF|Ian Maatsen|NED|24|78;DF|Aaron Wan-Bissaka|COD|28|79;DF|Modou Kéba Cissé|SEN|21|72;DF|Travis Patterson|ENG|20|62;MF|Ross Barkley|ENG|32|76;MF|John McGinn|SCO|31|79;MF|Boubacar Kamara|FRA|26|82;MF|Emiliano Buendía|ARG|29|78;MF|Jamaldeen Jimoh-Aloba|ENG|19|66;MF|Amadou Onana|BEL|25|81;MF|Lamare Bogarde|NED|22|72;MF|Leon Goretzka|GER|31|82;MF|João Gomes|BRA|25|81;MF|Johan Manzambi|SUI|20|76;FW|Nicolas Jackson|SEN|25|80;FW|Alejandro Garnacho|ARG|22|80;FW|Tammy Abraham|ENG|28|77;FW|Ibrahim Mbaye|SEN|18|72;FW|Alysson|BRA|20|70"],["Bournemouth","BOU","#da291c","#111111",76,"GK|Đorđe Petrović|SRB|26|80;GK|Michele Di Gregorio|ITA|29|81;DF|Adrien Truffert|FRA|24|79;DF|James Hill|ENG|24|72;DF|Julio Soler|ARG|21|75;DF|António Silva|POR|23|81;DF|Adam Smith|ENG|35|70;DF|Bafodé Diakité|FRA|25|78;DF|Juanlu Sánchez|ESP|23|76;MF|Lewis Cook|ENG|29|76;MF|David Brooks|WAL|29|74;MF|Alex Scott|ENG|23|78;MF|Ryan Christie|SCO|33|75;MF|Tyler Adams|USA|27|79;MF|Marcus Tavernier|ENG|27|78;MF|Alex Tóth|HUN|21|73;FW|Evanilson|BRA|27|80;FW|Ben Gannon-Doak|SCO|21|74;FW|Justin Kluivert|NED|27|79;FW|Daniel Jebbison|CAN|23|70;FW|Álvaro Rodríguez|URU|22|74;FW|Rayan|BRA|20|76"],["Brentford","BRE","#e30613","#ffffff",75,"GK|Caoimhín Kelleher|IRL|27|81;GK|Hákon Valdimarsson|ISL|24|72;GK|Ellery Balcombe|ENG|26|62;DF|Aaron Hickey|SCO|24|76;DF|Rico Henry|JAM|29|74;DF|Sepp van den Berg|NED|24|78;DF|Kristoffer Ajer|NOR|28|76;DF|Jayden Meghoma|ENG|20|66;DF|Nathan Collins|IRL|25|79;DF|Michael Kayode|ITA|22|77;DF|Jannik Schuster|AUT|20|72;DF|Benjamin Fredrick|NGA|21|68;DF|El Hadji Malick Diouf|SEN|21|76;MF|Yehor Yarmolyuk|UKR|22|77;MF|Mathias Jensen|DEN|30|77;MF|Josh Dasilva|ENG|27|72;MF|Fábio Carvalho|POR|23|74;MF|Antoni Milambo|NED|21|75;MF|Mamadou Sangaré|MLI|24|73;MF|Mikkel Damsgaard|DEN|26|79;MF|Vitaly Janelt|GER|28|76;FW|Kevin Schade|GER|24|78;FW|Igor Thiago|BRA|25|80;FW|Dango Ouattara|BFA|24|78;FW|Callum Wilson|ENG|34|73;FW|Jaidon Anthony|ENG|26|74;FW|Keane Lewis-Potter|ENG|25|76;FW|Gustavo Nunes|BRA|20|70"],["Brighton","BHA","#0057b8","#ffffff",77,"GK|Bart Verbruggen|NED|24|81;GK|Jason Steele|ENG|36|68;DF|Jaouen Hadjam|ALG|23|75;DF|Pascal Struijk|NED|27|76;DF|Lewis Dunk|ENG|35|76;DF|Costinha|POR|26|75;DF|Olivier Boscagli|FRA|28|77;DF|Ferdi Kadıoğlu|TUR|27|80;DF|Mats Wieffer|NED|27|78;DF|Maxim De Cuyper|BEL|26|78;DF|Michael Svoboda|AUT|28|74;DF|Luka Vušković|CRO|19|76;MF|Jack Hinshelwood|ENG|21|76;MF|Pascal Groß|GER|35|77;MF|Chema Andrés|ESP|21|74;MF|Ibrahim Osman|GHA|22|74;MF|Diego Gómez|PAR|23|78;MF|Yasin Ayari|SWE|23|77;MF|Matt O'Riley|DEN|26|79;MF|Malick Yalcouyé|CIV|20|72;MF|Zadok Yohanna|NGA|19|66;FW|Georginio Rutter|FRA|24|79;FW|Promise David|CAN|25|74;FW|Charalampos Kostoulas|GRE|19|73"],["Chelsea","CHE","#034694","#ffffff",82,"GK|Robert Sánchez|ESP|28|80;GK|Emiliano Martínez|ARG|33|83;GK|Mike Penders|BEL|21|72;DF|Marco Palestra|ITA|21|78;DF|Wesley Fofana|FRA|25|80;DF|Maxence Lacroix|FRA|26|80;DF|Levi Colwill|ENG|23|83;DF|Jorrel Hato|NED|20|79;DF|Reece James|ENG|26|84;DF|Malo Gusto|FRA|23|81;DF|Pep Chavarría|ESP|28|76;DF|Aarón Anselmino|ARG|21|72;DF|Josh Acheampong|ENG|20|74;DF|Tosin Adarabioyo|ENG|28|77;MF|Valentín Barco|ARG|22|74;MF|Enzo Fernández|ARG|25|85;MF|Cole Palmer|ENG|24|87;MF|Dário Essugo|POR|21|73;MF|Morgan Rogers|ENG|24|83;MF|Moisés Caicedo|ECU|24|87;MF|Roméo Lavia|BEL|22|79;FW|Pedro Neto|POR|26|82;FW|João Pedro|BRA|24|83;FW|Jamie Gittens|ENG|22|79;FW|Emmanuel Emegha|NED|23|75;FW|Geovany Quenda|POR|19|76;FW|Mykhailo Mudryk|UKR|25|74;FW|Estêvão|BRA|19|82"],["Coventry City","COV","#59cbe8","#ffffff",71,"GK|Ben Wilson|ENG|33|68;GK|Carl Rushworth|ENG|24|74;GK|Dan Bentley|ENG|32|68;DF|Ethan Pinnock|JAM|33|72;DF|Jay Dasilva|WAL|28|70;DF|Bobby Thomas|ENG|25|72;DF|Kaine Kesler-Hayden|ENG|23|72;DF|Jake Bidwell|ENG|33|66;DF|Joel Latibeaudiere|JAM|26|70;DF|Aurèle Amenda|SUI|22|72;DF|Luke Woolfenden|ENG|27|72;DF|Milan van Ewijk|NED|25|73;MF|Jack Rudoni|ENG|25|74;MF|Matt Grimes|ENG|30|72;MF|Tatsuhiro Sakamoto|JPN|29|73;MF|Caleb Yirenkyi|GHA|20|66;MF|Ephron Mason-Clark|JAM|26|70;MF|Frank Onyeka|NGA|26|73;MF|Josh Eccles|ENG|25|70;MF|Victor Torp|DEN|26|72;MF|Yann Gboho|FRA|25|71;MF|Gustavo Hamer|NED|29|75;FW|Ellis Simms|ENG|25|74;FW|Haji Wright|USA|28|74;FW|Taiwo Awoniyi|NGA|28|73;FW|Loum Tchaouna|FRA|22|72;FW|Brandon Thomas-Asante|GHA|27|70;FW|Sidiki Chérif|GUI|19|70"],["Crystal Palace","CRY","#1b458f","#c4122e",77,"GK|Dean Henderson|ENG|29|80;GK|Walter Benítez|ARG|33|74;GK|Remi Matthews|ENG|32|64;DF|Tyrick Mitchell|ENG|26|77;DF|Chadi Riad|MAR|23|74;DF|Jaydee Canvot|FRA|20|74;DF|Takehiro Tomiyasu|JPN|27|76;DF|Anan Khalaili|ISR|22|74;DF|Chris Richards|USA|26|78;DF|Óscar Mingueza|ESP|27|77;DF|Ben Chilwell|ENG|29|74;DF|Axel Disasi|FRA|28|77;MF|Jefferson Lerma|COL|31|76;MF|Daichi Kamada|JPN|30|77;MF|Will Hughes|ENG|31|75;MF|Adam Wharton|ENG|22|82;MF|Quinten Timber|NED|25|78;MF|Cheick Doucouré|MLI|26|77;FW|Ismaïla Sarr|SEN|28|80;FW|Eddie Nketiah|ENG|27|74;FW|Yéremy Pino|ESP|23|78;FW|Dwight McNeil|ENG|26|75;FW|Zavier Gozo|USA|18|66;FW|Jean-Philippe Mateta|FRA|29|80;FW|Jørgen Strand Larsen|NOR|26|77;FW|Evann Guessand|CIV|25|75"],["Everton","EVE","#003399","#ffffff",75,"GK|Jordan Pickford|ENG|32|82;GK|Mark Travers|IRL|26|72;GK|Tom King|WAL|31|62;DF|Nathan Patterson|SCO|24|74;DF|Jarrad Branthwaite|ENG|24|80;DF|Michael Keane|ENG|33|74;DF|James Tarkowski|ENG|33|77;DF|Jake O'Brien|IRL|25|76;DF|Vitaliy Mykolenko|UKR|27|76;DF|Adam Aznou|MAR|20|70;MF|Kiernan Dewsbury-Hall|ENG|27|77;MF|Christian Nørgaard|DEN|32|76;MF|Charly Alcaraz|ARG|23|76;MF|Hayden Hackney|ENG|24|76;MF|Merlin Röhl|GER|24|75;MF|James Garner|ENG|25|78;MF|Tim Iroegbunam|ENG|23|72;MF|Harrison Armstrong|ENG|19|70;FW|Beto|GNB|28|76;FW|Iliman Ndiaye|SEN|26|79;FW|Thierno Barry|FRA|23|76;FW|Tyrique George|ENG|20|74;FW|Tyler Dibling|ENG|20|76;FW|Brennan Johnson|WAL|25|79"],["Fulham","FUL","#ffffff","#111111",75,"GK|Bernd Leno|GER|34|79;GK|Benjamin Lecomte|FRA|35|70;DF|Kenny Tete|NED|30|76;DF|Calvin Bassey|NGA|26|77;DF|Jorge Cuenca|ESP|26|75;DF|Joachim Andersen|DEN|30|78;DF|Timothy Castagne|BEL|30|75;DF|Ryan Sessegnon|ENG|26|74;DF|Antonee Robinson|USA|28|79;MF|Harrison Reed|ENG|31|74;MF|César Palacios|ESP|22|72;MF|Hugo Larsson|SWE|21|77;MF|Sander Berge|NOR|28|77;MF|Shea Charles|NIR|22|73;MF|Josh King|ENG|19|72;MF|Emile Smith Rowe|ENG|26|77;MF|Chibuzo Nwoko|ENG|18|62;FW|Gonzalo García|ESP|22|76;FW|Rodrigo Muniz|BRA|25|76;FW|Kevin|BRA|23|77;FW|Oscar Bobb|NOR|23|76;FW|Alex Iwobi|NGA|30|78;FW|Macauley Zepa|CMR|18|58"],["Hull City","HUL","#f5a12d","#111111",70,"GK|Jack Butland|ENG|33|72;GK|Dillon Phillips|ENG|31|66;GK|Konstantinos Tzolakis|GRE|23|70;DF|Lewie Coyle|ENG|30|68;DF|Ryan Giles|ENG|26|70;DF|Charlie Hughes|ENG|22|69;DF|Semi Ajayi|NGA|32|69;DF|John Egan|IRL|33|70;DF|Paddy McNair|NIR|31|70;DF|Brooke Norton-Cuffy|ENG|22|72;DF|Matt Targett|ENG|30|70;DF|Nobel Mendy|SEN|21|68;MF|Hidemasa Morita|JPN|31|74;MF|Eliot Matazo|BEL|24|70;MF|Joe Gelhardt|ENG|24|70;MF|Óscar Zambrano|ECU|22|70;MF|Darko Gyabi|ENG|22|68;MF|Kieran Dowell|ENG|28|68;MF|Regan Slater|ENG|26|69;MF|Lucas Gourna-Douath|FRA|22|71;MF|Abdülkadir Ömür|TUR|27|72;MF|Christos Mouzakitis|GRE|19|68;FW|Sorba Thomas|WAL|27|70;FW|Oli McBurnie|SCO|30|70;FW|Mohamed Belloumi|ALG|24|71;FW|Ilyas Ansah|GER|21|70;FW|Robinio Vaz|FRA|19|68;FW|Mohamed-Ali Cho|FRA|22|72"],["Ipswich Town","IPS","#0044a9","#ffffff",71,"GK|Alex Palmer|ENG|29|73;GK|Christian Walton|ENG|30|68;GK|Cieran Slicker|SCO|23|64;DF|Harry Clarke|ENG|25|71;DF|Leif Davis|ENG|26|75;DF|Cédric Kipré|CIV|29|70;DF|Ben Johnson|ENG|26|72;DF|Darnell Furlong|ENG|30|70;DF|Jacob Greaves|ENG|25|72;DF|Elkan Baggott|IDN|23|66;DF|Dara O'Shea|IRL|27|74;MF|Azor Matusiwa|NED|28|72;MF|Wes Burns|WAL|31|70;MF|Jack Taylor|IRL|28|71;MF|Cameron Humphreys|ENG|22|66;MF|Marcelino Núñez|CHI|26|73;FW|Sindre Walle Egeli|NOR|20|68;FW|George Hirst|SCO|27|71;FW|Jaden Philogene|ENG|24|74;FW|Ali Al-Hamadi|IRQ|24|68;FW|Kasey McAteer|IRL|24|68;FW|Chiedozie Ogbene|IRL|29|71;FW|Sammie Szmodics|IRL|30|71;FW|Chuba Akpom|ENG|30|72;FW|Anis Mehmeti|ALB|25|72;FW|Jack Clarke|ENG|25|75"],["Leeds United","LEE","#ffffff","#1d428a",73,"GK|James Trafford|ENG|23|80;GK|Michael Zetterer|GER|31|72;DF|Jayden Bogle|ENG|25|75;DF|Gabriel Gudmundsson|SWE|27|75;DF|Tarik Muharemović|BIH|23|75;DF|Joe Rodon|WAL|28|76;DF|Jaka Bijol|SVN|27|77;DF|James Justin|ENG|28|74;DF|Melvin Bard|FRA|26|75;DF|Nico Elvedi|SUI|30|76;MF|Ethan Ampadu|WAL|26|76;MF|Daniel James|WAL|28|75;MF|Sean Longstaff|ENG|28|75;MF|Brenden Aaronson|USA|25|76;MF|Anton Stach|GER|27|77;MF|Ao Tanaka|JPN|27|76;MF|Ilia Gruev|BUL|26|74;FW|Dominic Calvert-Lewin|ENG|29|76;FW|Harry Wilson|WAL|29|77;FW|Lukas Nmecha|GER|27|73;FW|Noah Okafor|SUI|26|76;FW|Jean-Mattéo Bahoya|FRA|21|72"],["Liverpool","LIV","#c8102e","#00b2a9",84,"GK|Alisson Becker|BRA|34|85;GK|Giorgi Mamardashvili|GEO|26|82;GK|Freddie Woodman|ENG|29|66;GK|Vítězslav Jaroš|CZE|25|68;DF|Joe Gomez|ENG|29|78;DF|Virgil van Dijk|NED|35|85;DF|Jérémy Jacquet|FRA|21|78;DF|Milos Kerkez|HUN|22|82;DF|Conor Bradley|NIR|23|80;DF|Giovanni Leoni|ITA|19|77;DF|Kostas Tsimikas|GRE|30|76;DF|Jeremie Frimpong|NED|25|81;DF|Ronald Araújo|URU|27|83;DF|Luke Chambers|ENG|22|70;MF|Wataru Endo|JPN|33|76;MF|Florian Wirtz|GER|23|88;MF|Dominik Szoboszlai|HUN|25|85;MF|Alexis Mac Allister|ARG|27|86;MF|Ryan Gravenberch|NED|24|86;MF|Trey Nyoni|ENG|19|74;MF|James McConnell|ENG|22|72;FW|Alexander Isak|SWE|27|87;FW|Federico Chiesa|ITA|28|78;FW|Cody Gakpo|NED|27|83;FW|Hugo Ekitike|FRA|24|84;FW|Víctor Muñoz|ESP|23|78;FW|Bradley Barcola|FRA|24|83;FW|Rio Ngumoha|ENG|18|74"],["Manchester City","MCI","#6cabdd","#1c2c5b",84,"GK|Gianluigi Donnarumma|ITA|27|87;GK|Marcus Bettinelli|ENG|34|64;DF|Rúben Dias|POR|29|86;DF|Nathan Aké|NED|31|80;DF|Marc Guéhi|ENG|25|84;DF|Rayan Aït-Nouri|ALG|25|81;DF|Vitor Reis|BRA|20|76;DF|Joško Gvardiol|CRO|24|85;DF|Abdukodir Khusanov|UZB|22|80;DF|Rico Lewis|ENG|21|80;DF|Manuel Akanji|SUI|30|82;MF|Tijjani Reijnders|NED|27|85;MF|Mateo Kovačić|CRO|32|80;MF|Rayan Cherki|FRA|22|84;MF|Jérémy Doku|BEL|24|83;MF|Nico González|ESP|24|80;MF|Rodri|ESP|30|88;MF|Savinho|BRA|22|81;MF|Matheus Nunes|POR|27|80;MF|Claudio Echeverri|ARG|20|76;MF|Nico O'Reilly|ENG|21|81;MF|Sverre Nypan|NOR|19|74;MF|Antoine Semenyo|GHA|26|84;MF|Phil Foden|ENG|26|85;MF|Kalvin Phillips|ENG|30|72;MF|Jack Grealish|ENG|30|78;FW|Omar Marmoush|EGY|27|82;FW|Erling Haaland|NOR|25|91"],["Manchester United","MUN","#da291c","#fbe122",79,"GK|Senne Lammens|BEL|24|80;GK|Karl Darlow|WAL|35|66;DF|Diogo Dalot|POR|27|79;DF|Noussair Mazraoui|MAR|28|78;DF|Matthijs de Ligt|NED|26|81;DF|Harry Maguire|ENG|33|76;DF|Lisandro Martínez|ARG|28|81;DF|Patrick Dorgu|DEN|21|77;DF|Leny Yoro|FRA|20|80;DF|Luke Shaw|ENG|31|76;DF|Ayden Heaven|ENG|19|74;DF|Harry Amass|ENG|19|72;MF|Mason Mount|ENG|27|77;MF|Bruno Fernandes|POR|31|86;MF|Andrey Santos|BRA|22|79;MF|Youri Tielemans|BEL|29|80;MF|Carlos Baleba|CMR|22|81;MF|Manuel Ugarte|URU|25|78;MF|Kobbie Mainoo|ENG|21|79;MF|Jack Fletcher|ENG|19|62;MF|Tyler Fletcher|SCO|19|62;FW|Marcus Rashford|ENG|28|80;FW|Matheus Cunha|BRA|27|83;FW|Joshua Zirkzee|NED|25|76;FW|Amad Diallo|CIV|23|81;FW|Bryan Mbeumo|CMR|26|84;FW|Benjamin Šeško|SVN|23|81;FW|Shea Lacey|ENG|19|68"],["Newcastle United","NEW","#241f20","#ffffff",79,"GK|Nick Pope|ENG|34|79;GK|Lukáš Horníček|CZE|24|70;GK|Ewen Jaouen|FRA|21|62;GK|Mark Gillespie|ENG|35|60;DF|Tino Livramento|ENG|24|81;DF|Lewis Hall|ENG|22|80;DF|Sven Botman|NED|27|81;DF|Fabian Schär|SUI|35|76;DF|Malick Thiaw|GER|25|80;DF|Dan Burn|ENG|35|76;DF|Amar Dedić|BIH|24|78;MF|Joelinton|BRA|30|80;MF|Aladji Bamba|FRA|20|70;MF|Harvey Barnes|ENG|29|78;MF|Sean Steur|NED|19|68;MF|Bazoumana Touré|CIV|21|72;MF|Anthony Elanga|SWE|25|80;MF|Jacob Murphy|ENG|32|77;MF|Joe Willock|ENG|27|76;MF|Jacob Ramsey|ENG|26|78;MF|Lewis Miley|ENG|21|77;FW|Yoane Wissa|COD|30|80;FW|William Osula|DEN|23|75;FW|Matias Fernandez-Pardo|BEL|22|74"],["Nottingham Forest","NFO","#dd0000","#ffffff",76,"GK|John Victor|BRA|30|76;GK|Matz Sels|BEL|34|79;GK|Steven Benda|GER|27|68;DF|Ousmane Diomande|CIV|22|81;DF|Neco Williams|WAL|25|78;DF|Murillo|BRA|24|82;DF|Jair Cunha|BRA|21|74;DF|Luca Netz|GER|23|74;DF|Daniel Muñoz|COL|30|80;DF|Nikola Milenković|SRB|28|81;DF|Ola Aina|NGA|29|78;DF|Nicolò Savona|ITA|23|76;MF|Ibrahim Sangaré|CIV|28|78;MF|Nicolás Domínguez|ARG|28|78;MF|Morgan Gibbs-White|ENG|26|82;MF|Xaver Schlager|AUT|28|79;MF|Ryan Yates|ENG|28|75;MF|James McAtee|ENG|23|77;FW|Callum Hudson-Odoi|ENG|25|78;FW|Chris Wood|NZL|34|78;FW|Igor Jesus|BRA|25|77;FW|Dan Ndoye|SUI|25|80;FW|Arnaud Kalimuendo|FRA|24|77;FW|Liam Delap|ENG|23|79"],["Sunderland","SUN","#eb172b","#ffffff",74,"GK|Robin Roefs|NED|23|78;GK|Simon Moore|ENG|36|62;GK|Melker Ellborg|SWE|22|62;DF|Kevin Danso|AUT|27|79;DF|Daniel Ballard|NIR|26|76;DF|Dayann Methalie|FRA|21|66;DF|Thomas Meunier|BEL|34|74;DF|Omar Alderete|PAR|29|78;DF|Reinildo|MOZ|32|76;DF|Nordi Mukiele|FRA|28|78;DF|Trai Hume|NIR|24|76;DF|Aji Alese|ENG|25|68;MF|Alan Browne|IRL|31|70;MF|Chris Rigg|ENG|18|74;MF|Luke O'Nien|ENG|31|72;MF|Habib Diarra|SEN|22|79;MF|Noah Sadiki|COD|21|77;MF|Enzo Le Fée|FRA|26|79;MF|Jules Ahoka|COD|19|62;MF|Granit Xhaka|SUI|33|82;MF|Abdoullah Ba|FRA|22|72;FW|Chemsdine Talbi|MAR|21|76;FW|Brian Brobbey|NED|24|77;FW|Nilson Angulo|ECU|22|74;FW|Romaine Mundle|ENG|23|74;FW|Wilson Isidor|HAI|25|77;FW|Jocelin Ta Bi|CIV|18|62;FW|Malick Fofana|BEL|21|78"],["Tottenham Hotspur","TOT","#132257","#ffffff",79,"GK|Antonín Kinský|CZE|23|77;GK|Martin Dúbravka|SVK|37|72;GK|Brandon Austin|USA|27|64;DF|Andy Robertson|SCO|32|80;DF|Marcos Senesi|ARG|29|79;DF|Jan Paul van Hecke|NED|26|79;DF|Destiny Udogie|ITA|23|80;DF|Pedro Porro|ESP|26|82;DF|Ben Davies|WAL|33|74;DF|Micky van de Ven|NED|25|84;MF|Xavi Simons|NED|23|84;MF|Conor Gallagher|ENG|26|81;MF|James Maddison|ENG|29|81;MF|Archie Gray|ENG|20|78;MF|Lucas Bergvall|SWE|20|80;MF|Sandro Tonali|ITA|26|85;MF|Mateus Fernandes|POR|22|78;MF|Rodrigo Bentancur|URU|29|79;FW|Richarlison|BRA|29|77;FW|Mathys Tel|FRA|21|77;FW|Sávio|BRA|22|81;FW|Dominic Solanke|ENG|28|79;FW|Mohammed Kudus|GHA|26|83;FW|Dejan Kulusevski|SWE|26|82;FW|Wilson Odobert|FRA|21|75"]]};
 'use strict';
 /* ==========================================================
-   KG Football Manager — ไทยลีก 1  (เล่นกับเพื่อนผ่าน PeerJS)
-   เครื่องที่ "สร้างห้อง" เป็นตัวคุมเกม ทีมที่ไม่มีคนเลือก AI คุม
-   ชื่อทีมเป็นทีมจริง ส่วนชื่อนักเตะสุ่มขึ้น — เจ้าของทีมเปลี่ยนชื่อเองได้
+   KG Football Manager v2 — ไทยลีก 1 / พรีเมียร์ลีก
+   เครื่องที่ "สร้างห้อง" เป็นตัวคุมเกม (PeerJS) ทีมที่ว่าง AI คุม
+   แมตช์จำลองสดทีละนาที — เปลี่ยนตัว/แผน/แท็กติก/ขอเวลานอกได้ระหว่างแข่ง
+   รายชื่อนักเตะจริงตามข้อมูลต้นฤดูกาล 2026/27 (ค่าพลังเป็นค่าประเมินในเกม)
    ========================================================== */
-const VER=1, PREFIX='kgfm-', ROUNDS=30, LIVE_MS=45000, MAX_SQUAD=30, MIN_SQUAD=16;
+const VER=2, PREFIX='kgfm-', SAVE_KEY='fm_host2', MAX_SQUAD=30, MIN_SQUAD=16, MAX_SUBS=5, BENCH=7, PAUSE_MS=30000, TIMEOUTS=2;
+const SPEED=[{n:'เร็ว',t:380,ht:5000},{n:'ปกติ',t:750,ht:9000},{n:'ช้า',t:1150,ht:12000}];
 const QS=new URLSearchParams(location.search);
 const PEER_OPTS=(()=>{const o={debug:0,config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'},{urls:'stun:global.stun.twilio.com:3478'}]}};
   const ph=QS.get('peerhost');if(ph){const [h,p]=ph.split(':');Object.assign(o,{host:h,port:+p||9000,path:'/',secure:false})}return o})();
@@ -171,33 +188,20 @@ const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:v}catch(
 let uid=LS.get('fm_uid',null);if(!uid){uid='u'+Math.random().toString(36).slice(2,10);LS.set('fm_uid',uid)}
 let myName=LS.get('fm_name','');
 
-/* ---------------- ข้อมูลทีม ไทยลีก 1 ฤดูกาล 2026/27 ---------------- */
-// [ชื่อ, ตัวย่อ, สีหลัก, สีรอง, ความแข็งแกร่งเริ่มต้น(สมมติเพื่อความสมดุลเกม)]
-const TEAMS=[
- ['บุรีรัมย์ ยูไนเต็ด','BRU','#1d4ed8','#f59e0b',78],
- ['บีจี ปทุม ยูไนเต็ด','BGP','#2563eb','#e5e7eb',74],
- ['การท่าเรือ เอฟซี','PRT','#f97316','#1e3a8a',74],
- ['ทรู แบงค็อก ยูไนเต็ด','TBU','#dc2626','#111827',72],
- ['ราชบุรี เอฟซี','RBR','#0ea5e9','#facc15',71],
- ['สิงห์ เชียงราย ยูไนเต็ด','CRU','#0369a1','#f97316',70],
- ['ชลบุรี เอฟซี','CBR','#1e40af','#f8fafc',69],
- ['พีที ประจวบ เอฟซี','PTP','#b91c1c','#fde047',68],
- ['อุทัยธานี เอฟซี','UTH','#ea580c','#fef3c7',68],
- ['ลำพูน วอริเออร์','LPW','#7c3aed','#facc15',67],
- ['สุโขทัย เอฟซี','SKT','#facc15','#dc2626',67],
- ['ระยอง เอฟซี','RYG','#0d9488','#fde68a',66],
- ['อยุธยา ยูไนเต็ด','AYU','#991b1b','#facc15',65],
- ['ศรีสะเกษ ยูไนเต็ด','SSK','#f59e0b','#7c2d12',65],
- ['ราษีไศล ยูไนเต็ด','RSL','#16a34a','#fef08a',64],
- ['ปัตตานี เอฟซี','PTN','#15803d','#ffffff',64]
-];
-const FORMS={'4-4-2':[4,4,2],'4-3-3':[4,3,3],'4-5-1':[4,5,1],'3-5-2':[3,5,2],'3-4-3':[3,4,3],'5-3-2':[5,3,2]};
-const TAC=['ตั้งรับ','สมดุล','บุก'];
+/* ---------------- ลีก ---------------- */
+const LG={
+ th:{name:'ไทยลีก 1',flag:'🇹🇭',home:'THA',cur:'ล.',vk:42,ve:2.5,vm:1,bud:r=>r1(Math.max(10,(r-58)*3.8)+5),tv:0.5,gate:r=>0.6+(r-55)*0.07,wage:0.005,prize:i=>Math.max(3,30-i*1.8),zone:[2,3],zt:'ลุ้นไปเอเชีย'},
+ epl:{name:'พรีเมียร์ลีก',flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',home:'ENG',cur:'£',vk:55,ve:2.8,vm:4,bud:r=>r1(Math.max(15,(r-68)*9+15)),tv:3.5,gate:r=>Math.max(0.3,(r-60)*0.1),wage:0.0025,prize:i=>Math.max(10,100-i*4.5),zone:[4,3],zt:'แชมเปียนส์ลีก'}
+};
+const L=()=>LG[(S&&S.lg)||'th'];
+const FORMS={'4-4-2':[4,4,2],'4-3-3':[4,3,3],'4-5-1':[4,5,1],'3-5-2':[3,5,2],'3-4-3':[3,4,3],'5-3-2':[5,3,2],'5-4-1':[5,4,1]};
+const TAC=['ตั้งรับ','สมดุล','บุก'],TACI=['🛡️','⚖️','🔥'];
 const POSN={GK:'ผู้รักษาประตู',DF:'กองหลัง',MF:'กองกลาง',FW:'กองหน้า'};
-const TH1=['อนุชา','ธนากร','กิตติพงษ์','ณัฐพล','วีระพงษ์','สมชาย','ภานุวัฒน์','ปิยะพงษ์','อภิสิทธิ์','จักรกฤษณ์','วรวุฒิ','ชัยวัฒน์','ศักดิ์ชัย','ธนพล','พงศกร','กฤษดา','สุรเชษฐ์','ณัฐวุฒิ','อดิศร','ปฏิภาณ','เกียรติศักดิ์','ธีรเทพ','ศราวุธ','นพดล','อรรถพล','ภูวดล','ธวัชชัย','วุฒิชัย','สิทธิชัย','มงคล','รัฐพล','ธนวัฒน์','เอกชัย','วิทยา','พีระพัฒน์','จิรายุ','ก้องภพ','ศุภกิต','นที','ปกรณ์','ยศพล','วชิระ','อิทธิพล','ทศพล','เจษฎา','ธราดล','ภาคิน','ชยพล','กันตภณ','ณัฐนนท์','ปัณณวัฒน์','อนาวิน','สุรศักดิ์','ประวิทย์','บดินทร์','ไกรสร','เมธา','ศิวกร','ธีรวัฒน์','อัครพล'];
-const TH2=['ใจดี','ศรีสุข','แก้วมณี','บุญมา','ทองคำ','สุขสวัสดิ์','วงศ์ใหญ่','พรหมมา','ชัยมงคล','แสงทอง','ศรีวิไล','ทองสุข','มีสุข','เพชรรัตน์','บุญยืน','สายทอง','อินทร์แก้ว','จันทร์หอม','พิมพ์ทอง','ศักดิ์ดี','ทรัพย์มาก','ปัญญาดี','กล้าหาญ','ยอดยิ่ง','เรืองศรี','นาคสวัสดิ์','บุญเรือง','ศรีอ่อน','ชาญชัย','ประเสริฐสุข','วงศ์สวัสดิ์','พลอยงาม','มั่นคง','ดวงดี','ทองมา','สมบูรณ์','อุดมสุข','บัวทอง','คำแหง','แสนสุข','วิเศษ','เกษมสุข','รุ่งเรือง','ไชยศรี','ภูมิใจ','สิงห์ทอง','ฤทธิ์เดช','ศรีเมือง','กองแก้ว','บุญประเสริฐ','คงเจริญ','ทองดี','สว่างวงศ์','พันธุ์ดี','ศิริมงคล','จันทร์เพ็ญ','อ่อนศรี','แก่นจันทร์','ผาสุข','ชูศรี'];
-const FN1=['Lucas','Mateus','Rafael','Thiago','Bruno','Diego','Kenji','Daiki','Yuto','Ryo','Takumi','Min-jae','Seung-ho','Ibrahim','Moussa','Kwame','Ivan','Marko','Pedro','Felipe','Gustavo','Andre','Abdou','Emeka','Nikola','Stefan','Caio','Renan','Joao','Hiroki'];
-const FN2=['Silva','Souza','Oliveira','Costa','Pereira','Almeida','Barbosa','Ribeiro','Tanaka','Sato','Watanabe','Kim','Lee','Park','Diallo','Traore','Mensah','Okafor','Petrovic','Kovac','Novak','Santos','Moreira','Nakamura','Yamada','Cho','Kone','Mendy','Jovic','Horvat'];
+const FA={th:{a:['Anucha','Thanakorn','Kittipong','Nattapon','Weerapong','Somchai','Panuwat','Piyapong','Apisit','Jakkrit','Worawut','Chaiwat','Sakchai','Thanapol','Pongsakorn','Kritsada','Surachet','Nattawut','Adisorn','Patiphan','Kiattisak','Teerathep','Sarawut','Noppadol','Attapol','Thawatchai','Wuttichai','Sitthichai','Mongkol','Rattapol'],
+  b:['Jaidee','Srisuk','Kaewmanee','Boonma','Thongkham','Suksawat','Wongyai','Prommma','Chaimongkol','Saengthong','Sriwilai','Thongsuk','Meesuk','Petcharat','Boonyuen','Saithong','Inkaew','Janhom','Pimthong','Sakdee','Sapmak','Panyadee','Klaharn','Yodying','Ruangsri','Naksawat','Boonruang','Srion','Chanchai','Prasertsuk']},
+ en:{a:['Lucas','Mateus','Rafael','Thiago','Bruno','Diego','Kenji','Daiki','Yuto','Ibrahim','Moussa','Kwame','Ivan','Marko','Pedro','Felipe','Jack','Harry','Oliver','George','Charlie','Alfie','Tom','Sam','Leo','Nathan','Joe','Callum','Liam','Ryan'],
+  b:['Silva','Souza','Costa','Pereira','Almeida','Tanaka','Sato','Kim','Park','Diallo','Traore','Mensah','Okafor','Petrovic','Kovac','Santos','Smith','Jones','Taylor','Brown','Walker','Wright','Hughes','Evans','Clarke','Hall','Wood','Turner','Hill','Ward']}};
+const NATS=['BRA','JPN','KOR','ESP','FRA','NGA','ARG','SRB','POR','GHA'];
 
 /* ---------------- utils ---------------- */
 const rnd=()=>Math.random();
@@ -209,329 +213,407 @@ const gauss=()=>{let u=0,v=0;while(!u)u=rnd();while(!v)v=rnd();return Math.sqrt(
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(rnd()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $=s=>document.querySelector(s);
-const money=v=>(Math.round(v*10)/10).toLocaleString('th-TH',{maximumFractionDigits:1});
+const num=v=>(Math.round(v*10)/10).toLocaleString('th-TH',{maximumFractionDigits:1});
+const money=v=>L().cur==='£'?(v<0?'-':'')+'£'+num(Math.abs(v))+'m':num(v)+' ล.';
 const slotsOf=f=>{const [d,m,w]=FORMS[f]||FORMS['4-4-2'];return ['GK',...Array(d).fill('DF'),...Array(m).fill('MF'),...Array(w).fill('FW')]};
 const seasonLabel=s=>s+'/'+String((s+1)%100).padStart(2,'0');
+const nR=()=>(S.teams.length-1)*2;
 function lum(hex){const n=parseInt(hex.slice(1),16);const r=n>>16&255,g=n>>8&255,b=n&255;return (0.299*r+0.587*g+0.114*b)/255}
+const hnow=()=>Date.now()+(isHost?0:clockOff);
 
 /* ==========================================================
-   GAME STATE (โฮสต์เป็นเจ้าของ S ตัวจริง ผู้เล่นอื่นได้สำเนา)
+   GAME STATE
    ========================================================== */
 let S=null;
-
-function newName(f){
-  for(let k=0;k<40;k++){const n=f?pick(FN1)+' '+pick(FN2):pick(TH1)+' '+pick(TH2);
-    if(!Object.values(S.pl).some(p=>p.n===n))return n}
-  return (f?pick(FN1)+' '+pick(FN2):pick(TH1)+' '+pick(TH2))+' '+ri(2,9);
-}
 function valueOf(p){
-  const b=Math.max(0.15,Math.pow(Math.max(0,p.o-42)/10,2.5));
+  const c=L();const b=Math.max(0.1,Math.pow(Math.max(0,p.o-c.vk)/10,c.ve)*c.vm);
   const af=p.ag<=21?1.35:p.ag<=24?1.2:p.ag<=28?1:p.ag<=30?0.8:p.ag<=32?0.55:0.35;
-  const pb=1+Math.max(0,p.pt-p.o)*0.03;
-  return r1(b*af*pb);
+  return r1(b*af*(1+Math.max(0,p.pt-p.o)*0.03));
 }
-function mkPlayer(t,pos,o,ag,f){
-  const id=S.nid++;o=clamp(Math.round(o),40,92);
-  const pt=clamp(o+(ag<=20?ri(6,16):ag<=23?ri(3,10):ag<=26?ri(0,4):0),o,94);
-  const p={id,n:newName(f),pos,o,pt,ag,ft:100,ij:0,sp:0,t,g:0,as:0,ap:0,f:f?1:0,v:0};
-  p.v=valueOf(p);S.pl[id]=p;return p;
+function potOf(o,ag){return clamp(o+(ag<=19?ri(7,15):ag<=21?ri(4,11):ag<=23?ri(2,7):ag<=25?ri(0,3):0),o,94)}
+function addPlayer(t,pos,n,nat,ag,o){
+  const id=S.nid++;o=clamp(Math.round(o),40,93);
+  const p={id,n,pos,o,pt:potOf(o,ag),ag,ft:100,ij:0,sp:0,t,g:0,as:0,ap:0,nat,v:0};p.v=valueOf(p);S.pl[id]=p;return p;
 }
-function genSquad(T){
-  const R=T.rep, plan=[['GK',3,1],['DF',7,4],['MF',7,4],['FW',5,2]];
-  const made=[];
-  plan.forEach(([pos,n,st])=>{for(let i=0;i<n;i++){const starter=i<st;
-    const o=starter?R-1+gauss()*3:R-8+gauss()*4;const ag=starter?ri(22,32):ri(18,34);
-    made.push(mkPlayer(T.id,pos,o,ag,0))}});
-  // นักเตะต่างชาติ 5 คน (เน้นตัวจริงที่ไม่ใช่ GK)
-  shuffle(made.filter(p=>p.pos!=='GK')).sort((a,b)=>b.o-a.o).slice(0,8).sort(()=>rnd()-.5).slice(0,5)
-    .forEach(p=>{p.f=1;p.n=newName(1);p.o=clamp(p.o+2,40,92);p.pt=Math.max(p.pt,p.o);p.v=valueOf(p)});
+function fakeName(){const f=FA[S.lg==='th'?'th':'en'];for(let k=0;k<30;k++){const n=pick(f.a)+' '+pick(f.b);if(!Object.values(S.pl).some(p=>p.n===n))return n}return pick(f.a)+' '+pick(f.b)+' Jr.'}
+function genFree(t){
+  const pos=pick(['GK','DF','DF','DF','MF','MF','MF','FW','FW']);const ag=ri(19,33);
+  const base=S.lg==='epl'?66:57;const nat=S.lg==='th'?(rnd()<0.3?pick(NATS):'THA'):(rnd()<0.5?'ENG':pick(NATS));
+  return addPlayer(t==null?-1:t,pos,fakeName(),nat,ag,base+gauss()*5);
 }
-function genFree(){
-  const pos=pick(['GK','DF','DF','DF','MF','MF','MF','FW','FW']);const f=rnd()<0.3;
-  const ag=ri(19,34);const o=clamp(56+gauss()*6+(f?3:0),46,76);mkPlayer(-1,pos,o,ag,f);
-}
-function squad(t){return Object.values(S.pl).filter(p=>p.t===t)}
-function startBudget(rep){return r1(Math.max(10,(rep-58)*3.8)+5)}
+const squad=t=>Object.values(S.pl).filter(p=>p.t===t);
 function makeFixtures(n){
   const arr=shuffle([...Array(n).keys()]);const rounds=[];
   for(let r=0;r<n-1;r++){const m=[];for(let i=0;i<n/2;i++){let h=arr[i],a=arr[n-1-i];if(i===0?r%2:i%2)[h,a]=[a,h];m.push([h,a])}rounds.push(m);arr.splice(1,0,arr.pop())}
   return rounds.concat(shuffle(rounds.map(m=>m.map(([h,a])=>[a,h]))));
 }
 function addNews(txt){S.news.unshift({r:S.round,txt});if(S.news.length>40)S.news.length=40}
-
-function newGame(code,solo){
-  S={v:VER,code,solo:!!solo,host:uid,phase:'lobby',season:2026,round:0,nid:1,teams:[],pl:{},fx:[],res:[],last:null,humans:{},news:[],live:null,seq:0,champs:[],final:null};
-  TEAMS.forEach((t,i)=>{const T={id:i,name:t[0],sh:t[1],c1:t[2],c2:t[3],rep:t[4],budget:startBudget(t[4]),form:pick(['4-4-2','4-3-3','4-4-2','4-5-1','3-5-2']),tac:1,xi:[],owner:null};S.teams.push(T);genSquad(T);autoXI(T)});
+function newGame(code,solo,lg,keep){
+  S={v:VER,lg,code,solo:!!solo,host:uid,phase:'lobby',season:2026,round:0,nid:1,teams:[],pl:{},fx:[],res:[],last:null,lv:null,humans:keep||{},news:[],seq:0,champs:[],final:null,spd:1};
+  DB[lg].forEach((t,i)=>{
+    const T={id:i,name:t[0],sh:t[1],c1:t[2],c2:t[3],rep:t[4],budget:LG[lg].bud(t[4]),form:'4-4-2',tac:1,xi:[],bn:[],owner:null};S.teams.push(T);
+    t[5].split(';').forEach(s=>{const [pos,n,nat,ag,o]=s.split('|');addPlayer(i,pos,n,nat,+ag,+o)});
+  });
+  // ทีมที่นักเตะน้อยเกินไป เติมนักเตะเยาวชน/ฟรีเอเย่นต์ให้ครบ 20
+  S.teams.forEach(T=>{while(squad(T.id).length<20){const p=genFree(T.id);p.o=clamp(p.o-4,40,90);p.ag=ri(18,21);p.pt=potOf(p.o,p.ag);p.v=valueOf(p)}});
+  S.teams.forEach(T=>{T.form=bestForm(T);autoXI(T)});
   for(let k=0;k<26;k++)genFree();
-  S.fx=makeFixtures(16);
-  addNews('ยินดีต้อนรับสู่ไทยลีก 1 ฤดูกาล '+seasonLabel(S.season)+' 🇹🇭');
+  S.fx=makeFixtures(S.teams.length);
+  Object.values(S.humans).forEach(h=>{h.team=null;h.ready=false});
+  addNews('ยินดีต้อนรับสู่'+LG[lg].name+' ฤดูกาล '+seasonLabel(S.season)+' '+LG[lg].flag);
 }
+function bestForm(T){const sq=squad(T.id);const c=k=>sq.filter(p=>p.pos===k).length;if(c('FW')>=4)return pick(['4-3-3','4-4-2']);if(c('DF')>=9)return pick(['4-4-2','5-3-2']);return pick(['4-4-2','4-3-3','4-5-1'])}
 
-/* ---------------- ตัวจริง 11 คน ---------------- */
+/* ---------------- ตัวจริง/สำรอง ---------------- */
 const effScore=p=>p.o*(0.72+0.28*p.ft/100);
-function avail(p){return p&&!p.ij&&!p.sp}
+const avail=p=>p&&!p.ij&&!p.sp;
 function autoXI(T){
   const sl=slotsOf(T.form);const pool=squad(T.id).filter(avail).sort((a,b)=>effScore(b)-effScore(a));
   const used=new Set();const xi=sl.map(()=>null);
   sl.forEach((pos,i)=>{const p=pool.find(q=>q.pos===pos&&!used.has(q.id));if(p){xi[i]=p.id;used.add(p.id)}});
   sl.forEach((pos,i)=>{if(xi[i]==null){const p=pool.find(q=>!used.has(q.id)&&(pos==='GK')===(q.pos==='GK'))||pool.find(q=>!used.has(q.id));if(p){xi[i]=p.id;used.add(p.id)}}});
-  T.xi=xi;
+  T.xi=xi;T.bn=[];fixBench(T);
 }
 function fixXI(T){
   const sl=slotsOf(T.form);const used=new Set();
-  let xi=sl.map((_,i)=>{const id=T.xi[i];const p=S.pl[id];if(p&&p.t===T.id&&avail(p)&&!used.has(id)){used.add(id);return id}return null});
+  const xi=sl.map((_,i)=>{const id=T.xi[i];const p=S.pl[id];if(p&&p.t===T.id&&avail(p)&&!used.has(id)){used.add(id);return id}return null});
   const pool=squad(T.id).filter(p=>avail(p)&&!used.has(p.id)).sort((a,b)=>effScore(b)-effScore(a));
-  sl.forEach((pos,i)=>{if(xi[i]==null){const j=pool.findIndex(q=>q.pos===pos);const k=j>=0?j:pool.findIndex(q=>(pos==='GK')===(q.pos==='GK'));const kk=k>=0?k:0;if(pool.length){xi[i]=pool[kk].id;pool.splice(kk,1)}}});
+  const bnIds=new Set(T.bn||[]);pool.sort((a,b)=>(bnIds.has(a.id)?0:1)-(bnIds.has(b.id)?0:1)||effScore(b)-effScore(a));
+  sl.forEach((pos,i)=>{if(xi[i]==null&&pool.length){let k=pool.findIndex(q=>q.pos===pos);if(k<0)k=pool.findIndex(q=>(pos==='GK')===(q.pos==='GK'));if(k<0)k=0;xi[i]=pool[k].id;pool.splice(k,1)}});
   T.xi=xi;
 }
-
-/* ---------------- จำลองแมตช์ ---------------- */
-function power(T,home){
-  const sl=slotsOf(T.form);let gk=35;const df=[],mf=[],fw=[];
-  T.xi.forEach((id,i)=>{const p=S.pl[id];if(!p)return;const s=sl[i];let e=effScore(p);
-    if(p.pos!==s)e-=(s==='GK'||p.pos==='GK')?25:7;
-    if(s==='GK')gk=e;else if(s==='DF')df.push(e);else if(s==='MF')mf.push(e);else fw.push(e)});
-  const av=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:40;
-  const [d,m,w]=FORMS[T.form]||[4,4,2];const t=T.tac;
-  return{atk:av(fw)*0.42+av(mf)*0.38+av(df)*0.2+(w-2)*1.3+(m-4)*0.4+[-3.5,0,3.5][t]+(home?1.5:0),
-         def:av(df)*0.42+av(mf)*0.23+gk*0.35+(d-4)*1.3+[3.5,0,-3.5][t]+(home?1:0),
-         mid:av(mf)+(m-4)*1.5};
+function fixBench(T){
+  const inXI=new Set(T.xi.filter(Boolean));const seen=new Set();
+  T.bn=(T.bn||[]).filter(id=>{const p=S.pl[id];if(!p||p.t!==T.id||!avail(p)||inXI.has(id)||seen.has(id))return false;seen.add(id);return true}).slice(0,BENCH);
+  const pool=squad(T.id).filter(p=>avail(p)&&!inXI.has(p.id)&&!seen.has(p.id)).sort((a,b)=>effScore(b)-effScore(a));
+  if(!T.bn.some(id=>S.pl[id].pos==='GK')){const g=pool.find(p=>p.pos==='GK');if(g&&T.bn.length<BENCH){T.bn.push(g.id);seen.add(g.id)}}
+  ['DF','MF','FW'].forEach(pos=>{if(T.bn.length<BENCH&&!T.bn.some(id=>S.pl[id].pos===pos)){const q=pool.find(p=>p.pos===pos&&!seen.has(p.id));if(q){T.bn.push(q.id);seen.add(q.id)}}});
+  for(const p of pool){if(T.bn.length>=BENCH)break;if(!seen.has(p.id)&&p.pos!=='GK'){T.bn.push(p.id);seen.add(p.id)}}
 }
+function reslot(on,form,out){
+  // จัดผู้เล่นที่อยู่ในสนามเข้าช่องตามแผนใหม่
+  const sl=slotsOf(form);const ids=on.filter(Boolean);const res=sl.map(()=>null);const used=new Set();
+  const live=ids.filter(id=>!out.includes(id)),dead=ids.filter(id=>out.includes(id));
+  sl.forEach((pos,i)=>{const id=live.find(x=>!used.has(x)&&S.pl[x].pos===pos);if(id){res[i]=id;used.add(id)}});
+  sl.forEach((pos,i)=>{if(res[i]==null){const id=live.find(x=>!used.has(x)&&(pos==='GK')===(S.pl[x].pos==='GK'))||live.find(x=>!used.has(x));if(id){res[i]=id;used.add(id)}}});
+  sl.forEach((pos,i)=>{if(res[i]==null){const id=dead.find(x=>!used.has(x));if(id){res[i]=id;used.add(id)}}});
+  return res;
+}
+
+/* ---------------- จำลองแมตช์สด ---------------- */
 const TXT={
  g:['⚽ โก๊ลลล! {p} ซัดเข้าไปให้ {t}','⚽ ประตู! {p} ปลิดชีพในกรอบเขตโทษ','⚽ {p} โหม่งเข้าไปอย่างสวยงาม!','⚽ {p} หลุดเดี่ยวแล้วแปไปเสาไกล!','⚽ {p} ยิงไกลเสียบสามเหลี่ยม!','⚽ {p} สังหารจุดโทษอย่างเยือกเย็น','⚽ {p} ซ้ำลูกที่กระดอนมาเข้าไป!'],
  sv:['🧤 {k} พุ่งปัดลูกยิงของ {p} ได้อย่างยอดเยี่ยม','🧤 {p} ยิงตรงมือ {k}','🧤 {k} ออกมาตัดหน้า {p} ได้ทัน'],
  c:['{p} ซัดเฉียดเสาออกไปนิดเดียว','{p} โหม่งข้ามคานไป','ลูกยิงของ {p} ชนเสา!','{p} ยิงไกลแต่ไม่ได้ลุ้น','{p} ได้จังหวะยิงแต่ถูกบล็อกไว้','{p} หลุดเข้าไปแต่ยิงข้ามคาน']
 };
-function fill(s,o){return s.replace(/\{(\w)\}/g,(_,k)=>o[k]||'')}
-function wpick(list,wf){let tot=0;const w=list.map(x=>{const v=Math.max(0.01,wf(x));tot+=v;return v});let r=rnd()*tot;for(let i=0;i<list.length;i++){r-=w[i];if(r<=0)return list[i]}return list[list.length-1]}
-function shortN(p){if(!p)return'-';const w=p.n.split(' ');if(p.cu)return p.n.length<=12?p.n:w[0];return p.f?w[w.length-1]:w[0]+(w[1]?' '+w[1][0]+'.':'')}
-function fullN(p){return p?p.n:'-'}
-function simMatch(h,a){
-  const TH=S.teams[h],TA=S.teams[a];const P=[power(TH,true),power(TA,false)];
-  const xg=[clamp(1.3*Math.exp((P[0].atk-P[1].def)/20),0.15,4),clamp(1.3*Math.exp((P[1].atk-P[0].def)/20),0.15,4)];
-  const sl=[slotsOf(TH.form),slotsOf(TA.form)];
-  const on=[TH.xi.filter(id=>S.pl[id]),TA.xi.filter(id=>S.pl[id])];
-  const gkOf=s=>{const T=s?TA:TH;const id=T.xi[0];return S.pl[id]};
-  const mult=[1,1],sc=[0,0],sh=[0,0],ot=[0,0],cards=[0,0],ev=[],yel={},out=new Set(),inj=[],red=[],scorers=[],assists=[];
-  const posOf=(s,id)=>{const T=s?TA:TH;const i=T.xi.indexOf(id);return sl[s][i]||S.pl[id].pos};
-  const tn=s=>s?TA.name:TH.name;
-  ev.push({m:0,s:-1,k:'ko',x:'🟢 เริ่มเกม! '+TH.name+' พบ '+TA.name});
-  for(let m=1;m<=93;m++){
-    if(m===46)ev.push({m:45,s:-1,k:'ht',x:'⏸️ หมดครึ่งแรก '+sc[0]+'-'+sc[1]});
-    for(let s=0;s<2;s++){
-      const act=on[s].filter(id=>!out.has(id));if(!act.length)continue;
-      const lam=xg[s]*mult[s]/90;
-      if(rnd()<lam){
-        const shooter=wpick(act.filter(id=>posOf(s,id)!=='GK'),id=>({FW:6,MF:3,DF:1})[posOf(s,id)]*Math.pow(S.pl[id].o/60,2));
-        if(shooter==null)continue;
-        let as=null;if(rnd()<0.7){const c=act.filter(id=>id!==shooter&&posOf(s,id)!=='GK');if(c.length)as=wpick(c,id=>({MF:5,FW:3,DF:2})[posOf(s,id)])}
-        sc[s]++;sh[s]++;ot[s]++;scorers.push(shooter);if(as)assists.push(as);
-        ev.push({m,s,k:'g',x:fill(pick(TXT.g),{p:fullN(S.pl[shooter]),t:tn(s)})+(as?' (แอสซิสต์ '+fullN(S.pl[as])+')':'')+' — '+sc[0]+'-'+sc[1]});
-      }else if(rnd()<lam*5.5){
-        const c=act.filter(id=>posOf(s,id)!=='GK');if(!c.length)continue;
-        const p=wpick(c,id=>({FW:5,MF:3,DF:1})[posOf(s,id)]);sh[s]++;
-        if(rnd()<0.33){ot[s]++;ev.push({m,s,k:'sv',x:fill(pick(TXT.sv),{p:fullN(S.pl[p]),k:fullN(gkOf(1-s))})})}
-        else ev.push({m,s,k:'c',x:fill(pick(TXT.c),{p:fullN(S.pl[p])})});
-      }
-      if(rnd()<0.021){const p=pick(act);yel[p]=(yel[p]||0)+1;cards[s]++;
-        if(yel[p]>=2){out.add(p);red.push(p);mult[s]*=0.72;mult[1-s]*=1.12;ev.push({m,s,k:'r',x:'🟥 '+fullN(S.pl[p])+' ใบเหลืองใบที่สอง โดนไล่ออก!'})}
-        else ev.push({m,s,k:'y',x:'🟨 '+fullN(S.pl[p])+' ('+(s?TA.sh:TH.sh)+') รับใบเหลือง'})}
-      else if(rnd()<0.0009){const p=pick(act);out.add(p);red.push(p);cards[s]++;mult[s]*=0.72;mult[1-s]*=1.12;ev.push({m,s,k:'r',x:'🟥 ใบแดงตรงๆ! '+fullN(S.pl[p])+' ต้องออกจากสนาม'})}
-      if(rnd()<0.0017){const p=pick(act);if(!inj.includes(p)){inj.push(p);mult[s]*=0.97;ev.push({m,s,k:'i',x:'🚑 '+fullN(S.pl[p])+' บาดเจ็บ ต้องเปลี่ยนตัวออก'})}}
+const fill=(s,o)=>s.replace(/\{(\w)\}/g,(_,k)=>o[k]||'');
+function wpick(list,wf){if(!list.length)return null;let tot=0;const w=list.map(x=>{const v=Math.max(0.01,wf(x));tot+=v;return v});let r=rnd()*tot;for(let i=0;i<list.length;i++){r-=w[i];if(r<=0)return list[i]}return list[list.length-1]}
+function shortN(p){
+  if(!p)return'-';const w=p.n.trim().split(' ');if(w.length===1)return p.n;if(p.cu&&p.n.length<=13)return p.n;
+  if(S&&S.lg==='th'&&p.nat==='THA')return w[0];
+  let i=w.length-1;while(i>0&&/^(van|de|den|der|di|da|dos|von|le|la|el|al|ten|ter)$/i.test(w[i-1]))i--;return w.slice(i).join(' ');
+}
+const nm=id=>S.pl[id]?S.pl[id].n:'-';
+const fitNow=(m,id)=>{const p=S.pl[id];return p?Math.max(25,p.ft-(m.mp[id]||0)*0.17):0};
+function newLiveMatch(h,a){
+  const TH=S.teams[h],TA=S.teams[a];
+  const m={h,a,sc:[0,0],ev:[],on:[TH.xi.slice(),TA.xi.slice()],sl:[slotsOf(TH.form),slotsOf(TA.form)],bn:[TH.bn.slice(),TA.bn.slice()],sb:[0,0],sh:[0,0],ot:[0,0],cd:[0,0],yel:{},out:[],mp:{},pl:[...TH.xi,...TA.xi].filter(Boolean),gs:[],as:[],inj:[],red:[],mid:[0,0],tc:[TH.tac,TA.tac]};
+  m.ev.push({m:0,s:-1,k:'ko',x:'🟢 เริ่มเกม! '+TH.name+' พบ '+TA.name});
+  return m;
+}
+function powerLive(m,s){
+  const T=S.teams[s?m.a:m.h];const sl=m.sl[s];let gk=25;const df=[],mf=[],fw=[];
+  sl.forEach((pos,i)=>{const id=m.on[s][i];let e=25;
+    if(id&&!m.out.includes(id)){const p=S.pl[id];e=p.o*(0.72+0.28*fitNow(m,id)/100);if(p.pos!==pos)e-=(pos==='GK'||p.pos==='GK')?25:7}
+    if(pos==='GK')gk=e;else if(pos==='DF')df.push(e);else if(pos==='MF')mf.push(e);else fw.push(e)});
+  const av=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:35;
+  const d=df.length,mm=mf.length,w=fw.length,t=T.tac,home=s===0;
+  return{atk:av(fw)*0.42+av(mf)*0.38+av(df)*0.2+(w-2)*1.3+(mm-4)*0.4+[-3.5,0,3.5][t]+(home?1.5:0),
+         def:av(df)*0.42+av(mf)*0.23+gk*0.35+(d-4)*1.3+[3.5,0,-3.5][t]+(home?1:0),mid:av(mf)+(mm-4)*1.5};
+}
+const active=(m,s)=>m.on[s].filter(id=>id&&!m.out.includes(id));
+const posIn=(m,s,id)=>{const i=m.on[s].indexOf(id);return m.sl[s][i]||S.pl[id].pos};
+function doSub(m,s,off,on,why){
+  const i=m.on[s].indexOf(off);if(i<0)return false;const bi=m.bn[s].indexOf(on);if(bi<0)return false;
+  m.on[s][i]=on;m.bn[s].splice(bi,1);m.sb[s]++;if(!m.pl.includes(on))m.pl.push(on);
+  m.ev.push({m:S.lv.min,s,k:'sub',x:'🔁 '+nm(on)+' ลงสนามแทน '+nm(off)+(why?' ('+why+')':'')});return true;
+}
+function bestBench(m,s,pos){
+  const c=m.bn[s].map(id=>S.pl[id]).filter(avail);if(!c.length)return null;
+  const same=c.filter(p=>p.pos===pos);const pool=same.length?same:c.filter(p=>(p.pos==='GK')===(pos==='GK'));
+  return (pool.length?pool:c).sort((a,b)=>b.o-a.o)[0].id;
+}
+function stepMinute(m,min){
+  const P=[powerLive(m,0),powerLive(m,1)];
+  m.mid[0]+=P[0].mid;m.mid[1]+=P[1].mid;
+  for(let s=0;s<2;s++){const act=active(m,s);act.forEach(id=>m.mp[id]=(m.mp[id]||0)+1)}
+  for(let s=0;s<2;s++){
+    const T=S.teams[s?m.a:m.h];const act=active(m,s);if(!act.length)continue;
+    const xg=clamp(1.2*Math.exp((P[s].atk-P[1-s].def)/20),0.12,4);const lam=xg/90;
+    const shooters=act.filter(id=>posIn(m,s,id)!=='GK');
+    if(rnd()<lam){
+      const sh=wpick(shooters,id=>({FW:6,MF:3,DF:1})[posIn(m,s,id)]*Math.pow(S.pl[id].o/60,2));if(sh==null)continue;
+      let as=null;if(rnd()<0.7){as=wpick(shooters.filter(id=>id!==sh),id=>({MF:5,FW:3,DF:2})[posIn(m,s,id)])}
+      m.sc[s]++;m.sh[s]++;m.ot[s]++;m.gs.push(sh);if(as)m.as.push(as);
+      m.ev.push({m:min,s,k:'g',x:fill(pick(TXT.g),{p:nm(sh),t:T.name})+(as?' (แอสซิสต์ '+nm(as)+')':'')+' — '+m.sc[0]+'-'+m.sc[1]});
+    }else if(rnd()<lam*5.5){
+      const p=wpick(shooters,id=>({FW:5,MF:3,DF:1})[posIn(m,s,id)]);if(p==null)continue;m.sh[s]++;
+      const gk=m.on[1-s][0];
+      if(rnd()<0.33){m.ot[s]++;m.ev.push({m:min,s,k:'sv',x:fill(pick(TXT.sv),{p:nm(p),k:nm(gk)})})}
+      else m.ev.push({m:min,s,k:'c',x:fill(pick(TXT.c),{p:nm(p)})});
     }
+    if(rnd()<0.021){const p=pick(act);m.yel[p]=(m.yel[p]||0)+1;m.cd[s]++;
+      if(m.yel[p]>=2){m.out.push(p);m.red.push(p);m.ev.push({m:min,s,k:'r',x:'🟥 '+nm(p)+' ('+T.sh+') ใบเหลืองใบที่สอง โดนไล่ออก!'})}
+      else m.ev.push({m:min,s,k:'y',x:'🟨 '+nm(p)+' ('+T.sh+') รับใบเหลือง'})}
+    else if(rnd()<0.0009){const p=pick(act);m.out.push(p);m.red.push(p);m.cd[s]++;m.ev.push({m:min,s,k:'r',x:'🟥 ใบแดงตรงๆ! '+nm(p)+' ('+T.sh+') ต้องออกจากสนาม'})}
+    if(rnd()<0.0017){const p=pick(active(m,s));if(p&&!m.inj.includes(p)){m.inj.push(p);
+      m.ev.push({m:min,s,k:'i',x:'🚑 '+nm(p)+' ('+T.sh+') บาดเจ็บ'});
+      const rep=m.sb[s]<MAX_SUBS?bestBench(m,s,posIn(m,s,p)):null;
+      if(rep)doSub(m,s,p,rep,'บาดเจ็บ');else m.out.push(p)}}
   }
-  ev.push({m:93,s:-1,k:'ft',x:'🏁 จบเกม '+TH.name+' '+sc[0]+'-'+sc[1]+' '+TA.name});
-  const pm=P[0].mid*P[0].mid,qm=P[1].mid*P[1].mid;const ps=clamp(Math.round(pm/(pm+qm)*100+(rnd()*6-3)+2),28,72);
-  return{h,a,hg:sc[0],ag:sc[1],ev,ps:[ps,100-ps],sh,ot,cd:cards,xi:[TH.xi.slice(),TA.xi.slice()],scorers,assists,inj,red};
+}
+function humanCtl(T){const h=T.owner&&S.humans[T.owner];return !!(h&&h.on)}
+function aiMatch(m,min){
+  for(let s=0;s<2;s++){
+    const T=S.teams[s?m.a:m.h];if(humanCtl(T))continue;
+    const diff=m.sc[s]-m.sc[1-s];
+    if(min===70&&diff<0&&T.tac!==2){T.tac=2;m.ev.push({m:min,s,k:'tac',x:'📋 '+T.name+' เปลี่ยนเป็นเกมบุก'})}
+    if(min===82&&diff>0&&T.tac!==0){T.tac=0;m.ev.push({m:min,s,k:'tac',x:'📋 '+T.name+' ถอยมาตั้งรับ'})}
+    if(min>=58&&m.sb[s]<4&&rnd()<0.13){
+      const c=active(m,s).filter(id=>posIn(m,s,id)!=='GK').sort((a,b)=>fitNow(m,a)-fitNow(m,b));
+      const off=c[0];if(off&&fitNow(m,off)<74){const on=bestBench(m,s,posIn(m,s,off));if(on&&S.pl[on].pos!=='GK')doSub(m,s,off,on,'')}
+    }
+    m.tc[s]=T.tac;
+  }
 }
 
 /* ---------------- ตาราง ---------------- */
-function table(excludeRound){
+function table(){
   const t=S.teams.map(T=>({id:T.id,p:0,w:0,d:0,l:0,gf:0,ga:0,pts:0,fm:[]}));
-  S.res.forEach((rd,ri_)=>{if(!rd||ri_===excludeRound)return;rd.forEach(m=>{const A=t[m.h],B=t[m.a];A.p++;B.p++;A.gf+=m.hg;A.ga+=m.ag;B.gf+=m.ag;B.ga+=m.hg;
+  S.res.forEach(rd=>{if(!rd)return;rd.forEach(m=>{const A=t[m.h],B=t[m.a];A.p++;B.p++;A.gf+=m.hg;A.ga+=m.ag;B.gf+=m.ag;B.ga+=m.hg;
     if(m.hg>m.ag){A.w++;B.l++;A.pts+=3;A.fm.push('W');B.fm.push('L')}else if(m.hg<m.ag){B.w++;A.l++;B.pts+=3;A.fm.push('L');B.fm.push('W')}else{A.d++;B.d++;A.pts++;B.pts++;A.fm.push('D');B.fm.push('D')}})});
   return t.sort((x,y)=>y.pts-x.pts||(y.gf-y.ga)-(x.gf-x.ga)||y.gf-x.gf||S.teams[x.id].name.localeCompare(S.teams[y.id].name,'th'));
 }
 
 /* ---------------- หลังจบนัด ---------------- */
-function applyRound(results){
-  const played=new Set();
-  results.forEach(r=>{r.xi.forEach(x=>x.forEach(id=>played.add(id)))});
+function applyRound(ms){
+  const played=new Map();ms.forEach(m=>m.pl.forEach(id=>played.set(id,m.mp[id]||0)));
+  const c=L();
   Object.values(S.pl).forEach(p=>{
-    if(p.ij>0&&!played.has(p.id))p.ij--;
-    if(p.sp>0&&!played.has(p.id))p.sp--;
+    const pl=played.has(p.id);
+    if(p.ij>0&&!pl)p.ij--;if(p.sp>0&&!pl)p.sp--;
     p.ft=Math.min(100,p.ft+14);
-    if(played.has(p.id)){p.ap++;p.ft=Math.max(35,p.ft-ri(16,22))}
-    let ch=0;const pl=played.has(p.id);
-    if(p.ag<=21){if(p.o<p.pt&&rnd()<(pl?0.16:0.08))ch=1}
-    else if(p.ag<=25){if(p.o<p.pt&&rnd()<(pl?0.09:0.04))ch=1}
-    else if(p.ag>=33){if(rnd()<0.06)ch=-1}
-    else if(p.ag>=30){if(rnd()<0.03)ch=-1}
+    if(pl){const mins=played.get(p.id);if(mins>=1)p.ap++;p.ft=Math.max(35,Math.round(p.ft-mins*0.21-rnd()*3))}
+    let ch=0;
+    if(p.ag<=21){if(p.o<p.pt&&rnd()<(pl?0.16:0.07))ch=1}else if(p.ag<=25){if(p.o<p.pt&&rnd()<(pl?0.09:0.03))ch=1}
+    else if(p.ag>=33){if(rnd()<0.06)ch=-1}else if(p.ag>=30){if(rnd()<0.03)ch=-1}
     p.o=clamp(p.o+ch,35,94);p.v=valueOf(p);
   });
-  results.forEach(r=>{
-    r.scorers.forEach(id=>{if(S.pl[id])S.pl[id].g++});r.assists.forEach(id=>{if(S.pl[id])S.pl[id].as++});
-    r.inj.forEach(id=>{const p=S.pl[id];if(p){p.ij=ri(1,4);if(S.teams[p.t]&&S.teams[p.t].owner)addNews('🚑 '+p.n+' ('+S.teams[p.t].sh+') บาดเจ็บ พัก '+p.ij+' นัด')}});
-    r.red.forEach(id=>{const p=S.pl[id];if(p)p.sp=1});
-    const H=S.teams[r.h],A=S.teams[r.a];
-    H.budget=r1(H.budget+0.6+(H.rep-55)*0.07);
+  ms.forEach(m=>{
+    m.gs.forEach(id=>{if(S.pl[id])S.pl[id].g++});m.as.forEach(id=>{if(S.pl[id])S.pl[id].as++});
+    m.inj.forEach(id=>{const p=S.pl[id];if(p){p.ij=ri(1,4);const T=S.teams[p.t];if(T&&T.owner)addNews('🚑 '+p.n+' ('+T.sh+') บาดเจ็บ พัก '+p.ij+' นัด')}});
+    m.red.forEach(id=>{const p=S.pl[id];if(p)p.sp=1});
+    const H=S.teams[m.h];H.budget=r1(H.budget+c.gate(H.rep));
   });
-  S.teams.forEach(T=>{const sq=squad(T.id);T.budget=r1(T.budget+0.5-sq.reduce((s,p)=>s+p.v,0)*0.005)});
+  S.teams.forEach(T=>{T.budget=r1(T.budget+c.tv-squad(T.id).reduce((s,p)=>s+p.v,0)*c.wage)});
   aiMarket();
 }
 function aiMarket(){
   S.teams.forEach(T=>{
     if(T.owner)return;const sq=squad(T.id);
-    if(sq.length>26){const w=sq.sort((a,b)=>a.o-b.o)[0];w.t=-1;T.budget=r1(T.budget+w.v*0.7);return}
-    if(rnd()>0.17||sq.length>=28)return;
+    if(sq.length>27){const w=sq.sort((a,b)=>a.o-b.o)[0];w.t=-1;T.budget=r1(T.budget+w.v*0.7);return}
+    if(rnd()>0.15||sq.length>=28)return;
     fixXI(T);const sl=slotsOf(T.form);let wi=-1,wo=99;
-    T.xi.forEach((id,i)=>{const p=S.pl[id];if(p&&i>0&&p.o<wo){wo=p.o;wi=i}});
-    if(wi<0)return;const pos=sl[wi];
+    T.xi.forEach((id,i)=>{const p=S.pl[id];if(p&&i>0&&p.o<wo){wo=p.o;wi=i}});if(wi<0)return;const pos=sl[wi];
     const c=Object.values(S.pl).filter(p=>p.t===-1&&p.pos===pos&&p.o>wo+2&&p.v<=T.budget*0.5).sort((a,b)=>b.o-a.o)[0];
-    if(c){c.t=T.id;T.budget=r1(T.budget-c.v);if(c.o>=66)addNews('✍️ '+T.name+' คว้าตัว '+c.n+' ('+c.pos+' '+c.o+') '+money(c.v)+' ล้าน')}
+    if(c){c.t=T.id;T.budget=r1(T.budget-c.v);addNews('✍️ '+T.name+' คว้าตัว '+c.n+' ('+c.pos+' '+c.o+') '+money(c.v))}
   });
 }
 function seasonEnd(){
-  const tb=table();
-  tb.forEach((row,i)=>{const T=S.teams[row.id];T.budget=r1(T.budget+Math.max(3,30-i*1.8))});
+  const tb=table();const c=L();
+  tb.forEach((row,i)=>{const T=S.teams[row.id];T.budget=r1(T.budget+c.prize(i))});
   const top=Object.values(S.pl).filter(p=>p.g>0).sort((a,b)=>b.g-a.g)[0];
   S.champs.push({s:S.season,t:tb[0].id});
   S.final={tb:tb.map(r=>r.id),top:top?{n:top.n,g:top.g,t:top.t}:null};
-  S.phase='end';S.live=null;
-  addNews('🏆 '+S.teams[tb[0].id].name+' คว้าแชมป์ไทยลีก '+seasonLabel(S.season)+'!');
+  S.phase='end';
+  addNews('🏆 '+S.teams[tb[0].id].name+' คว้าแชมป์'+c.name+' '+seasonLabel(S.season)+'!');
 }
 function newSeason(){
   S.season++;S.round=0;S.res=[];S.last=null;S.final=null;
   Object.values(S.pl).forEach(p=>{
     p.ag++;p.g=0;p.as=0;p.ap=0;p.ft=100;p.ij=0;p.sp=0;if(p.ag>=29)p.pt=p.o;
-    if(p.ag>=36||(p.ag>=34&&rnd()<0.4)){
+    if(p.ag>=37||(p.ag>=35&&rnd()<0.4)){
       const T=S.teams[p.t];delete S.pl[p.id];
-      if(T){if(p.o>=68)addNews('👋 '+p.n+' ('+T.sh+') ประกาศแขวนสตั๊ด');
-        if(squad(T.id).length<22){const y=mkPlayer(T.id,p.pos,T.rep-12+gauss()*4,ri(17,19),0);y.pt=clamp(y.o+ri(10,20),y.o,92);y.v=valueOf(y)}}
+      if(T){if(p.o>=(S.lg==='epl'?78:68))addNews('👋 '+p.n+' ('+T.sh+') ประกาศแขวนสตั๊ด');
+        if(squad(T.id).length<22){const y=genFree(T.id);y.pos=p.pos;y.ag=ri(17,19);y.o=clamp(T.rep-12+Math.round(gauss()*4),40,85);y.pt=clamp(y.o+ri(10,20),y.o,92);y.v=valueOf(y)}}
     }else p.v=valueOf(p);
   });
   const fr=Object.values(S.pl).filter(p=>p.t===-1);fr.sort((a,b)=>a.o-b.o).slice(0,Math.max(0,fr.length-12)).forEach(p=>delete S.pl[p.id]);
   while(Object.values(S.pl).filter(p=>p.t===-1).length<26)genFree();
-  S.teams.forEach(T=>{if(!T.owner)autoXI(T);else fixXI(T)});
-  S.fx=makeFixtures(16);S.phase='pre';
+  S.teams.forEach(T=>{if(!T.owner)autoXI(T);else{fixXI(T);fixBench(T)}});
+  S.fx=makeFixtures(S.teams.length);S.phase='pre';
   Object.values(S.humans).forEach(h=>h.ready=false);
   addNews('📅 เปิดฤดูกาลใหม่ '+seasonLabel(S.season));
 }
 
-/* ---------------- เล่นแต่ละนัด ---------------- */
-let liveTimer=null,playTimer=null;
-function playRound(){
+/* ---------------- วงจรแข่งสด (โฮสต์) ---------------- */
+let tickT=null,playTimer=null,endT=null;
+function startRound(){
   if(!S||S.phase!=='pre')return;clearTimeout(playTimer);
-  const r=S.round;
-  S.teams.forEach(T=>{if(!T.owner){if(rnd()<0.15)T.form=pick(['4-4-2','4-3-3','4-5-1','3-5-2','4-4-2']);T.tac=1;autoXI(T)}else fixXI(T)});
-  const results=S.fx[r].map(([h,a])=>simMatch(h,a));
-  S.res[r]=results.map(m=>({h:m.h,a:m.a,hg:m.hg,ag:m.ag}));
-  S.last={r,m:results.map(m=>({h:m.h,a:m.a,hg:m.hg,ag:m.ag,ev:m.ev,ps:m.ps,sh:m.sh,ot:m.ot,cd:m.cd}))};
-  applyRound(results);
+  S.teams.forEach(T=>{
+    if(!T.owner){if(rnd()<0.15)T.form=bestForm(T);T.tac=1;autoXI(T)}
+    else{fixXI(T);fixBench(T)}
+  });
+  S.lv={id:Math.random().toString(36).slice(2,8),r:S.round,min:0,st:'run',pu:null,htu:0,tu:{},ms:S.fx[S.round].map(([h,a])=>newLiveMatch(h,a))};
   Object.values(S.humans).forEach(h=>h.ready=false);
-  S.phase='live';S.live={id:Math.random().toString(36).slice(2,8),r,at:Date.now(),dur:LIVE_MS};
-  bump();
-  clearTimeout(liveTimer);liveTimer=setTimeout(endLive,LIVE_MS+2500);
+  S.phase='live';bump();runTicker();
 }
-function endLive(){
-  if(!S||S.phase!=='live')return;clearTimeout(liveTimer);
-  S.round++;S.live=null;
-  if(S.round>=ROUNDS)seasonEnd();else S.phase='pre';
+function runTicker(){clearInterval(tickT);tickT=setInterval(tick,SPEED[S.spd||1].t)}
+function tick(force){
+  const V=S&&S.lv;if(!V||S.phase!=='live'){clearInterval(tickT);return}
+  const now=Date.now();
+  if(!force){
+    if(V.st==='pause'){if(now<V.pu.until)return;V.st='run';V.pu=null;liveSend([]);return}
+    if(V.st==='ht'){if(now<V.htu)return;V.st='run';liveSend([]);return}
+  }
+  if(V.st==='ft')return;
+  V.min++;const d=[];
+  V.ms.forEach((m,i)=>{const n0=m.ev.length;
+    if(V.min===46)m.ev.push({m:45,s:-1,k:'ht',x:'⏸️ หมดครึ่งแรก '+m.sc[0]+'-'+m.sc[1]});
+    stepMinute(m,V.min);aiMatch(m,V.min);
+    if(V.min>=93)m.ev.push({m:93,s:-1,k:'ft',x:'🏁 จบเกม '+S.teams[m.h].name+' '+m.sc[0]+'-'+m.sc[1]+' '+S.teams[m.a].name});
+    d.push(i,n0)});
+  if(V.min===45&&!force){V.st='ht';V.htu=now+SPEED[S.spd||1].ht}
+  if(V.min>=93){finishRound();return}
+  if(!force)liveSend(d);
+}
+function finishRound(){
+  const V=S.lv;clearInterval(tickT);V.st='ft';V.min=93;
+  const r=V.r;
+  S.res[r]=V.ms.map(m=>({h:m.h,a:m.a,hg:m.sc[0],ag:m.sc[1]}));
+  S.last={r,m:V.ms.map(m=>{const pm=m.mid[0]*m.mid[0],qm=m.mid[1]*m.mid[1];const ps=clamp(Math.round(pm/(pm+qm||1)*100+(rnd()*6-3)),28,72);
+    return{h:m.h,a:m.a,hg:m.sc[0],ag:m.sc[1],ev:m.ev.filter(e=>['g','r','i','y','sub'].includes(e.k)),ps:[ps,100-ps],sh:m.sh,ot:m.ot,cd:m.cd}})};
+  applyRound(V.ms);
   bump();
+  clearTimeout(endT);endT=setTimeout(endLive,5000);
+}
+function skipAll(){if(!S||S.phase!=='live'||!S.lv)return;clearInterval(tickT);while(S.lv&&S.lv.st!=='ft')tick(true);}
+function endLive(){
+  if(!S||S.phase!=='live')return;clearTimeout(endT);clearInterval(tickT);
+  if(S.lv&&S.lv.st!=='ft'){skipAll()}
+  S.lv=null;S.round++;
+  if(S.round>=nR())seasonEnd();else S.phase='pre';
+  bump();
+}
+function liveSend(d){
+  const V=S.lv;if(!V)return;
+  const pk={t:'l',id:V.id,min:V.min,st:V.st,pu:V.pu,htu:V.htu,tu:V.tu,now:Date.now(),d:[]};
+  for(let k=0;k<d.length;k+=2){const i=d[k],n0=d[k+1],m=V.ms[i];pk.d.push({i,n:m.ev.length,e:m.ev.slice(n0),sc:m.sc,sh:m.sh,ot:m.ot,cd:m.cd,on:m.on,bn:m.bn,sb:m.sb,out:m.out,inj:m.inj,mp:m.mp,tc:m.tc})}
+  if(isHost){for(const c of conns.keys())if(c.open)try{c.send(pk)}catch(e){}}
+  render();
 }
 function checkReady(){
   if(!S||S.phase!=='pre')return;
   const hs=Object.values(S.humans).filter(h=>h.team!=null&&h.on);
-  if(hs.length&&hs.every(h=>h.ready)){clearTimeout(playTimer);playTimer=setTimeout(playRound,1200)}
-  else clearTimeout(playTimer);
+  if(hs.length&&hs.every(h=>h.ready)){clearTimeout(playTimer);playTimer=setTimeout(startRound,1200)}else clearTimeout(playTimer);
 }
 
-/* ---------------- คำสั่งจากผู้เล่น (รันบนโฮสต์เท่านั้น) ---------------- */
+/* ---------------- คำสั่งจากผู้เล่น (รันบนโฮสต์) ---------------- */
 function teamOf(u){const h=S.humans[u];return h&&h.team!=null?S.teams[h.team]:null}
+function myLive(T){if(!S.lv||!T)return null;const i=S.lv.ms.findIndex(m=>m.h===T.id||m.a===T.id);if(i<0)return null;const m=S.lv.ms[i];return{m,i,s:m.h===T.id?0:1}}
 function act(u,m){
   if(!S||!m||typeof m!=='object')return;
   const isH=u===S.host,h=S.humans[u],T=teamOf(u);
   switch(m.type){
-    case 'hello':{const nm=String(m.name||'ผู้จัดการ').trim().slice(0,16)||'ผู้จัดการ';
-      if(!h){if(Object.keys(S.humans).length>=24)return'ห้องเต็มแล้ว';S.humans[u]={name:nm,team:null,ready:false,on:true}}
-      else{h.name=nm;h.on=true}break}
-    case 'pick':{if(!h)return;const t=+m.team;const X=S.teams[t];if(!X)return;
-      if(S.phase==='live')return'รอให้จบนัดนี้ก่อน';
-      if(X.owner&&X.owner!==u)return'ทีมนี้มีคนคุมแล้ว';
-      if(T&&T!==X)T.owner=null;X.owner=u;h.team=t;h.ready=false;
+    case 'hello':{const n=String(m.name||'ผู้จัดการ').trim().slice(0,16)||'ผู้จัดการ';
+      if(!h){if(Object.keys(S.humans).length>=24)return'ห้องเต็มแล้ว';S.humans[u]={name:n,team:null,ready:false,on:true}}else{h.name=n;h.on=true}break}
+    case 'league':{if(!isH||S.phase!=='lobby'||!LG[m.lg])return;const keep=S.humans,code=S.code,solo=S.solo,spd=S.spd;newGame(code,solo,m.lg,keep);S.spd=spd;break}
+    case 'speed':{if(!isH)return;S.spd=clamp(+m.v|0,0,2);if(S.phase==='live')runTicker();break}
+    case 'pick':{if(!h)return;const X=S.teams[+m.team];if(!X)return;if(S.phase==='live')return'รอให้จบนัดนี้ก่อน';
+      if(X.owner&&X.owner!==u)return'ทีมนี้มีคนคุมแล้ว';if(T&&T!==X)T.owner=null;X.owner=u;h.team=X.id;h.ready=false;
       if(S.phase!=='lobby')addNews('👔 '+h.name+' เข้ารับตำแหน่งผู้จัดการ '+X.name);break}
     case 'unpick':{if(T){T.owner=null;h.team=null;h.ready=false}break}
-    case 'lineup':{if(!T)return;if(m.form&&FORMS[m.form])T.form=m.form;if(m.tac===0||m.tac===1||m.tac===2)T.tac=m.tac;
-      if(Array.isArray(m.xi)){const sl=slotsOf(T.form);const seen=new Set();
-        T.xi=sl.map((_,i)=>{const id=m.xi[i];const p=S.pl[id];if(p&&p.t===T.id&&!seen.has(id)){seen.add(id);return id}return null})}
+    case 'lineup':{if(!T||S.phase==='live')return;if(m.form&&FORMS[m.form])T.form=m.form;if([0,1,2].includes(m.tac))T.tac=m.tac;
+      const own=id=>{const p=S.pl[id];return p&&p.t===T.id};const seen=new Set();
+      if(Array.isArray(m.xi))T.xi=slotsOf(T.form).map((_,i)=>{const id=m.xi[i];if(own(id)&&!seen.has(id)){seen.add(id);return id}return null});
+      if(Array.isArray(m.bn))T.bn=m.bn.filter(id=>own(id)&&!seen.has(id)&&(seen.add(id),true)).slice(0,BENCH);
       break}
-    case 'auto':{if(!T)return;autoXI(T);break}
+    case 'auto':{if(!T||S.phase==='live')return;autoXI(T);break}
     case 'ready':{if(!T||S.phase!=='pre')return;h.ready=!!m.v;break}
-    case 'buy':{if(!T)return;const p=S.pl[m.pid];if(!p)return'ไม่พบนักเตะ';if(p.t===T.id)return;
+    case 'buy':{if(!T)return;if(S.phase==='live')return'ซื้อขายได้หลังจบนัด';const p=S.pl[m.pid];if(!p)return'ไม่พบนักเตะ';if(p.t===T.id)return;
       const seller=p.t>=0?S.teams[p.t]:null;if(seller&&seller.owner)return'ซื้อจากทีมของเพื่อนไม่ได้';
       if(seller&&squad(seller.id).length<=18)return seller.name+' ไม่ยอมปล่อยตัว (ผู้เล่นไม่พอ)';
       if(squad(T.id).length>=MAX_SQUAD)return'ทีมเต็ม '+MAX_SQUAD+' คนแล้ว';
       const price=priceOf(p);if(T.budget<price)return'งบไม่พอ';
-      T.budget=r1(T.budget-price);if(seller){seller.budget=r1(seller.budget+price);seller.xi=seller.xi.map(x=>x===p.id?null:x);fixXI(seller)}
-      p.t=T.id;addNews('✍️ '+T.name+' ซื้อ '+p.n+' ('+p.pos+' '+p.o+') '+money(price)+' ล้าน');break}
-    case 'sell':{if(!T)return;const p=S.pl[m.pid];if(!p||p.t!==T.id)return;
+      T.budget=r1(T.budget-price);if(seller){seller.budget=r1(seller.budget+price);seller.xi=seller.xi.map(x=>x===p.id?null:x);seller.bn=seller.bn.filter(x=>x!==p.id);fixXI(seller);fixBench(seller)}
+      p.t=T.id;addNews('✍️ '+T.name+' ซื้อ '+p.n+' ('+p.pos+' '+p.o+') '+money(price));break}
+    case 'sell':{if(!T)return;if(S.phase==='live')return'ซื้อขายได้หลังจบนัด';const p=S.pl[m.pid];if(!p||p.t!==T.id)return;
       if(squad(T.id).length<=MIN_SQUAD)return'ต้องมีนักเตะอย่างน้อย '+MIN_SQUAD+' คน';
-      const g=r1(p.v*0.75);T.budget=r1(T.budget+g);p.t=-1;T.xi=T.xi.map(x=>x===p.id?null:x);
-      addNews('💸 '+T.name+' ขาย '+p.n+' ได้ '+money(g)+' ล้าน');break}
+      const g=r1(p.v*0.75);T.budget=r1(T.budget+g);p.t=-1;T.xi=T.xi.map(x=>x===p.id?null:x);T.bn=T.bn.filter(x=>x!==p.id);
+      addNews('💸 '+T.name+' ขาย '+p.n+' ได้ '+money(g));break}
     case 'rename':{const p=S.pl[m.pid];if(!p)return;if(!(isH||(T&&p.t===T.id)))return'เปลี่ยนชื่อได้เฉพาะนักเตะทีมตัวเอง';
       const n=String(m.n||'').replace(/\s+/g,' ').trim().slice(0,28);if(!n)return;p.n=n;p.cu=1;break}
     case 'bulk':{if(!T)return;const r=bulkRename(T,String(m.txt||''));bump();return r.msg}
-    case 'start':{if(!isH||S.phase!=='lobby')return;S.phase='pre';addNews('📣 ฤดูกาล '+seasonLabel(S.season)+' เริ่มแล้ว! ผู้จัดการ '+Object.values(S.humans).filter(x=>x.team!=null).map(x=>x.name).join(', '));break}
-    case 'play':{if(!isH)return;playRound();return}
-    case 'skiplive':{if(!isH)return;endLive();return}
+    case 'start':{if(!isH||S.phase!=='lobby')return;S.phase='pre';addNews('📣 ฤดูกาล '+seasonLabel(S.season)+' เริ่มแล้ว! ผู้จัดการ: '+Object.values(S.humans).filter(x=>x.team!=null).map(x=>x.name).join(', '));break}
+    case 'play':{if(!isH)return;startRound();return}
+    case 'skiplive':{if(!isH)return;skipAll();return}
     case 'newseason':{if(!isH||S.phase!=='end')return;newSeason();break}
+    /* ---- ระหว่างแข่ง ---- */
+    case 'ltac':{const L_=myLive(T);if(!L_||S.lv.st==='ft')return;const v=+m.v;if(![0,1,2].includes(v)||T.tac===v)return;T.tac=v;L_.m.tc[L_.s]=v;
+      L_.m.ev.push({m:S.lv.min,s:L_.s,k:'tac',x:'📋 '+T.name+' เปลี่ยนแท็กติกเป็น “'+TAC[v]+'”'});break}
+    case 'lform':{const L_=myLive(T);if(!L_||S.lv.st==='ft'||!FORMS[m.f]||T.form===m.f)return;T.form=m.f;
+      L_.m.sl[L_.s]=slotsOf(m.f);L_.m.on[L_.s]=reslot(L_.m.on[L_.s],m.f,L_.m.out);
+      L_.m.ev.push({m:S.lv.min,s:L_.s,k:'tac',x:'📋 '+T.name+' เปลี่ยนแผนเป็น '+m.f});break}
+    case 'sub':{const L_=myLive(T);if(!L_)return;const M=L_.m,s=L_.s;if(S.lv.st==='ft')return'จบเกมแล้ว';
+      if(M.sb[s]>=MAX_SUBS)return'เปลี่ยนตัวครบ '+MAX_SUBS+' คนแล้ว';
+      if(!M.on[s].includes(m.off)||M.out.includes(m.off))return'ผู้เล่นคนนี้ไม่ได้อยู่ในสนาม';
+      if(!M.bn[s].includes(m.on))return'ไม่มีผู้เล่นคนนี้บนม้านั่งสำรอง';
+      doSub(M,s,m.off,m.on,'');break}
+    case 'pause':{if(!S.lv||!T||S.lv.st!=='run')return;const n=S.lv.tu[u]||0;if(n>=TIMEOUTS)return'ใช้สิทธิ์ขอเวลานอกครบแล้ว';
+      S.lv.tu[u]=n+1;S.lv.st='pause';S.lv.pu={by:h.name,u,until:Date.now()+PAUSE_MS};
+      const L_=myLive(T);if(L_)L_.m.ev.push({m:S.lv.min,s:L_.s,k:'tac',x:'⏸️ '+h.name+' ('+T.sh+') ขอเวลานอก'});break}
+    case 'resume':{if(!S.lv||S.lv.st!=='pause')return;if(!(isH||S.lv.pu.u===u))return'เฉพาะคนที่ขอเวลานอกหรือเจ้าของห้อง';S.lv.pu.until=Date.now();break}
     default:return;
   }
   bump();checkReady();
 }
 function priceOf(p){return p.t>=0?r1(p.v*1.3):r1(p.v)}
 function bulkRename(T,txt){
-  const map={gk:'GK',df:'DF',mf:'MF',fw:'FW','ผู้รักษาประตู':'GK','ประตู':'GK','กองหลัง':'DF','กองกลาง':'MF','กองหน้า':'FW'};
-  const order={GK:0,DF:1,MF:2,FW:3};
+  const map={gk:'GK',df:'DF',mf:'MF',fw:'FW','ผู้รักษาประตู':'GK','ประตู':'GK','กองหลัง':'DF','กองกลาง':'MF','กองหน้า':'FW'};const order={GK:0,DF:1,MF:2,FW:3};
   const sq=squad(T.id).sort((a,b)=>order[a.pos]-order[b.pos]||b.o-a.o);const used=new Set();let n=0,skip=0;
   txt.split(/\r?\n/).map(s=>s.trim()).filter(Boolean).forEach(line=>{
-    let pos=null,name=line.replace(/^\d+[\s.)\-]*/,'');
-    const mm=name.match(/^(GK|DF|MF|FW|ผู้รักษาประตู|ประตู|กองหลัง|กองกลาง|กองหน้า)[\s:.\-]+/i);
+    let pos=null,name=line.replace(/^\d+[\s.)\-]*/,'');const mm=name.match(/^(GK|DF|MF|FW|ผู้รักษาประตู|ประตู|กองหลัง|กองกลาง|กองหน้า)[\s:.\-]+/i);
     if(mm){pos=map[mm[1].toLowerCase()]||map[mm[1]];name=name.slice(mm[0].length)}
     name=name.replace(/\s+/g,' ').trim().slice(0,28);if(!name){skip++;return}
-    const p=sq.find(q=>!used.has(q.id)&&(!pos||q.pos===pos));
-    if(!p){skip++;return}used.add(p.id);p.n=name;p.cu=1;n++;
-  });
+    const p=sq.find(q=>!used.has(q.id)&&(!pos||q.pos===pos));if(!p){skip++;return}used.add(p.id);p.n=name;p.cu=1;n++});
   return{msg:'เปลี่ยนชื่อแล้ว '+n+' คน'+(skip?' (ข้าม '+skip+' บรรทัด)':'')};
 }
 
 /* ==========================================================
    NETWORK
    ========================================================== */
-let isHost=false,peer=null,conn=null,netOk=false,clockOff=0,retryT=null,leaving=false;
+let isHost=false,peer=null,conn=null,netOk=false,clockOff=0,retryT=null,leaving=false,joinCode=null;
 const conns=new Map();
 function genCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<5;i++)s+=c[ri(0,c.length-1)];return s}
 let bcT=null,saveT=null;
 function bump(){
   if(!S)return;S.seq++;
-  if(isHost){clearTimeout(bcT);bcT=setTimeout(broadcast,40);clearTimeout(saveT);saveT=setTimeout(()=>LS.set('fm_host',JSON.stringify(S)),300)}
+  if(isHost){clearTimeout(bcT);bcT=setTimeout(broadcast,40);clearTimeout(saveT);saveT=setTimeout(saveGame,400)}
   render();
 }
+function saveGame(){if(isHost&&S)LS.set(SAVE_KEY,JSON.stringify(S))}
 function broadcast(){if(!isHost||!S)return;const msg={t:'s',s:S,now:Date.now()};for(const c of conns.keys())if(c.open)try{c.send(msg)}catch(e){}}
 function send(m){
   if(isHost){const err=act(uid,m);if(err)toast(err);return}
   if(conn&&conn.open){try{conn.send({t:'a',u:uid,m})}catch(e){toast('ส่งไม่สำเร็จ')}}else toast('กำลังเชื่อมต่อใหม่...');
 }
-function hostStart(solo){
-  isHost=true;leaving=false;newGame(solo?'SOLO':genCode(),solo);act(uid,{type:'hello',name:myName});
-  if(!solo)openHostPeer(0);UI.tab='home';bump();
-}
+function hostStart(solo,lg){isHost=true;leaving=false;newGame(solo?'SOLO':genCode(),solo,lg||'th');act(uid,{type:'hello',name:myName});if(!solo)openHostPeer(0);UI.tab='home';bump()}
 function resumeHost(){
-  try{S=JSON.parse(LS.get('fm_host','null'))}catch(e){S=null}
-  if(!S){toast('ไม่พบเกมที่บันทึกไว้');return}
+  try{S=JSON.parse(LS.get(SAVE_KEY,'null'))}catch(e){S=null}
+  if(!S||S.v!==VER){S=null;toast('ไม่พบเกมที่บันทึกไว้');return}
   isHost=true;leaving=false;S.host=uid;Object.values(S.humans).forEach(h=>h.on=false);
   if(S.humans[uid])S.humans[uid].on=true;else act(uid,{type:'hello',name:myName});
-  if(S.phase==='live'){S.live.at=Date.now()-S.live.dur;endLive()}
+  if(S.phase==='live'){if(!S.lv)S.phase='pre';else if(S.lv.st==='ft'){S.lv.st='run';endLive()}else{S.lv.st='run';S.lv.pu=null;runTicker()}}
   if(!S.solo)openHostPeer(0);UI.tab='home';bump();
 }
 function openHostPeer(tries){
@@ -541,71 +623,62 @@ function openHostPeer(tries){
   peer.on('open',()=>{netOk=true;render()});
   peer.on('connection',c=>{c.on('data',d=>hostData(c,d));c.on('close',()=>hostClose(c));c.on('error',()=>hostClose(c))});
   peer.on('disconnected',()=>{netOk=false;render();if(!leaving)setTimeout(()=>{try{peer&&!peer.destroyed&&peer.reconnect()}catch(e){}},1500)});
-  peer.on('error',e=>{netOk=false;render();
-    if(leaving)return;
+  peer.on('error',e=>{netOk=false;render();if(leaving)return;
     if(e.type==='unavailable-id'){if(tries<12)setTimeout(()=>openHostPeer(tries+1),4000);else toast('รหัสห้องถูกใช้อยู่ ลองสร้างห้องใหม่')}
-    else if(['network','server-error','socket-error','socket-closed'].includes(e.type)){setTimeout(()=>openHostPeer(tries+1),4000)}
-  });
+    else if(['network','server-error','socket-error','socket-closed'].includes(e.type))setTimeout(()=>openHostPeer(tries+1),4000)});
 }
 function hostData(c,d){
   if(!d||d.t!=='a'||!S)return;const u=String(d.u||'').slice(0,24);if(!u)return;
   if(d.m&&d.m.type==='hello'){for(const [cc,uu] of conns)if(uu===u&&cc!==c){conns.delete(cc);try{cc.close()}catch(e){}}conns.set(c,u)}
   if(conns.get(c)!==u)return;
-  const err=act(u,d.m);
-  if(err)try{c.send({t:'err',m:err})}catch(e){}
+  const err=act(u,d.m);if(err)try{c.send({t:'err',m:err})}catch(e){}
   if(d.m&&d.m.type==='hello')try{c.send({t:'s',s:S,now:Date.now()})}catch(e){}
 }
 function hostClose(c){const u=conns.get(c);conns.delete(c);if(u&&S&&S.humans[u]&&![...conns.values()].includes(u)){S.humans[u].on=false;S.humans[u].ready=false;bump();checkReady()}}
 function joinRoom(code){
   code=String(code||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(code.length<4){toast('ใส่รหัสห้องให้ถูกต้อง');return}
   if(typeof Peer==='undefined'){toast('โหลดระบบออนไลน์ไม่ได้ ลองรีเฟรช');return}
-  isHost=false;leaving=false;LS.set('fm_last',code);joinCode=code;UI.tab='home';connectClient(true);render();
+  isHost=false;leaving=false;LS.set('fm_last',code);joinCode=code;UI.tab='home';connectClient();render();
 }
-let joinCode=null,firstJoin=false;
-function connectClient(first){
-  clearTimeout(retryT);firstJoin=!!first;
-  try{if(peer)peer.destroy()}catch(e){}
+function connectClient(){
+  clearTimeout(retryT);try{if(peer)peer.destroy()}catch(e){}
   netOk=false;peer=new Peer(PEER_OPTS);
-  peer.on('open',()=>{
-    conn=peer.connect(PREFIX+joinCode,{reliable:true});
+  peer.on('open',()=>{conn=peer.connect(PREFIX+joinCode,{reliable:true});
     conn.on('open',()=>{netOk=true;conn.send({t:'a',u:uid,m:{type:'hello',name:myName}});render()});
-    conn.on('data',onClientData);
-    conn.on('close',lost);conn.on('error',lost);
-  });
-  peer.on('error',e=>{
-    if(leaving)return;
-    if(e.type==='peer-unavailable'&&!S){toast('ไม่พบห้อง '+joinCode+' (เจ้าของห้องอาจออฟไลน์)');goHome();return}
-    lost();
-  });
+    conn.on('data',onClientData);conn.on('close',lost);conn.on('error',lost)});
+  peer.on('error',e=>{if(leaving)return;if(e.type==='peer-unavailable'&&!S){toast('ไม่พบห้อง '+joinCode+' (เจ้าของห้องอาจออฟไลน์)');goHome();return}lost()});
 }
-function lost(){if(leaving||isHost)return;netOk=false;render();clearTimeout(retryT);retryT=setTimeout(()=>connectClient(false),3000)}
+function lost(){if(leaving||isHost)return;netOk=false;render();clearTimeout(retryT);retryT=setTimeout(connectClient,3000)}
 function onClientData(d){
   if(!d)return;
-  if(d.t==='s'){const prevLive=S&&S.live&&S.live.id;S=d.s;clockOff=d.now-Date.now();
-    if(S.live&&S.live.id!==prevLive){UI.tab='home';UI.goalSeen=0}
+  if(d.t==='s'){const prev=S&&S.lv&&S.lv.id;S=d.s;clockOff=d.now-Date.now();if(S.lv&&S.lv.id!==prev){UI.tab='home';UI.liveSel=null}render()}
+  else if(d.t==='l'){if(!S||!S.lv||S.lv.id!==d.id)return;const V=S.lv;clockOff=d.now-Date.now();
+    Object.assign(V,{min:d.min,st:d.st,pu:d.pu,htu:d.htu,tu:d.tu});
+    d.d.forEach(x=>{const m=V.ms[x.i];if(!m)return;if(m.ev.length+x.e.length===x.n)m.ev.push(...x.e);
+      Object.assign(m,{sc:x.sc,sh:x.sh,ot:x.ot,cd:x.cd,on:x.on,bn:x.bn,sb:x.sb,out:x.out,inj:x.inj,mp:x.mp,tc:x.tc})});
     render()}
   else if(d.t==='err')toast(d.m);
 }
 function goHome(){
-  leaving=true;clearTimeout(retryT);clearTimeout(liveTimer);clearTimeout(playTimer);
-  try{if(peer)peer.destroy()}catch(e){}peer=null;conn=null;conns.clear();
-  S=null;isHost=false;netOk=false;closeModal();render();
+  if(isHost)saveGame();
+  leaving=true;clearTimeout(retryT);clearInterval(tickT);clearTimeout(endT);clearTimeout(playTimer);
+  try{if(peer)peer.destroy()}catch(e){}peer=null;conn=null;conns.clear();S=null;isHost=false;netOk=false;closeModal();render();
 }
 
 /* ==========================================================
    UI
    ========================================================== */
-const UI={tab:'home',mkPos:'ALL',mkSrc:'all',mkSort:'o',tbl:'table',fxR:null,skip:{},sound:LS.get('fm_snd','1')==='1',goalSeen:0};
+const UI={tab:'home',lg:LS.get('fm_lg','th'),mkPos:'ALL',mkSrc:'all',mkSort:'o',tbl:'table',fxR:null,skip:{},sound:LS.get('fm_snd','1')==='1',liveSel:null,subOff:null};
 let rq=false;
 function render(){if(rq)return;rq=true;requestAnimationFrame(()=>{rq=false;draw()})}
 function badge(T,sz){sz=sz||38;return '<span class="badge" style="width:'+sz+'px;height:'+sz+'px;background:'+T.c1+';border-color:'+T.c2+';color:'+(lum(T.c1)>0.6?'#111':'#fff')+';font-size:'+Math.round(sz*0.28)+'px">'+T.sh+'</span>'}
-function stars(rep){const n=clamp(Math.round((rep-60)/3.6),1,5);return '<span class="stars">'+'★'.repeat(n)+'<span style="opacity:.25">'+'★'.repeat(5-n)+'</span></span>'}
-function posTag(p){return '<span class="pos p'+p.pos+'">'+p.pos+'</span>'}
+function stars(rep){const lo=S.lg==='epl'?69:60,st=S.lg==='epl'?3:3.6;const n=clamp(Math.round((rep-lo)/st),1,5);return '<span class="stars">'+'★'.repeat(n)+'<span style="opacity:.25">'+'★'.repeat(5-n)+'</span></span>'}
+const posTag=p=>'<span class="pos p'+p.pos+'">'+p.pos+'</span>';
+const natTag=p=>p.nat&&p.nat!==L().home?' <span class="fx">'+esc(p.nat)+'</span>':'';
 const me=()=>S&&S.humans[uid];
 const myTeam=()=>{const h=me();return h&&h.team!=null?S.teams[h.team]:null};
 const amHost=()=>S&&S.host===uid&&isHost;
-function liveMin(){if(!S||!S.live)return 93;const el=(Date.now()+(isHost?0:clockOff))-S.live.at;return clamp(Math.floor(el/S.live.dur*93),0,93)}
-function liveShown(){return S&&S.phase==='live'&&S.last&&!UI.skip[S.live.id]}
+const liveShown=()=>S&&S.phase==='live'&&S.lv&&!UI.skip[S.lv.id];
 
 function draw(){
   const app=$('#app');
@@ -613,69 +686,68 @@ function draw(){
   if(S.phase==='lobby'){app.innerHTML=vLobby();return}
   let body='';
   if(UI.tab==='home')body=liveShown()?vLive():S.phase==='end'?vEnd():vHome();
-  else if(UI.tab==='team')body=vTeam();
-  else if(UI.tab==='market')body=vMarket();
-  else if(UI.tab==='table')body=vTable();
-  else body=vRoom();
-  app.innerHTML=vTop()+'<div class="sec">'+body+'</div>'+vNav();
+  else if(UI.tab==='team')body=vTeam();else if(UI.tab==='market')body=vMarket();else if(UI.tab==='table')body=vTable();else body=vRoom();
+  const sy=window.scrollY;app.innerHTML=vTop()+'<div class="sec">'+body+'</div>'+vNav();
   if(UI.tab==='home'&&liveShown())liveSound();
+  if(UI.subOff!=null||UI.subOpen)drawSub();
 }
 function vTop(){
   const T=myTeam();const off=!S.solo&&!netOk;
-  const st=S.phase==='end'?'จบฤดูกาล '+seasonLabel(S.season):S.phase==='live'?'กำลังแข่ง นัดที่ '+(S.live.r+1):'นัดที่ '+(S.round+1)+'/'+ROUNDS+' · '+seasonLabel(S.season);
+  const st=S.phase==='end'?'จบฤดูกาล '+seasonLabel(S.season):S.phase==='live'?'🔴 กำลังแข่ง นัดที่ '+(S.lv.r+1):'นัดที่ '+(S.round+1)+'/'+nR()+' · '+seasonLabel(S.season);
   return '<div class="top">'+(T?badge(T):'<span style="font-size:30px">⚽</span>')+
-   '<div class="tt"><b>'+(T?esc(T.name):'ผู้ชม')+'</b><small>'+(S.solo?'':'<span class="dot'+(off?' off':'')+'"></span>')+st+'</small></div>'+
-   (T?'<div class="money">'+money(T.budget)+' ล.<small>งบประมาณ</small></div>':'')+'</div>';
+   '<div class="tt"><b>'+(T?esc(T.name):'ผู้ชม')+'</b><small>'+(S.solo?'':'<span class="dot'+(off?' off':'')+'"></span>')+L().flag+' '+st+'</small></div>'+
+   (T?'<div class="money">'+money(T.budget)+'<small>งบประมาณ</small></div>':'')+'</div>';
 }
 function vNav(){
   const it=[['home','🏟️','หน้าหลัก'],['team','👕','ทีม'],['market','🛒','ตลาด'],['table','📊','ตาราง'],['room','👥','ห้อง']];
   return '<div class="nav">'+it.map(([k,i,l])=>'<button class="'+(UI.tab===k?'on':'')+'" data-a="tab" data-v="'+k+'"><i>'+i+'</i>'+l+'</button>').join('')+'</div>';
 }
 function vConnecting(){return '<div class="hero"><div class="ball">📡</div><h1>กำลังเข้าห้อง '+esc(joinCode)+'</h1><p>รอเชื่อมต่อกับเจ้าของห้อง...</p></div><div class="sec"><button class="btn blk" data-a="leave">ยกเลิก</button></div>'}
+function lgSeg(cur,act){return '<div class="seg">'+Object.entries(LG).map(([k,c])=>'<button class="'+(cur===k?'on':'')+'" data-a="'+act+'" data-v="'+k+'">'+c.flag+' '+c.name+'</button>').join('')+'</div>'}
 function vStart(){
-  const hs=LS.get('fm_host',null);let hsInfo='';
-  try{const o=JSON.parse(hs);if(o&&o.teams)hsInfo=(o.solo?'เกมคนเดียว':'ห้อง '+o.code)+' · '+seasonLabel(o.season)+' นัดที่ '+Math.min(ROUNDS,o.round+1)}catch(e){}
+  let hsInfo='';try{const o=JSON.parse(LS.get(SAVE_KEY,'null'));if(o&&o.v===VER)hsInfo=LG[o.lg].flag+' '+LG[o.lg].name+' · '+(o.solo?'เกมคนเดียว':'ห้อง '+o.code)+' · '+seasonLabel(o.season)+' นัดที่ '+(o.round+1)}catch(e){}
   const last=LS.get('fm_last','');const qroom=(QS.get('room')||'').toUpperCase();
-  return '<div class="hero"><div class="ball">⚽</div><h1>KG ผู้จัดการทีม</h1><p>คุมทีมไทยลีก 1 · เล่นกับเพื่อนแบบเรียลไทม์</p></div><div class="sec">'+
+  return '<div class="hero"><div class="ball">⚽</div><h1>KG ผู้จัดการทีม</h1><p>ไทยลีก 1 & พรีเมียร์ลีก · เล่นกับเพื่อนแบบเรียลไทม์</p></div><div class="sec">'+
   '<div class="card"><label class="lb">ชื่อผู้จัดการ</label><input class="in" id="nm" maxlength="16" placeholder="เช่น โค้ชต้น" value="'+esc(myName)+'"></div>'+
   (qroom?'<div class="card"><h3>📨 เพื่อนชวนเข้าห้อง '+esc(qroom)+'</h3><button class="btn pri blk" data-a="join" data-v="'+esc(qroom)+'">เข้าห้องนี้เลย</button></div>':'')+
+  '<div class="card"><h3>เลือกลีก</h3>'+lgSeg(UI.lg,'slg')+'</div>'+
   '<div class="card"><h3>เล่นกับเพื่อน</h3><button class="btn pri blk" data-a="create">➕ สร้างห้องใหม่</button>'+
   '<div class="row" style="margin-top:10px"><input class="in grow" id="jc" maxlength="6" placeholder="รหัสห้อง" style="text-transform:uppercase;letter-spacing:3px" value="'+esc(qroom||'')+'"><button class="btn" data-a="join">เข้าห้อง</button></div>'+
   (last&&last!==qroom?'<button class="btn blk" style="margin-top:8px" data-a="join" data-v="'+esc(last)+'">↩️ เข้าห้องล่าสุด '+esc(last)+'</button>':'')+'</div>'+
   '<div class="card"><h3>เล่นคนเดียว</h3><button class="btn blk" data-a="solo">🎮 เริ่มเกมคนเดียว (แข่งกับ AI)</button></div>'+
   (hsInfo?'<div class="card"><h3>เกมที่บันทึกไว้ (คุณเป็นเจ้าของห้อง)</h3><p class="mut sm" style="margin:0 0 8px">'+esc(hsInfo)+'</p><button class="btn gold blk" data-a="resume">▶️ เล่นต่อ</button></div>':'')+
-  '<p class="mut sm">ชื่อทีมเป็นทีมไทยลีก 1 ฤดูกาล 2026/27 ส่วนชื่อนักเตะและพลังเป็นแบบสุ่ม — เจ้าของทีมแก้เป็นชื่อจริงได้เองในแท็บ “ทีม”</p>'+
+  '<p class="mut sm">รายชื่อนักเตะจริงตามข้อมูลต้นฤดูกาล 2026/27 ค่าพลังเป็นค่าประเมินในเกม ฟรีเอเย่นต์และเด็กปั้นเป็นชื่อสมมติ — แก้ชื่อได้ในแท็บ “ทีม”</p>'+
   '<div class="foot">KG Football Manager · By Thitipong Srisomwong</div></div>';
 }
 function vLobby(){
-  const h=me();const T=myTeam();const hs=Object.entries(S.humans);
-  const link=location.origin+location.pathname+'?room='+S.code;
-  return '<div class="top"><span style="font-size:28px">⚽</span><div class="tt"><b>'+(S.solo?'เลือกทีมของคุณ':'ห้องรอเริ่มเกม')+'</b><small>'+(S.solo?'เกมคนเดียว':'<span class="dot'+(netOk?'':' off')+'"></span>'+(netOk?'ออนไลน์':'กำลังเชื่อมต่อ...'))+'</small></div></div><div class="sec">'+
+  const T=myTeam();const hs=Object.entries(S.humans);const link=location.origin+location.pathname+'?room='+S.code;
+  return '<div class="top"><span style="font-size:28px">⚽</span><div class="tt"><b>'+(S.solo?'เลือกทีมของคุณ':'ห้องรอเริ่มเกม')+'</b><small>'+(S.solo?'เกมคนเดียว':'<span class="dot'+(netOk?'':' off')+'"></span>'+(netOk?'ออนไลน์':'กำลังเชื่อมต่อ...'))+' · '+L().flag+' '+L().name+'</small></div></div><div class="sec">'+
    (S.solo?'':'<div class="card"><div class="mut sm" style="text-align:center">รหัสห้อง — ส่งให้เพื่อน</div><div class="code">'+S.code+'</div><div class="row" style="margin-top:8px"><button class="btn grow" data-a="share" data-v="'+esc(link)+'">📤 ชวนเพื่อน</button><button class="btn grow" data-a="copy" data-v="'+esc(link)+'">📋 คัดลอกลิงก์</button></div></div>')+
+   (amHost()?'<div class="card"><h3>ลีก</h3>'+lgSeg(S.lg,'hlg')+'<h3 style="margin-top:12px">ความเร็วแมตช์สด</h3>'+speedSeg()+'</div>':'')+
    (S.solo?'':'<div class="card"><h3>ผู้จัดการในห้อง ('+hs.length+')</h3><div class="hl">'+hs.map(([u,x])=>'<div class="hu"><span class="dot'+(x.on?'':' off')+'"></span><b>'+esc(x.name)+'</b>'+(u===S.host?' <span class="mut sm">(เจ้าของห้อง)</span>':'')+'<span class="grow"></span>'+(x.team!=null?badge(S.teams[x.team],26)+' <span class="sm">'+esc(S.teams[x.team].name)+'</span>':'<span class="mut sm">ยังไม่เลือกทีม</span>')+'</div>').join('')+'</div></div>')+
    '<div class="card"><h3>เลือกทีม '+(T?'· <span style="color:var(--ac)">'+esc(T.name)+'</span>':'')+'</h3>'+vTeamGrid()+'</div>'+
    (amHost()?'<button class="btn pri blk" data-a="start" '+(T?'':'disabled')+'>🏁 เริ่มฤดูกาล '+seasonLabel(S.season)+'</button><p class="mut sm" style="text-align:center">ทีมที่ไม่มีใครเลือก AI จะคุมให้ · เพื่อนเข้ามาเพิ่มระหว่างฤดูกาลได้</p>':'<p class="mut" style="text-align:center">รอเจ้าของห้องกดเริ่มเกม...</p>')+
    '<button class="btn blk" style="margin-top:8px" data-a="leave">ออกจากห้อง</button></div>';
 }
+function speedSeg(){return '<div class="seg">'+SPEED.map((s,i)=>'<button class="'+((S.spd??1)===i?'on':'')+'" data-a="speed" data-v="'+i+'">'+s.n+'</button>').join('')+'</div><div class="mut sm" style="margin-top:4px">แมตช์ละประมาณ '+Math.round((93*SPEED[S.spd??1].t+SPEED[S.spd??1].ht)/1000)+' วินาที</div>'}
 function vTeamGrid(){
   return '<div class="tgrid">'+S.teams.map(T=>{const mine=T.owner===uid;const tk=T.owner&&!mine;const on=tk&&S.humans[T.owner];
-    return '<button class="tpick'+(mine?' mine':'')+(tk?' taken':'')+'" data-a="pick" data-v="'+T.id+'">'+badge(T,34)+'<div style="min-width:0"><b>'+esc(T.name)+'</b><small>'+(tk?'👔 '+esc(on?on.name:'?'):stars(T.rep)+' · '+money(T.budget)+' ล.')+'</small></div></button>'}).join('')+'</div>';
+    return '<button class="tpick'+(mine?' mine':'')+(tk?' taken':'')+'" data-a="pick" data-v="'+T.id+'">'+badge(T,34)+'<div style="min-width:0"><b>'+esc(T.name)+'</b><small>'+(tk?'👔 '+esc(on?on.name:'?'):stars(T.rep)+' · '+money(T.budget))+'</small></div></button>'}).join('')+'</div>';
 }
-function formOf(id,n){const t=table(S.phase==='live'&&!liveDoneLocal()?S.live.r:-1).find(x=>x.id===id);return t?t.fm.slice(-n):[]}
-function formHtml(arr){return '<span class="form">'+arr.map(x=>'<i class="f'+x+'">'+({W:'ช',D:'ส',L:'พ'})[x]+'</i>').join('')+'</span>'}
-function liveDoneLocal(){return !S.live||UI.skip[S.live.id]||liveMin()>=93}
+const formOf=(id,n)=>{const t=table().find(x=>x.id===id);return t?t.fm.slice(-n):[]};
+const formHtml=a=>'<span class="form">'+a.map(x=>'<i class="f'+x+'">'+({W:'ช',D:'ส',L:'พ'})[x]+'</i>').join('')+'</span>';
+const avgXI=T=>{const a=T.xi.map(id=>S.pl[id]).filter(Boolean);return a.length?Math.round(a.reduce((s,p)=>s+p.o,0)/a.length):'-'};
 function vHome(){
   const T=myTeam();let html='';
   if(!T)html+='<div class="warn">คุณยังไม่มีทีม — ไปที่แท็บ “ห้อง” เพื่อเลือกทีมที่ยังว่าง</div>';
-  if(S.phase==='live')html+='<div class="card"><b>⏳ นัดที่ '+(S.live.r+1)+' กำลังแข่ง...</b> <button class="btn sm" data-a="unskip">ดูสด</button></div>';
+  if(S.phase==='live')html+='<div class="card row"><b class="grow">🔴 นัดที่ '+(S.lv.r+1)+' กำลังแข่ง ('+Math.min(S.lv.min,90)+'\')</b><button class="btn sm pri" data-a="unskip">ดูสด / แก้เกม</button></div>';
   if(T&&S.phase==='pre'){
     const fx=S.fx[S.round].find(([h,a])=>h===T.id||a===T.id);const home=fx[0]===T.id;const O=S.teams[home?fx[1]:fx[0]];
-    const tb=table();const posO=tb.findIndex(x=>x.id===O.id)+1,posM=tb.findIndex(x=>x.id===T.id)+1;
-    const H=home?T:O,A=home?O:T;
+    const tb=table();const posO=tb.findIndex(x=>x.id===O.id)+1,posM=tb.findIndex(x=>x.id===T.id)+1;const H=home?T:O,A=home?O:T;
     const empty=T.xi.filter(x=>x==null).length;
     html+='<div class="card"><div class="mut sm" style="text-align:center;margin-bottom:6px">นัดถัดไป · นัดที่ '+(S.round+1)+' · '+(home?'เกมเหย้า 🏠':'เกมเยือน ✈️')+'</div>'+
     '<div class="vs"><div class="side">'+badge(H,48)+'<b>'+esc(H.name)+'</b>'+formHtml(formOf(H.id,5))+'</div><div class="mid">VS<small>อันดับ '+(home?posM:posO)+' vs '+(home?posO:posM)+'</small></div><div class="side">'+badge(A,48)+'<b>'+esc(A.name)+'</b>'+formHtml(formOf(A.id,5))+'</div></div>'+
-    '<div class="row" style="margin-top:10px;justify-content:center;font-size:13px"><span class="mut">คู่แข่ง: '+TAC[O.tac]+' · '+O.form+' · พลังเฉลี่ย '+avgXI(O)+'</span></div></div>';
+    '<div class="mut sm" style="text-align:center;margin-top:10px">คู่แข่ง: '+O.form+' · พลังเฉลี่ยตัวจริง '+avgXI(O)+' · ของคุณ '+avgXI(T)+'</div></div>';
     if(empty)html+='<div class="warn">ตัวจริงยังไม่ครบ 11 คน (ขาด '+empty+') — ถ้าไม่จัด ระบบจะเติมให้อัตโนมัติ</div>';
     const ready=me().ready;
     html+='<button class="btn '+(ready?'':'pri')+' blk" data-a="ready" data-v="'+(ready?0:1)+'" style="min-height:54px;font-size:17px">'+(ready?'⏳ รอเพื่อน... (แตะเพื่อยกเลิก)':'✅ พร้อมเตะ!')+'</button>';
@@ -690,183 +762,220 @@ function vHome(){
   html+='<div class="card"><h3>📰 ข่าว</h3>'+(S.news.slice(0,8).map(n=>'<div class="news">'+esc(n.txt)+'</div>').join('')||'<div class="mut sm">ยังไม่มีข่าว</div>')+'</div>';
   return html;
 }
-function avgXI(T){const a=T.xi.map(id=>S.pl[id]).filter(Boolean);return a.length?Math.round(a.reduce((s,p)=>s+p.o,0)/a.length):'-'}
 function vLastResults(){
-  if(!S.last||S.phase==='live'&&!liveDoneLocal())return'';
-  const T=myTeam();
+  if(!S.last||S.phase==='live'&&S.lv&&S.lv.st!=='ft')return'';const T=myTeam();
   return '<div class="card" style="margin-top:12px"><h3>ผลนัดที่ '+(S.last.r+1)+'</h3>'+S.last.m.map((m,i)=>{const H=S.teams[m.h],A=S.teams[m.a];const mine=T&&(m.h===T.id||m.a===T.id);
     return '<div class="res'+(mine?' me':'')+'" data-a="match" data-v="'+i+'"><span class="tn r">'+esc(H.name)+'</span>'+badge(H,22)+'<span class="sc">'+m.hg+' - '+m.ag+'</span>'+badge(A,22)+'<span class="tn">'+esc(A.name)+'</span></div>'}).join('')+'<div class="mut sm" style="margin-top:4px">แตะคู่ที่สนใจเพื่อดูรายละเอียด</div></div>';
 }
-function scoreAt(m,min){let h=0,a=0;m.ev.forEach(e=>{if(e.k==='g'&&e.m<=min){if(e.s===0)h++;else a++}});return[h,a]}
+/* ---------- แมตช์สด ---------- */
 function vLive(){
-  const T=myTeam();const min=liveMin();const myIdx=S.last.m.findIndex(m=>T&&(m.h===T.id||m.a===T.id));let idx=UI.liveSel&&UI.liveSel.id===S.live.id?UI.liveSel.i:myIdx;if(idx<0)idx=0;
-  const m=S.last.m[idx];const H=S.teams[m.h],A=S.teams[m.a];const [hg,ag]=scoreAt(m,min);
-  const clk=min>=93?'จบเกม':min===45?'พักครึ่ง':min>90?"90+"+(min-90)+"'":min+"'";
-  const evs=m.ev.filter(e=>e.m<=min&&e.k!=='ko').slice().reverse();
-  let html='<div class="card live"><div style="text-align:center" class="clock">🔴 สด · นัดที่ '+(S.last.r+1)+' · '+clk+'</div>'+
-   '<div class="vs" style="margin-top:6px"><div class="side">'+badge(H,46)+'<b>'+esc(H.name)+'</b></div><div class="mid" id="lsc">'+hg+' - '+ag+'</div><div class="side">'+badge(A,46)+'<b>'+esc(A.name)+'</b></div></div>'+
-   '<div class="bar" style="margin:10px 0 2px"><i style="width:'+(min/93*100)+'%;background:var(--ac)"></i></div></div>';
-  html+='<div class="card"><div class="feed">'+(evs.length?evs.map(e=>'<div class="ev '+(e.k==='g'?'g':e.k==='r'?'r':'')+'"><span class="m">'+(e.m>90?'90+'+(e.m-90):e.m)+"'</span><span>"+esc(e.x)+'</span></div>').join(''):'<div class="ev"><span class="m">0\'</span><span>🟢 เริ่มเกม!</span></div>')+'</div></div>';
-  html+='<div class="card"><h3>สนามอื่น</h3>'+S.last.m.map((x,i)=>{if(i===idx)return'';const [a,b]=scoreAt(x,min);const X=S.teams[x.h],Y=S.teams[x.a];
-    return '<div class="mini" data-a="liveidx" data-v="'+i+'"><span class="tn r">'+esc(X.name)+'</span><span class="sc">'+a+' - '+b+'</span><span class="tn">'+esc(Y.name)+'</span></div>'}).join('')+'</div>';
-  if(myIdx>=0&&idx!==myIdx)html+='<button class="btn blk" style="margin-bottom:8px" data-a="liveidx" data-v="'+myIdx+'">↩️ กลับไปดูคู่ของฉัน</button>';
-  html+='<div class="row"><button class="btn grow" data-a="skip">⏩ ดูผลเลย</button>'+(amHost()?'<button class="btn grow" data-a="skiplive">⏭️ ข้ามทั้งห้อง</button>':'')+'</div>';
+  const V=S.lv,T=myTeam();const mine=myLive(T);let idx=UI.liveSel&&UI.liveSel.id===V.id?UI.liveSel.i:mine?mine.i:0;
+  const m=V.ms[idx];const H=S.teams[m.h],A=S.teams[m.a];const isMine=mine&&mine.i===idx;
+  const clk=V.st==='ft'?'จบเกม':V.st==='ht'?'พักครึ่ง ⏱️'+Math.max(0,Math.ceil((V.htu-hnow())/1000))+'s':V.min>90?'90+'+(V.min-90)+"'":V.min+"'";
+  let html='';
+  if(V.st==='pause')html+='<div class="warn" style="text-align:center">⏸️ เกมหยุดชั่วคราว — '+esc(V.pu.by)+' ขอเวลานอก (เหลือ '+Math.max(0,Math.ceil((V.pu.until-hnow())/1000))+' วิ)'+((V.pu.u===uid||amHost())?' <button class="btn sm" data-a="resume">▶️ เล่นต่อ</button>':'')+'</div>';
+  html+='<div class="card live"><div style="text-align:center" class="clock">🔴 สด · นัดที่ '+(V.r+1)+' · '+clk+'</div>'+
+   '<div class="vs" style="margin-top:6px"><div class="side">'+badge(H,46)+'<b>'+esc(H.name)+'</b><small class="mut">'+TACI[m.tc[0]]+' '+TAC[m.tc[0]]+'</small></div><div class="mid">'+m.sc[0]+' - '+m.sc[1]+'</div><div class="side">'+badge(A,46)+'<b>'+esc(A.name)+'</b><small class="mut">'+TACI[m.tc[1]]+' '+TAC[m.tc[1]]+'</small></div></div>'+
+   '<div class="bar" style="margin:10px 0 2px"><i style="width:'+(Math.min(V.min,93)/93*100)+'%;background:var(--ac)"></i></div>'+
+   '<div class="row sm mut" style="justify-content:space-between;margin-top:6px"><span>ยิง '+m.sh[0]+' ('+m.ot[0]+')</span><span>ยิง (ตรงกรอบ)</span><span>'+m.sh[1]+' ('+m.ot[1]+')</span></div></div>';
+  const evs=m.ev.filter(e=>e.k!=='ko').slice().reverse();
+  html+='<div class="card"><div class="feed">'+(evs.length?evs.map(evHtml).join(''):'<div class="ev"><span class="m">0\'</span><span>🟢 เริ่มเกม!</span></div>')+'</div></div>';
+  if(isMine&&V.st!=='ft')html+=vControl(m,mine.s,T);
+  html+='<div class="card"><h3>สนามอื่น</h3>'+V.ms.map((x,i)=>{if(i===idx)return'';const X=S.teams[x.h],Y=S.teams[x.a];const my=mine&&mine.i===i;
+    return '<div class="mini'+(my?' me':'')+'" data-a="liveidx" data-v="'+i+'"><span class="tn r">'+esc(X.name)+'</span><span class="sc">'+x.sc[0]+' - '+x.sc[1]+'</span><span class="tn">'+esc(Y.name)+'</span></div>'}).join('')+'</div>';
+  if(mine&&!isMine)html+='<button class="btn pri blk" style="margin-bottom:8px" data-a="liveidx" data-v="'+mine.i+'">↩️ กลับไปคุมคู่ของฉัน</button>';
+  html+='<div class="row"><button class="btn grow" data-a="skip">🙈 ซ่อนจอสด</button>'+(amHost()&&V.st!=='ft'?'<button class="btn grow" data-a="skiplive">⏭️ ข้ามไปดูผล</button>':'')+'</div>';
   return html;
+}
+function evHtml(e){return '<div class="ev '+(e.k==='g'?'g':e.k==='r'?'r':e.k==='sub'||e.k==='tac'?'sb':'')+'"><span class="m">'+(e.m>90?'90+'+(e.m-90):e.m)+"'</span><span>"+esc(e.x)+'</span></div>'}
+function vControl(m,s,T){
+  const left=MAX_SUBS-m.sb[s];const tu=TIMEOUTS-((S.lv.tu||{})[uid]||0);
+  const onIds=m.on[s];const sl=m.sl[s];
+  let h='<div class="card ctl"><h3>🎛️ แก้เกม</h3>'+
+   '<div class="seg" style="margin-bottom:8px">'+TAC.map((t,i)=>'<button class="'+(T.tac===i?'on':'')+'" data-a="ltac" data-v="'+i+'">'+TACI[i]+' '+t+'</button>').join('')+'</div>'+
+   '<div class="chips" style="margin-bottom:8px">'+Object.keys(FORMS).map(f=>'<button class="chip'+(T.form===f?' on':'')+'" data-a="lform" data-v="'+f+'">'+f+'</button>').join('')+'</div>'+
+   '<div class="row"><button class="btn pri grow" data-a="subopen"'+(left>0?'':' disabled')+'>🔁 เปลี่ยนตัว ('+left+')</button>'+
+   (S.lv.st==='run'?'<button class="btn grow" data-a="pause"'+(tu>0?'':' disabled')+'>⏸️ ขอเวลานอก ('+tu+')</button>':'')+'</div>'+
+   '<div class="gh"><span>ในสนาม</span><span>ความฟิตตอนนี้</span></div>';
+  h+=onIds.map((id,i)=>{const p=S.pl[id];if(!p)return'';const out=m.out.includes(id);const f=Math.round(fitNow(m,id));
+    return '<div class="lrow'+(out?' dead':'')+'"><span class="pos p'+sl[i]+'">'+sl[i]+'</span><span class="grow">'+esc(p.n)+(out?' 🟥':'')+(m.yel[id]?' 🟨':'')+(p.pos!==sl[i]?' <span class="fx">ผิดตำแหน่ง</span>':'')+'</span><span class="ov sm">'+p.o+'</span><div class="fit"><i style="width:'+f+'%;background:'+(f>=75?'var(--ac)':f>=60?'var(--ac2)':'var(--bad)')+'"></i></div></div>'}).join('');
+  h+='<div class="gh"><span>สำรอง ('+m.bn[s].length+')</span></div><div class="mut sm">'+(m.bn[s].map(id=>S.pl[id]?posTagS(S.pl[id])+esc(shortN(S.pl[id]))+' '+S.pl[id].o:'').join(' · ')||'ไม่มีตัวสำรอง')+'</div></div>';
+  return h;
+}
+const posTagS=p=>'<span class="pos p'+p.pos+'">'+p.pos+'</span>';
+function drawSub(){
+  const T=myTeam();const mine=myLive(T);if(!mine||S.lv.st==='ft'){UI.subOpen=false;UI.subOff=null;closeModal();return}
+  const m=mine.m,s=mine.s;const left=MAX_SUBS-m.sb[s];
+  let h='<h2>🔁 เปลี่ยนตัว</h2><div class="mut sm">นาทีที่ '+Math.min(S.lv.min,90)+' · เหลือสิทธิ์ '+left+' คน</div>';
+  if(UI.subOff==null){
+    h+='<div class="gh"><span>1) เลือกคนที่จะเอาออก</span></div>'+m.on[s].map((id,i)=>{const p=S.pl[id];if(!p||m.out.includes(id))return'';const f=Math.round(fitNow(m,id));
+      return '<button class="lrow btnrow" data-a="suboff" data-v="'+id+'"><span class="pos p'+m.sl[s][i]+'">'+m.sl[s][i]+'</span><span class="grow">'+esc(p.n)+(m.yel[id]?' 🟨':'')+'</span><span class="ov sm">'+p.o+'</span><span class="sm" style="color:'+(f>=75?'var(--ac)':f>=60?'var(--ac2)':'var(--bad)')+'">'+f+'%</span></button>'}).join('');
+  }else{
+    const off=S.pl[UI.subOff];
+    h+='<div class="warn">ออก: <b>'+esc(off?off.n:'-')+'</b> <button class="btn sm" data-a="suback">เปลี่ยน</button></div><div class="gh"><span>2) เลือกตัวสำรองที่จะลง</span></div>'+
+     (m.bn[s].map(id=>{const p=S.pl[id];if(!p)return'';return '<button class="lrow btnrow" data-a="subon" data-v="'+id+'">'+posTagS(p)+'<span class="grow">'+esc(p.n)+'</span><span class="ov sm">'+p.o+'</span><span class="sm">'+p.ft+'%</span></button>'}).join('')||'<div class="mut">ไม่มีตัวสำรอง</div>');
+  }
+  h+='<button class="btn blk" style="margin-top:10px" data-a="subclose">ปิด</button>';
+  const cur=$('#modal .sh');if(cur){cur.innerHTML=h}else openModal(h);
 }
 let lastGoalKey='';
 function liveSound(){
-  if(!UI.sound)return;const T=myTeam();if(!T)return;const m=S.last.m.find(x=>x.h===T.id||x.a===T.id);if(!m)return;
-  const min=liveMin();const g=m.ev.filter(e=>e.k==='g'&&e.m<=min);const key=S.live.id+':'+g.length;
-  if(key!==lastGoalKey){const prev=lastGoalKey.split(':');lastGoalKey=key;if(prev[0]===S.live.id&&g.length>+prev[1]){const e=g[g.length-1];beep((e.s===0)===(m.h===T.id))}}
+  if(!UI.sound)return;const T=myTeam();const mine=myLive(T);if(!mine)return;const m=mine.m;
+  const n=m.sc[0]+m.sc[1];const key=S.lv.id+':'+n;
+  if(key!==lastGoalKey){const prev=lastGoalKey.split(':');lastGoalKey=key;if(prev[0]===S.lv.id&&n>+prev[1]){const g=m.ev.filter(e=>e.k==='g').pop();if(g)beep(g.s===mine.s)}}
 }
 let actx=null;
 function beep(good){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();const t=actx.currentTime;
   (good?[523,659,784,1047]:[330,262]).forEach((f,i)=>{const o=actx.createOscillator(),g=actx.createGain();o.type=good?'triangle':'sawtooth';o.frequency.value=f;g.gain.setValueAtTime(0.0001,t+i*0.12);g.gain.exponentialRampToValueAtTime(0.18,t+i*0.12+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t+i*0.12+0.25);o.connect(g).connect(actx.destination);o.start(t+i*0.12);o.stop(t+i*0.12+0.3)})}catch(e){}}
 function vEnd(){
   const F=S.final;if(!F)return'';const C=S.teams[F.tb[0]];const T=myTeam();const myPos=T?F.tb.indexOf(T.id)+1:0;
-  return '<div class="card champ"><div class="tro">🏆</div><div class="mut sm">แชมป์ไทยลีก 1 ฤดูกาล '+seasonLabel(S.season)+'</div><div style="margin:8px 0">'+badge(C,64)+'</div><h2 style="margin:4px 0">'+esc(C.name)+'</h2>'+(C.owner&&S.humans[C.owner]?'<div>👔 '+esc(S.humans[C.owner].name)+'</div>':'')+'</div>'+
-  (T?'<div class="card"><h3>ผลงานของคุณ</h3><div class="kv"><div><b>'+myPos+'</b><small>อันดับ</small></div><div><b>+'+money(Math.max(3,30-(myPos-1)*1.8))+'</b><small>เงินรางวัล (ล.)</small></div><div><b>'+money(T.budget)+'</b><small>งบตอนนี้</small></div></div></div>':'')+
+  return '<div class="card champ"><div class="tro">🏆</div><div class="mut sm">แชมป์'+L().name+' ฤดูกาล '+seasonLabel(S.season)+'</div><div style="margin:8px 0">'+badge(C,64)+'</div><h2 style="margin:4px 0">'+esc(C.name)+'</h2>'+(C.owner&&S.humans[C.owner]?'<div>👔 '+esc(S.humans[C.owner].name)+'</div>':'')+'</div>'+
+  (T?'<div class="card"><h3>ผลงานของคุณ</h3><div class="kv"><div><b>'+myPos+'</b><small>อันดับ</small></div><div><b>+'+money(L().prize(myPos-1))+'</b><small>เงินรางวัล</small></div><div><b>'+money(T.budget)+'</b><small>งบตอนนี้</small></div></div></div>':'')+
   (F.top?'<div class="card"><h3>👟 ดาวซัลโว</h3>'+esc(F.top.n)+' ('+(S.teams[F.top.t]?S.teams[F.top.t].sh:'-')+') — '+F.top.g+' ประตู</div>':'')+
-  '<div class="card"><h3>ตารางสุดท้าย</h3>'+vTableHtml(table(),true)+'</div>'+
+  '<div class="card"><h3>ตารางสุดท้าย</h3>'+vTableHtml(table())+'</div>'+
   (amHost()?'<button class="btn pri blk" data-a="newseason">📅 เริ่มฤดูกาล '+seasonLabel(S.season+1)+'</button>':'<p class="mut" style="text-align:center">รอเจ้าของห้องเริ่มฤดูกาลใหม่...</p>');
 }
-
 /* ---------- แท็บทีม ---------- */
 function vTeam(){
   const T=myTeam();if(!T)return '<div class="warn">ยังไม่มีทีม — เลือกทีมในแท็บ “ห้อง”</div>';
-  const sl=slotsOf(T.form);const rows={FW:[],MF:[],DF:[],GK:[]};
-  sl.forEach((pos,i)=>rows[pos].push(i));
+  if(S.phase==='live')return '<div class="warn">กำลังแข่งอยู่ — เปลี่ยนตัว/แผน/แท็กติกได้ที่หน้าจอแมตช์สด</div><button class="btn pri blk" data-a="unskip">🎛️ ไปหน้าแก้เกม</button>';
+  const sl=slotsOf(T.form);const rows={FW:[],MF:[],DF:[],GK:[]};sl.forEach((pos,i)=>rows[pos].push(i));
   const slotHtml=i=>{const p=S.pl[T.xi[i]];const pos=sl[i];
     if(!p)return '<button class="slot" data-a="slotpick" data-v="'+i+'"><span class="c emp">+</span><span>'+pos+'</span></button>';
     const cls=p.ft>=80?'':p.ft>=65?' mid':' low';
     return '<button class="slot" data-a="unslot" data-v="'+i+'"><span class="c'+cls+(p.pos!==pos?' oop':'')+'">'+p.o+'</span><span>'+esc(shortN(p))+'</span></button>'};
-  const sq=squad(T.id);const inXI=new Set(T.xi.filter(Boolean));
-  const wage=sq.reduce((s,p)=>s+p.v,0)*0.005;
+  const sq=squad(T.id);const inXI=new Set(T.xi.filter(Boolean)),inBn=new Set(T.bn);
+  const wage=sq.reduce((s,p)=>s+p.v,0)*L().wage;
   let html='<div class="card"><div class="chips" style="margin-bottom:8px">'+Object.keys(FORMS).map(f=>'<button class="chip'+(T.form===f?' on':'')+'" data-a="form" data-v="'+f+'">'+f+'</button>').join('')+'</div>'+
-   '<div class="seg">'+TAC.map((t,i)=>'<button class="'+(T.tac===i?'on':'')+'" data-a="tac" data-v="'+i+'">'+['🛡️ ','⚖️ ','🔥 '][i]+t+'</button>').join('')+'</div></div>';
+   '<div class="seg">'+TAC.map((t,i)=>'<button class="'+(T.tac===i?'on':'')+'" data-a="tac" data-v="'+i+'">'+TACI[i]+' '+t+'</button>').join('')+'</div></div>';
   html+='<div class="pitch">'+['FW','MF','DF','GK'].map(r=>'<div class="prow2">'+rows[r].map(slotHtml).join('')+'</div>').join('')+'</div>';
-  html+='<div class="row" style="margin:10px 0"><button class="btn grow" data-a="auto">🤖 จัดตัวอัตโนมัติ</button><button class="btn grow" data-a="bulk">📝 ใส่ชื่อจริง</button></div>';
-  html+='<div class="mut sm">แตะ + เพื่อส่งลงสนาม (จะสลับกับคนที่อ่อนสุดในตำแหน่งเดียวกัน) · แตะชื่อเพื่อดูข้อมูล/เปลี่ยนชื่อ/ขาย · ความฟิตต่ำทำให้เล่นแย่ลง</div>';
+  html+='<div class="bench"><div class="gh" style="margin-top:0"><span>🪑 ตัวสำรอง ('+T.bn.length+'/'+BENCH+')</span><span class="mut">แตะเพื่อเอาออก</span></div><div class="bchips">'+
+   (T.bn.map(id=>{const p=S.pl[id];return p?'<button class="bchip" data-a="unbench" data-v="'+id+'">'+posTagS(p)+esc(shortN(p))+' <b>'+p.o+'</b></button>':''}).join('')||'<span class="mut sm">ยังไม่มีตัวสำรอง — กด “ส” ที่รายชื่อด้านล่าง</span>')+'</div></div>';
+  html+='<div class="row" style="margin:10px 0"><button class="btn grow" data-a="auto">🤖 จัดตัวอัตโนมัติ</button><button class="btn grow" data-a="bulk">📝 แก้ชื่อหลายคน</button></div>';
+  html+='<div class="mut sm">ปุ่ม + = ส่งลงตัวจริง · ปุ่ม ส = ใส่ม้านั่งสำรอง (สูงสุด '+BENCH+' คน ใช้เปลี่ยนตัวระหว่างแข่งได้ '+MAX_SUBS+' คน) · แตะชื่อเพื่อดูข้อมูล/เปลี่ยนชื่อ/ขาย</div>';
   ['GK','DF','MF','FW'].forEach(pos=>{
     const ps=sq.filter(p=>p.pos===pos).sort((a,b)=>b.o-a.o);
     html+='<div class="gh"><span>'+POSN[pos]+' ('+ps.length+')</span><span>ตัวจริง '+T.xi.filter((id,i)=>id&&sl[i]===pos).length+'/'+sl.filter(s=>s===pos).length+'</span></div>';
-    html+=ps.map(p=>plRow(p,inXI.has(p.id))).join('');
+    html+=ps.map(p=>plRow(p,inXI.has(p.id),inBn.has(p.id))).join('');
   });
-  html+='<div class="card" style="margin-top:12px"><h3>💰 การเงิน</h3><div class="kv"><div><b>'+money(T.budget)+'</b><small>งบ (ล้าน)</small></div><div><b>'+money(sq.reduce((s,p)=>s+p.v,0))+'</b><small>มูลค่าทีม</small></div><div><b>'+money(wage)+'</b><small>ค่าเหนื่อย/นัด</small></div></div><div class="mut sm">รายได้: ค่าตั๋วเกมเหย้า + ค่าลิขสิทธิ์ทุกนัด + เงินรางวัลจบฤดูกาล</div></div>';
+  html+='<div class="card" style="margin-top:12px"><h3>💰 การเงิน</h3><div class="kv"><div><b>'+money(T.budget)+'</b><small>งบประมาณ</small></div><div><b>'+money(sq.reduce((s,p)=>s+p.v,0))+'</b><small>มูลค่าทีม</small></div><div><b>'+money(wage)+'</b><small>ค่าเหนื่อย/นัด</small></div></div><div class="mut sm">รายได้: ค่าตั๋วเกมเหย้า + ค่าลิขสิทธิ์ทุกนัด + เงินรางวัลจบฤดูกาล</div></div>';
   return html;
 }
-function plRow(p,inx){
-  const st=p.ij?'🚑'+p.ij+' ':p.sp?'🟥 ':'';
-  return '<div class="pl'+(inx?' in':'')+'"><button class="tog" data-a="tog" data-v="'+p.id+'"'+(avail(p)||inx?'':' disabled')+'>'+(inx?'✓':'+')+'</button>'+
-   '<div class="pm" data-a="pl" data-v="'+p.id+'"><b>'+st+esc(p.n)+(p.f?' <span class="fx">●ต่างชาติ</span>':'')+'</b><small>'+posTag(p)+p.ag+' ปี · '+money(p.v)+' ล. · ⚽'+p.g+'</small></div>'+
-   '<div class="fit" title="ความฟิต"><i style="width:'+p.ft+'%;background:'+(p.ft>=80?'var(--ac)':p.ft>=65?'var(--ac2)':'var(--bad)')+'"></i></div><div class="ov">'+p.o+'</div></div>';
+function plRow(p,inx,inb){
+  const st=p.ij?'🚑'+p.ij+' ':p.sp?'🟥 ':'';const ok=avail(p);
+  return '<div class="pl'+(inx?' in':inb?' bn':'')+'"><button class="tog" data-a="tog" data-v="'+p.id+'"'+(ok||inx?'':' disabled')+'>'+(inx?'✓':'+')+'</button>'+
+   '<button class="tog tb" data-a="bench" data-v="'+p.id+'"'+(ok||inb?'':' disabled')+'>'+(inb?'✓ส':'ส')+'</button>'+
+   '<div class="pm" data-a="pl" data-v="'+p.id+'"><b>'+st+esc(p.n)+natTag(p)+'</b><small>'+posTag(p)+p.ag+' ปี · '+money(p.v)+' · ⚽'+p.g+'</small></div>'+
+   '<div class="fit"><i style="width:'+p.ft+'%;background:'+(p.ft>=80?'var(--ac)':p.ft>=65?'var(--ac2)':'var(--bad)')+'"></i></div><div class="ov">'+p.o+'</div></div>';
 }
-function lineupChange(T,fn){
-  // แก้ในเครื่องทันที แล้วส่งให้โฮสต์
-  fn(T);send({type:'lineup',xi:T.xi.slice(),form:T.form,tac:T.tac});if(!isHost)render();
-}
+function lineupChange(fn){const T=myTeam();if(!T)return;fn(T);send({type:'lineup',xi:T.xi.slice(),bn:T.bn.slice(),form:T.form,tac:T.tac});if(!isHost)render()}
 function togglePlayer(pid){
-  const T=myTeam();if(!T)return;const p=S.pl[pid];if(!p)return;const sl=slotsOf(T.form);
-  const at=T.xi.indexOf(pid);
-  if(at>=0){lineupChange(T,X=>{X.xi[at]=null});return}
+  const T=myTeam();if(!T)return;const p=S.pl[pid];if(!p)return;const sl=slotsOf(T.form);const at=T.xi.indexOf(pid);
+  if(at>=0){lineupChange(X=>{X.xi[at]=null});return}
   if(!avail(p)){toast(p.ij?'บาดเจ็บอยู่':'ติดโทษแบน');return}
-  let i=sl.findIndex((s,k)=>s===p.pos&&X0(T,k));
+  let i=sl.findIndex((s,k)=>s===p.pos&&!S.pl[T.xi[k]]);
   if(i<0){let wo=999;sl.forEach((s,k)=>{if(s===p.pos){const q=S.pl[T.xi[k]];const sc=q?effScore(q):-1;if(sc<wo){wo=sc;i=k}}})}
-  if(i<0){i=sl.findIndex((s,k)=>X0(T,k)&&(s==='GK')===(p.pos==='GK'));}
+  if(i<0)i=sl.findIndex((s,k)=>!S.pl[T.xi[k]]&&(s==='GK')===(p.pos==='GK'));
   if(i<0){toast('ไม่มีตำแหน่งว่าง');return}
-  lineupChange(T,X=>{X.xi[i]=pid});
+  lineupChange(X=>{const old=X.xi[i];const bi=X.bn.indexOf(pid);X.xi[i]=pid;
+    if(bi>=0){if(old)X.bn[bi]=old;else X.bn.splice(bi,1)}});
 }
-function X0(T,k){return T.xi[k]==null||!S.pl[T.xi[k]]}
-
+function toggleBench(pid){
+  const T=myTeam();if(!T)return;const p=S.pl[pid];if(!p)return;
+  if(T.bn.includes(pid)){lineupChange(X=>{X.bn=X.bn.filter(x=>x!==pid)});return}
+  if(!avail(p)){toast(p.ij?'บาดเจ็บอยู่':'ติดโทษแบน');return}
+  if(T.bn.length>=BENCH){toast('ม้านั่งสำรองเต็ม '+BENCH+' คนแล้ว');return}
+  lineupChange(X=>{const at=X.xi.indexOf(pid);if(at>=0)X.xi[at]=null;X.bn.push(pid)});
+}
 /* ---------- ตลาด ---------- */
 function vMarket(){
   const T=myTeam();if(!T)return '<div class="warn">ยังไม่มีทีม</div>';
   let list=Object.values(S.pl).filter(p=>{if(p.t===T.id)return false;const o=p.t>=0?S.teams[p.t]:null;if(o&&o.owner)return false;
-    if(UI.mkSrc==='free'&&p.t!==-1)return false;if(UI.mkSrc==='club'&&p.t===-1)return false;if(UI.mkPos!=='ALL'&&p.pos!==UI.mkPos)return false;if(UI.mkSrc==='afford'&&priceOf(p)>T.budget)return false;return true});
+    if(UI.mkSrc==='free'&&p.t!==-1)return false;if(UI.mkSrc==='club'&&p.t===-1)return false;if(UI.mkPos!=='ALL'&&p.pos!==UI.mkPos)return false;if(UI.mkSrc==='afford'&&priceOf(p)>T.budget)return false;
+    if(UI.mkQ&&!p.n.toLowerCase().includes(UI.mkQ.toLowerCase()))return false;return true});
   const s=UI.mkSort;list.sort((a,b)=>s==='o'?b.o-a.o:s==='p'?priceOf(a)-priceOf(b):s==='a'?a.ag-b.ag:(b.pt-b.o)-(a.pt-a.o));
   const n=list.length;list=list.slice(0,60);
-  return '<div class="card"><div class="row"><div class="grow"><b>ตลาดซื้อขาย</b><div class="mut sm">นักเตะในทีม '+squad(T.id).length+'/'+MAX_SQUAD+'</div></div><div class="money">'+money(T.budget)+' ล.<small>งบที่มี</small></div></div></div>'+
+  return (S.phase==='live'?'<div class="warn">กำลังแข่ง — ซื้อขายได้หลังจบนัด</div>':'')+
+   '<div class="card"><div class="row"><div class="grow"><b>ตลาดซื้อขาย</b><div class="mut sm">นักเตะในทีม '+squad(T.id).length+'/'+MAX_SQUAD+'</div></div><div class="money">'+money(T.budget)+'<small>งบที่มี</small></div></div>'+
+   '<input class="in" id="mkq" placeholder="🔎 ค้นหาชื่อนักเตะ" style="margin-top:8px" value="'+esc(UI.mkQ||'')+'"></div>'+
    '<div class="chips">'+[['all','ทั้งหมด'],['free','ฟรีเอเย่นต์'],['club','จากทีม AI (+30%)'],['afford','ซื้อไหว']].map(([k,l])=>'<button class="chip'+(UI.mkSrc===k?' on':'')+'" data-a="mksrc" data-v="'+k+'">'+l+'</button>').join('')+'</div>'+
    '<div class="chips" style="margin:6px 0">'+['ALL','GK','DF','MF','FW'].map(k=>'<button class="chip'+(UI.mkPos===k?' on':'')+'" data-a="mkpos" data-v="'+k+'">'+(k==='ALL'?'ทุกตำแหน่ง':k)+'</button>').join('')+'</div>'+
    '<div class="chips" style="margin-bottom:8px">'+[['o','เก่งสุด'],['p','ถูกสุด'],['a','อายุน้อย'],['g','ศักยภาพ']].map(([k,l])=>'<button class="chip'+(UI.mkSort===k?' on':'')+'" data-a="mksort" data-v="'+k+'">เรียง: '+l+'</button>').join('')+'</div>'+
-   (list.map(p=>{const pr=priceOf(p);const own=p.t>=0?S.teams[p.t]:null;
+   (list.map(p=>{const pr=priceOf(p);const own=p.t>=0?S.teams[p.t]:null;const can=T.budget>=pr&&S.phase!=='live';
      return '<div class="pl">'+(own?badge(own,30):'<span class="badge" style="width:30px;height:30px;background:#0a1c11;border-color:#2c5a3d;color:#8db59a;font-size:9px">ฟรี</span>')+
-     '<div class="pm" data-a="pl" data-v="'+p.id+'"><b>'+esc(p.n)+(p.f?' <span class="fx">●</span>':'')+'</b><small>'+posTag(p)+p.ag+' ปี'+(p.pt-p.o>=6&&p.ag<=23?' · 🌱ดาวรุ่ง':'')+'</small></div>'+
-     '<div class="ov">'+p.o+'</div><div class="price"><b>'+money(pr)+'</b>ล้าน</div><button class="btn sm '+(T.budget>=pr?'pri':'')+'" data-a="buy" data-v="'+p.id+'"'+(T.budget>=pr?'':' disabled')+'>ซื้อ</button></div>'}).join('')||'<div class="mut">ไม่มีนักเตะตามเงื่อนไข</div>')+
+     '<div class="pm" data-a="pl" data-v="'+p.id+'"><b>'+esc(p.n)+natTag(p)+'</b><small>'+posTag(p)+p.ag+' ปี'+(p.pt-p.o>=6&&p.ag<=23?' · 🌱ดาวรุ่ง':'')+'</small></div>'+
+     '<div class="ov">'+p.o+'</div><div class="price"><b>'+money(pr)+'</b></div><button class="btn sm '+(can?'pri':'')+'" data-a="buy" data-v="'+p.id+'"'+(can?'':' disabled')+'>ซื้อ</button></div>'}).join('')||'<div class="mut">ไม่มีนักเตะตามเงื่อนไข</div>')+
    (n>60?'<div class="mut sm" style="text-align:center">แสดง 60 จาก '+n+' คน</div>':'');
 }
-
 /* ---------- ตาราง ---------- */
-function vTableHtml(tb,final){
+function vTableHtml(tb){
+  const z=L().zone,n=tb.length;
   return '<table class="tb"><tr><th>#</th><th style="text-align:left">ทีม</th><th>นัด</th><th>ช</th><th>ส</th><th>พ</th><th>+/-</th><th>แต้ม</th></tr>'+
    tb.map((r,i)=>{const T=S.teams[r.id];const own=T.owner&&S.humans[T.owner];const mine=T.owner===uid;
-    return '<tr class="'+(mine?'me ':'')+(own?'hum ':'')+(i<2?'zone1':i>=13?'zoneR':'')+'"><td>'+(i+1)+'</td><td class="t">'+badge(T,20)+' <b>'+esc(T.name)+'</b>'+(own?'<div class="mut" style="font-size:10px;padding-left:26px">👔 '+esc(own.name)+'</div>':'')+'</td><td>'+r.p+'</td><td>'+r.w+'</td><td>'+r.d+'</td><td>'+r.l+'</td><td>'+(r.gf-r.ga>0?'+':'')+(r.gf-r.ga)+'</td><td class="pts">'+r.pts+'</td></tr>'}).join('')+'</table>'+
-   '<div class="mut sm" style="margin-top:6px"><span style="color:var(--ac)">▍</span>ลุ้นไปเอเชีย <span style="color:var(--bad)">▍</span>โซนตกชั้น</div>';
+    return '<tr class="'+(mine?'me ':'')+(own?'hum ':'')+(i<z[0]?'zone1':i>=n-z[1]?'zoneR':'')+'"><td>'+(i+1)+'</td><td class="t">'+badge(T,20)+' <b>'+esc(T.name)+'</b>'+(own?'<div class="mut" style="font-size:10px;padding-left:26px">👔 '+esc(own.name)+'</div>':'')+'</td><td>'+r.p+'</td><td>'+r.w+'</td><td>'+r.d+'</td><td>'+r.l+'</td><td>'+(r.gf-r.ga>0?'+':'')+(r.gf-r.ga)+'</td><td class="pts">'+r.pts+'</td></tr>'}).join('')+'</table>'+
+   '<div class="mut sm" style="margin-top:6px"><span style="color:var(--ac)">▍</span>'+L().zt+' <span style="color:var(--bad)">▍</span>โซนตกชั้น</div>';
 }
 function vTable(){
-  const ex=S.phase==='live'&&!liveDoneLocal()?S.live.r:-1;
   let html='<div class="seg" style="margin-bottom:10px">'+[['table','ตารางคะแนน'],['top','ดาวซัลโว'],['fx','โปรแกรม']].map(([k,l])=>'<button class="'+(UI.tbl===k?'on':'')+'" data-a="tbl" data-v="'+k+'">'+l+'</button>').join('')+'</div>';
-  if(UI.tbl==='table')html+='<div class="card" style="padding:8px">'+vTableHtml(table(ex))+'</div>';
+  if(UI.tbl==='table')html+='<div class="card" style="padding:8px">'+vTableHtml(table())+'</div>';
   else if(UI.tbl==='top'){
     const ps=Object.values(S.pl).filter(p=>p.g>0&&p.t>=0).sort((a,b)=>b.g-a.g||b.as-a.as).slice(0,20);
     html+='<div class="card">'+(ps.map((p,i)=>'<div class="mini" data-a="pl" data-v="'+p.id+'"><span style="min-width:22px">'+(i+1)+'</span>'+badge(S.teams[p.t],22)+'<span class="tn">'+esc(p.n)+'</span><span class="mut sm">'+p.as+' แอสซิสต์</span><span class="sc">⚽ '+p.g+'</span></div>').join('')||'<div class="mut">ยังไม่มีใครยิงประตู</div>')+'</div>';
   }else{
-    let r=UI.fxR==null?Math.min(S.round,ROUNDS-1):UI.fxR;r=clamp(r,0,ROUNDS-1);UI.fxR=r;const T=myTeam();
-    html+='<div class="row" style="margin-bottom:8px"><button class="btn sm" data-a="fxr" data-v="'+(r-1)+'">◀</button><b class="grow" style="text-align:center">นัดที่ '+(r+1)+'</b><button class="btn sm" data-a="fxr" data-v="'+(r+1)+'">▶</button></div><div class="card">'+
-     S.fx[r].map(([h,a])=>{const res=S.res[r]&&r!==ex?S.res[r].find(x=>x.h===h):null;const H=S.teams[h],A=S.teams[a];const mine=T&&(h===T.id||a===T.id);
+    const R=nR();let r=UI.fxR==null?Math.min(S.round,R-1):UI.fxR;r=clamp(r,0,R-1);UI.fxR=r;const T=myTeam();
+    html+='<div class="row" style="margin-bottom:8px"><button class="btn sm" data-a="fxr" data-v="'+(r-1)+'">◀</button><b class="grow" style="text-align:center">นัดที่ '+(r+1)+'/'+R+'</b><button class="btn sm" data-a="fxr" data-v="'+(r+1)+'">▶</button></div><div class="card">'+
+     S.fx[r].map(([h,a])=>{const res=S.res[r]?S.res[r].find(x=>x.h===h):null;const H=S.teams[h],A=S.teams[a];const mine=T&&(h===T.id||a===T.id);
       return '<div class="res'+(mine?' me':'')+'"><span class="tn r">'+esc(H.name)+'</span>'+badge(H,22)+'<span class="sc">'+(res?res.hg+' - '+res.ag:'vs')+'</span>'+badge(A,22)+'<span class="tn">'+esc(A.name)+'</span></div>'}).join('')+'</div>';
   }
   if(S.champs.length)html+='<div class="card"><h3>🏆 ทำเนียบแชมป์</h3>'+S.champs.slice().reverse().map(c=>'<div class="mini"><span>'+seasonLabel(c.s)+'</span><span class="grow"></span>'+badge(S.teams[c.t],22)+' '+esc(S.teams[c.t].name)+'</div>').join('')+'</div>';
   return html;
 }
-
 /* ---------- ห้อง ---------- */
 function vRoom(){
-  const link=location.origin+location.pathname+'?room='+S.code;const hs=Object.entries(S.humans);const T=myTeam();
-  let html='';
+  const link=location.origin+location.pathname+'?room='+S.code;const hs=Object.entries(S.humans);const T=myTeam();let html='';
   if(!S.solo)html+='<div class="card"><div class="mut sm" style="text-align:center">รหัสห้อง</div><div class="code">'+S.code+'</div><div class="mut sm" style="text-align:center">'+(isHost?'คุณเป็นเจ้าของห้อง — ต้องเปิดแอปค้างไว้ระหว่างเล่น':'')+'</div><div class="row" style="margin-top:8px"><button class="btn grow" data-a="share" data-v="'+esc(link)+'">📤 ชวนเพื่อน</button><button class="btn grow" data-a="copy" data-v="'+esc(link)+'">📋 คัดลอก</button></div></div>'+
    '<div class="card"><h3>ผู้จัดการ ('+hs.length+')</h3><div class="hl">'+hs.map(([u,x])=>'<div class="hu"><span class="dot'+(x.on?'':' off')+'"></span><b>'+esc(x.name)+'</b>'+(u===S.host?'<span class="mut sm">👑</span>':'')+'<span class="grow"></span>'+(x.team!=null?badge(S.teams[x.team],24)+' <span class="sm">'+esc(S.teams[x.team].sh)+'</span>':'<span class="mut sm">ผู้ชม</span>')+'</div>').join('')+'</div></div>';
+  if(amHost())html+='<div class="card"><h3>ความเร็วแมตช์สด</h3>'+speedSeg()+'</div>';
   html+='<div class="card"><h3>'+(T?'ย้ายไปคุมทีมอื่น':'เลือกทีมที่ยังว่าง')+'</h3><div class="mut sm" style="margin-bottom:8px">ทีมเดิมจะกลับไปให้ AI คุม</div>'+vTeamGrid()+'</div>';
   html+='<div class="card"><h3>ตั้งค่า</h3><button class="btn blk" data-a="snd">'+(UI.sound?'🔊 เสียงตอนยิงประตู: เปิด':'🔇 เสียงตอนยิงประตู: ปิด')+'</button></div>';
-  html+='<div class="card"><h3>วิธีเล่น</h3><div class="sm mut">1) จัดตัวจริง เลือกแผน และแท็กติกในแท็บ “ทีม”<br>2) ซื้อ-ขายนักเตะในแท็บ “ตลาด”<br>3) กด “พร้อมเตะ” — เมื่อทุกคนพร้อม ทุกคู่จะแข่งพร้อมกันพร้อมบรรยายสด<br>4) แข่ง 30 นัด เหย้า-เยือน จบฤดูกาลรับเงินรางวัลตามอันดับ<br>5) นักเตะลงเล่นติดกันจะล้า ควรหมุนเวียน · ดาวรุ่งได้ลงสนามจะเก่งขึ้นเร็ว</div></div>';
+  html+='<div class="card"><h3>วิธีเล่น</h3><div class="sm mut">1) จัดตัวจริง 11 คน + ตัวสำรอง '+BENCH+' คน เลือกแผนและแท็กติกในแท็บ “ทีม”<br>2) ซื้อ-ขายนักเตะในแท็บ “ตลาด”<br>3) กด “พร้อมเตะ” — ทุกคู่แข่งพร้อมกันแบบสด<br>4) ระหว่างแข่ง: เปลี่ยนตัวได้ '+MAX_SUBS+' คน เปลี่ยนแผน/แท็กติกได้ตลอด และขอเวลานอกได้ '+TIMEOUTS+' ครั้ง/นัด (หยุดทุกสนาม '+PAUSE_MS/1000+' วิ)<br>5) นักเตะเหนื่อยลงระหว่างเกม เปลี่ยนตัวสดช่วงท้ายเกมช่วยได้มาก<br>6) จบฤดูกาลรับเงินรางวัลตามอันดับ</div></div>';
   html+='<button class="btn red blk" data-a="leave">🚪 ออกจากห้อง</button>';
   if(isHost)html+='<p class="mut sm" style="text-align:center">เกมถูกบันทึกในเครื่องนี้ กลับมาเล่นต่อได้จากหน้าแรก</p>';
   return html;
 }
-
 /* ---------- Modal ---------- */
 function openModal(html){$('#modal').innerHTML='<div class="bg" data-a="closebg"><div class="sh">'+html+'</div></div>'}
-function closeModal(){$('#modal').innerHTML=''}
+function closeModal(){$('#modal').innerHTML='';UI.subOpen=false;UI.subOff=null}
 function showPlayer(pid){
   const p=S.pl[pid];if(!p)return;const T=myTeam();const own=p.t>=0?S.teams[p.t]:null;const mine=T&&p.t===T.id;
-  const canRename=mine||amHost();const buyable=T&&!mine&&!(own&&own.owner);
-  openModal('<div class="row">'+(own?badge(own,44):'')+'<div class="grow"><h2>'+esc(p.n)+'</h2><div class="mut sm">'+posTag(p)+POSN[p.pos]+' · '+(own?esc(own.name):'ฟรีเอเย่นต์')+(p.f?' · ต่างชาติ':'')+'</div></div></div>'+
+  const canRename=mine||amHost();const buyable=T&&!mine&&!(own&&own.owner)&&S.phase!=='live';
+  openModal('<div class="row">'+(own?badge(own,44):'')+'<div class="grow"><h2>'+esc(p.n)+'</h2><div class="mut sm">'+posTag(p)+POSN[p.pos]+' · '+(own?esc(own.name):'ฟรีเอเย่นต์')+' · '+esc(p.nat||'')+'</div></div></div>'+
    '<div class="kv"><div><b>'+p.o+'</b><small>พลังตอนนี้</small></div><div><b>'+(p.ag<=26?p.pt:'—')+'</b><small>ศักยภาพ</small></div><div><b>'+p.ag+'</b><small>อายุ</small></div>'+
-   '<div><b>'+p.ft+'%</b><small>ความฟิต</small></div><div><b>'+money(p.v)+'</b><small>มูลค่า (ล.)</small></div><div><b>'+p.ap+'</b><small>ลงเล่น</small></div>'+
+   '<div><b>'+p.ft+'%</b><small>ความฟิต</small></div><div><b>'+money(p.v)+'</b><small>มูลค่า</small></div><div><b>'+p.ap+'</b><small>ลงเล่น</small></div>'+
    '<div><b>'+p.g+'</b><small>ประตู</small></div><div><b>'+p.as+'</b><small>แอสซิสต์</small></div><div><b>'+(p.ij?'🚑 '+p.ij:p.sp?'🟥 แบน':'✅')+'</b><small>สถานะ</small></div></div>'+
    (canRename?'<label class="lb">เปลี่ยนชื่อ</label><div class="row"><input class="in grow" id="rn" maxlength="28" value="'+esc(p.n)+'"><button class="btn" data-a="rename" data-v="'+p.id+'">บันทึก</button></div>':'')+
-   (mine?'<button class="btn red blk" style="margin-top:10px" data-a="sell" data-v="'+p.id+'">💸 ขายให้ตลาด รับ '+money(p.v*0.75)+' ล้าน</button>':'')+
-   (buyable?'<button class="btn pri blk" style="margin-top:10px" data-a="buy" data-v="'+p.id+'"'+(T.budget>=priceOf(p)?'':' disabled')+'>✍️ ซื้อ '+money(priceOf(p))+' ล้าน</button>':'')+
+   (mine&&S.phase!=='live'?'<button class="btn red blk" style="margin-top:10px" data-a="sell" data-v="'+p.id+'">💸 ขายให้ตลาด รับ '+money(p.v*0.75)+'</button>':'')+
+   (buyable?'<button class="btn pri blk" style="margin-top:10px" data-a="buy" data-v="'+p.id+'"'+(T.budget>=priceOf(p)?'':' disabled')+'>✍️ ซื้อ '+money(priceOf(p))+'</button>':'')+
    '<button class="btn blk" style="margin-top:8px" data-a="close">ปิด</button>');
 }
 function showMatch(i){
   const m=S.last.m[i];const H=S.teams[m.h],A=S.teams[m.a];
   const st=(l,a,b)=>'<div class="stat"><b>'+a+'</b><div class="bar"><i style="width:'+(a+b?a/(a+b)*100:50)+'%;background:'+H.c1+'"></i><i style="flex:1;background:'+A.c1+'"></i></div><b>'+b+'</b></div><div class="mut sm" style="text-align:center;margin-top:-4px">'+l+'</div>';
-  openModal('<div class="vs">'+'<div class="side">'+badge(H,44)+'<b>'+esc(H.name)+'</b></div><div class="mid">'+m.hg+' - '+m.ag+'<small>จบเกม</small></div><div class="side">'+badge(A,44)+'<b>'+esc(A.name)+'</b></div></div>'+
+  openModal('<div class="vs"><div class="side">'+badge(H,44)+'<b>'+esc(H.name)+'</b></div><div class="mid">'+m.hg+' - '+m.ag+'<small>จบเกม</small></div><div class="side">'+badge(A,44)+'<b>'+esc(A.name)+'</b></div></div>'+
    st('ครองบอล %',m.ps[0],m.ps[1])+st('ยิง',m.sh[0],m.sh[1])+st('ยิงตรงกรอบ',m.ot[0],m.ot[1])+st('ใบเหลือง/แดง',m.cd[0],m.cd[1])+
-   '<h3 style="margin:12px 0 6px">เหตุการณ์สำคัญ</h3>'+(m.ev.filter(e=>['g','r','i','y'].includes(e.k)).map(e=>'<div class="ev '+(e.k==='g'?'g':e.k==='r'?'r':'')+'"><span class="m">'+(e.m>90?'90+'+(e.m-90):e.m)+"'</span><span>"+esc(e.x)+'</span></div>').join('')||'<div class="mut">ไม่มีเหตุการณ์สำคัญ</div>')+
+   '<h3 style="margin:12px 0 6px">เหตุการณ์สำคัญ</h3>'+(m.ev.map(evHtml).join('')||'<div class="mut">ไม่มีเหตุการณ์สำคัญ</div>')+
    '<button class="btn blk" style="margin-top:12px" data-a="close">ปิด</button>');
 }
 function showBulk(){
-  const T=myTeam();if(!T)return;
-  openModal('<h2>📝 ใส่ชื่อนักเตะจริง</h2><p class="mut sm">วางรายชื่อ 1 คนต่อบรรทัด ใส่ตำแหน่งนำหน้าได้ (GK / DF / MF / FW) เช่น<br><code>GK สมชาย ใจดี</code><br><code>DF ...</code><br>ถ้าไม่ใส่ตำแหน่ง จะไล่ใส่ตามลำดับ ผู้รักษาประตู → กองหลัง → กองกลาง → กองหน้า (เรียงจากคนเก่งสุด)</p>'+
+  if(!myTeam())return;
+  openModal('<h2>📝 แก้ชื่อนักเตะหลายคน</h2><p class="mut sm">วางรายชื่อ 1 คนต่อบรรทัด ใส่ตำแหน่งนำหน้าได้ (GK / DF / MF / FW) เช่น<br><code>GK ชื่อ นามสกุล</code><br>ถ้าไม่ใส่ตำแหน่ง จะไล่ใส่ตามลำดับ ผู้รักษาประตู → กองหลัง → กองกลาง → กองหน้า (เรียงจากคนเก่งสุด)</p>'+
    '<textarea class="in" id="bk" rows="10" placeholder="GK ชื่อ นามสกุล&#10;DF ชื่อ นามสกุล"></textarea>'+
    '<button class="btn pri blk" style="margin-top:10px" data-a="dobulk">บันทึกรายชื่อ</button><button class="btn blk" style="margin-top:8px" data-a="close">ยกเลิก</button>');
 }
 let toastT=null;
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2400)}
 async function shareLink(link){
-  const text='มาเล่นเกมผู้จัดการทีมไทยลีกด้วยกัน! รหัสห้อง '+S.code;
+  const text='มาเล่นเกมผู้จัดการทีม'+L().name+'ด้วยกัน! รหัสห้อง '+S.code;
   if(navigator.share){try{await navigator.share({title:'KG ผู้จัดการทีม',text,url:link});return}catch(e){if(e&&e.name==='AbortError')return}}
   copyText(link);
 }
@@ -875,55 +984,61 @@ function saveName(){const el=$('#nm');if(el){myName=el.value.trim().slice(0,16);
 
 /* ---------- Events ---------- */
 const A={
-  create(){if(!saveName()){toast('ใส่ชื่อก่อนนะ');$('#nm').focus();return}hostStart(false)},
-  solo(){if(!saveName())myName='ผู้จัดการ';hostStart(true)},
+  slg(d){UI.lg=d.v;LS.set('fm_lg',d.v);saveName();render()},
+  hlg(d){send({type:'league',lg:d.v})},
+  speed(d){send({type:'speed',v:+d.v})},
+  create(){if(!saveName()){toast('ใส่ชื่อก่อนนะ');$('#nm').focus();return}hostStart(false,UI.lg)},
+  solo(){if(!saveName())myName='ผู้จัดการ';hostStart(true,UI.lg)},
   resume(){saveName();if(!myName)myName='ผู้จัดการ';resumeHost()},
   join(d){if(!saveName()){toast('ใส่ชื่อก่อนนะ');$('#nm').focus();return}joinRoom(d.v||($('#jc')&&$('#jc').value))},
-  leave(){if(isHost&&!S?.solo&&!confirm('ออกจากห้อง? เพื่อนจะหลุดจากเกม (เกมยังถูกบันทึกในเครื่องนี้)'))return;goHome()},
+  leave(){if(isHost&&S&&!S.solo&&!confirm('ออกจากห้อง? เพื่อนจะหลุดจากเกม (เกมยังถูกบันทึกในเครื่องนี้)'))return;goHome()},
   tab(d){UI.tab=d.v;render();window.scrollTo(0,0)},
   pick(d){send({type:'pick',team:+d.v})},
   start(){send({type:'start'})},
   ready(d){send({type:'ready',v:d.v==='1'});if(!isHost&&me()){me().ready=d.v==='1';render()}},
   play(){send({type:'play'})},
   skiplive(){send({type:'skiplive'})},
-  skip(){if(S.live)UI.skip[S.live.id]=1;render()},
-  unskip(){if(S.live)delete UI.skip[S.live.id];render()},
-  liveidx(d){UI.liveSel={id:S.live.id,i:+d.v};render();window.scrollTo(0,0)},
+  skip(){if(S.lv)UI.skip[S.lv.id]=1;render()},
+  unskip(){if(S.lv)delete UI.skip[S.lv.id];UI.tab='home';render();window.scrollTo(0,0)},
+  liveidx(d){UI.liveSel={id:S.lv.id,i:+d.v};render();window.scrollTo(0,0)},
   newseason(){send({type:'newseason'})},
-  form(d){const T=myTeam();lineupChange(T,X=>{X.form=d.v;autoXIlocal(X)})},
-  tac(d){const T=myTeam();lineupChange(T,X=>{X.tac=+d.v})},
-  auto(){const T=myTeam();lineupChange(T,X=>autoXIlocal(X))},
-  tog(d){togglePlayer(+d.v)},
-  unslot(d){const T=myTeam();lineupChange(T,X=>{X.xi[+d.v]=null})},
-  slotpick(d){UI.tab='team';const T=myTeam();const pos=slotsOf(T.form)[+d.v];toast('เลือก '+POSN[pos]+' จากรายชื่อด้านล่าง')},
-  pl(d){showPlayer(+d.v)},
-  match(d){showMatch(+d.v)},
+  form(d){lineupChange(X=>{X.form=d.v;autoXI(X)})},
+  tac(d){lineupChange(X=>{X.tac=+d.v})},
+  auto(){lineupChange(X=>autoXI(X))},
+  tog(d){togglePlayer(+d.v)},bench(d){toggleBench(+d.v)},
+  unbench(d){lineupChange(X=>{X.bn=X.bn.filter(x=>x!==+d.v)})},
+  unslot(d){lineupChange(X=>{X.xi[+d.v]=null})},
+  slotpick(d){const T=myTeam();toast('เลือก'+POSN[slotsOf(T.form)[+d.v]]+'จากรายชื่อด้านล่าง')},
+  pl(d){showPlayer(+d.v)},match(d){showMatch(+d.v)},
   mksrc(d){UI.mkSrc=d.v;render()},mkpos(d){UI.mkPos=d.v;render()},mksort(d){UI.mkSort=d.v;render()},
   buy(d){send({type:'buy',pid:+d.v});closeModal()},
   sell(d){if(!confirm('ขายนักเตะคนนี้?'))return;send({type:'sell',pid:+d.v});closeModal()},
-  rename(d){const v=$('#rn').value;send({type:'rename',pid:+d.v,n:v});if(!isHost&&S.pl[+d.v]){S.pl[+d.v].n=v.trim()||S.pl[+d.v].n;render()}closeModal();toast('บันทึกชื่อแล้ว')},
+  rename(d){const v=$('#rn').value;send({type:'rename',pid:+d.v,n:v});if(!isHost&&S.pl[+d.v]){S.pl[+d.v].n=v.trim()||S.pl[+d.v].n;S.pl[+d.v].cu=1;render()}closeModal();toast('บันทึกชื่อแล้ว')},
   bulk(){showBulk()},
-  dobulk(){const txt=$('#bk').value;send({type:'bulk',txt});closeModal();if(isHost){}else toast('ส่งรายชื่อแล้ว')},
-  tbl(d){UI.tbl=d.v;render()},fxr(d){UI.fxR=clamp(+d.v,0,ROUNDS-1);render()},
+  dobulk(){send({type:'bulk',txt:$('#bk').value});closeModal();if(!isHost)toast('ส่งรายชื่อแล้ว')},
+  tbl(d){UI.tbl=d.v;render()},fxr(d){UI.fxR=+d.v;render()},
   share(d){shareLink(d.v)},copy(d){copyText(d.v)},
   snd(){UI.sound=!UI.sound;LS.set('fm_snd',UI.sound?'1':'0');if(UI.sound)beep(true);render()},
+  /* live */
+  ltac(d){send({type:'ltac',v:+d.v});const T=myTeam();if(!isHost&&T){T.tac=+d.v;render()}},
+  lform(d){send({type:'lform',f:d.v})},
+  pause(){send({type:'pause'})},resume(){send({type:'resume'})},
+  subopen(){UI.subOpen=true;UI.subOff=null;drawSub()},
+  suboff(d){UI.subOff=+d.v;drawSub()},suback(){UI.subOff=null;drawSub()},
+  subon(d){send({type:'sub',off:UI.subOff,on:+d.v});UI.subOff=null;const T=myTeam(),mine=myLive(T);
+    if(mine&&MAX_SUBS-mine.m.sb[mine.s]<=1){closeModal()}else drawSub()},
+  subclose(){closeModal()},
   close(){closeModal()},
   closebg(d,el,e){if(e.target===el)closeModal()}
 };
-function autoXIlocal(T){
-  // จัดตัวในเครื่องลูกข่าย (ใช้สูตรเดียวกับโฮสต์)
-  autoXI(T);
-}
-document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el)return;const f=A[el.dataset.a];if(!f)return;if(el.disabled)return;f(el.dataset,el,e)});
+document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el)return;const f=A[el.dataset.a];if(!f||el.disabled)return;f(el.dataset,el,e)});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='jc')A.join({})});
-
-/* ---------- live ticker ---------- */
-setInterval(()=>{if(S&&S.phase==='live'&&(UI.tab==='home'||UI.tab==='table')&&!$('#modal').innerHTML)render()},700);
-window.addEventListener('pagehide',()=>{if(isHost&&S)LS.set('fm_host',JSON.stringify(S))});
-
-/* ---------- start ---------- */
+document.addEventListener('input',e=>{if(e.target.id==='mkq'){UI.mkQ=e.target.value;clearTimeout(UI.mqT);UI.mqT=setTimeout(()=>{render();setTimeout(()=>{const el=$('#mkq');if(el){el.focus();el.setSelectionRange(el.value.length,el.value.length)}},20)},350)}});
+setInterval(()=>{if(S&&S.lv&&(S.lv.st==='pause'||S.lv.st==='ht')&&UI.tab==='home')render()},1000);
+window.addEventListener('pagehide',saveGame);
 render();
-window.__fm={get S(){return S},playRound,endLive,act:(m)=>act(uid,m),uid:()=>uid};
+window.__fm={get S(){return S},startRound,skipAll,endLive,tick,act:m=>act(uid,m),uid:()=>uid};
+
 </script>
 </body>
 </html>
