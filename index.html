@@ -223,6 +223,10 @@ code{background:#0a1c11;padding:1px 5px;border-radius:5px}
 .rs{min-width:40px;text-align:center;font-weight:700;border-radius:6px;padding:1px 6px;font-size:12px}
 .rs.w{background:#166534;color:#bbf7d0}.rs.d{background:#4b5563;color:#e5e7eb}.rs.l{background:#7f1d1d;color:#fecaca}
 .nav button{max-width:96px;font-size:11px}
+.gkalert{border-color:#b91c1c;background:linear-gradient(135deg,#3b0a0a,#1f0d0d);margin-top:8px}
+.pitchHost{margin:0 0 12px;border-radius:14px;overflow:hidden;border:2px solid #2f8a50;background:#0e3b22;line-height:0;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+.pitchHost canvas{display:block;width:100%}
+.live .vs .mid{font-size:26px}
 </style>
 </head>
 <body>
@@ -428,6 +432,7 @@ function fixBench(T){
 }
 function reslot(on,form,out){
   const sl=slotsOf(form);const ids=on.filter(Boolean);const res=sl.map(()=>null);const used=new Set();
+  if(on[0]&&!out.includes(on[0])){res[0]=on[0];used.add(on[0])}
   const live=ids.filter(id=>!out.includes(id)),dead=ids.filter(id=>out.includes(id));
   sl.forEach((pos,i)=>{const id=live.find(x=>!used.has(x)&&S.pl[x].pos===pos);if(id){res[i]=id;used.add(id)}});
   sl.forEach((pos,i)=>{if(res[i]==null){const id=live.find(x=>!used.has(x)&&(pos==='GK')===(S.pl[x].pos==='GK'))||live.find(x=>!used.has(x));if(id){res[i]=id;used.add(id)}}});
@@ -493,12 +498,12 @@ function stepMinute(m,min){
       m.ev.push({m:min,s,k:'g',p:sh,a:as,sc:m.sc.slice(),x:fill(pick(TXT.g),{p:nm(sh),t:T.name})+(as?' (แอสซิสต์ '+nm(as)+')':'')+' — '+m.sc[0]+'-'+m.sc[1]});
     }else if(rnd()<lam*5.5){
       const p=wpick(shooters,id=>({FW:5,MF:3,DF:1})[posIn(m,s,id)]);if(p==null)continue;m.sh[s]++;
-      if(rnd()<0.33){m.ot[s]++;m.ev.push({m:min,s,k:'sv',x:fill(pick(TXT.sv),{p:nm(p),k:nm(m.on[1-s][0])})})}
-      else m.ev.push({m:min,s,k:'c',x:fill(pick(TXT.c),{p:nm(p)})});
+      if(rnd()<0.33){m.ot[s]++;m.ev.push({m:min,s,k:'sv',p,x:fill(pick(TXT.sv),{p:nm(p),k:nm(m.on[1-s][0])})})}
+      else m.ev.push({m:min,s,k:'c',p,x:fill(pick(TXT.c),{p:nm(p)})});
     }
     if(rnd()<0.021){const p=pick(act);m.yel[p]=(m.yel[p]||0)+1;m.cd[s]++;
       if(m.yel[p]>=2){m.out.push(p);m.red.push(p);m.ev.push({m:min,s,k:'r',p,x:'🟥 '+nm(p)+' ('+T.sh+') ใบเหลืองใบที่สอง โดนไล่ออก!'})}
-      else m.ev.push({m:min,s,k:'y',x:'🟨 '+nm(p)+' ('+T.sh+') รับใบเหลือง'})}
+      else m.ev.push({m:min,s,k:'y',p,x:'🟨 '+nm(p)+' ('+T.sh+') รับใบเหลือง'})}
     else if(rnd()<0.0009){const p=pick(act);m.out.push(p);m.red.push(p);m.cd[s]++;m.ev.push({m:min,s,k:'r',p,x:'🟥 ใบแดงตรงๆ! '+nm(p)+' ('+T.sh+') ต้องออกจากสนาม'})}
     if(rnd()<0.0017*(1-0.12*T.st.med)){const p=pick(active(m,s));if(p&&!m.inj.includes(p)){m.inj.push(p);
       m.ev.push({m:min,s,k:'i',p,x:'🚑 '+nm(p)+' ('+T.sh+') บาดเจ็บ'});
@@ -507,9 +512,35 @@ function stepMinute(m,min){
   }
 }
 const humanCtl=T=>!!T.owner;
+const gkDead=(m,s)=>{const id=m.on[s][0];return !id||m.out.includes(id)};
+function gkField(m,s,pid,min,auto){ // ย้ายผู้เล่นในสนามไปเฝ้าประตู (ไม่เสียสิทธิ์เปลี่ยนตัว)
+  const i=m.on[s].indexOf(pid);if(i<=0||m.out.includes(pid))return false;
+  const old=m.on[s][0];m.on[s][0]=pid;m.on[s][i]=old;
+  m.ev.push({m:min,s,k:'gk',p:pid,x:'🧤 '+nm(pid)+' ย้ายไปเฝ้าประตู'+(auto?' (ฉุกเฉิน)':'')});return true;
+}
+function gkSub(m,s,off,on,min){ // เอาผู้เล่นออก 1 คน แล้วส่งผู้รักษาประตูสำรองลงเฝ้าประตู
+  if(!gkDead(m,s))return false;const i=m.on[s].indexOf(off),bi=m.bn[s].indexOf(on);if(i<=0||bi<0||m.out.includes(off))return false;
+  const old=m.on[s][0];m.on[s][0]=on;m.on[s][i]=old;m.bn[s].splice(bi,1);m.sb[s]++;if(!m.pl.includes(on))m.pl.push(on);
+  m.ev.push({m:min,s,k:'sub',p:on,x:'🔁🧤 '+nm(on)+' ลงเฝ้าประตู (เอา '+nm(off)+' ออก)'});return true;
+}
+function fixGK(m,s,min,useSub){
+  if(!gkDead(m,s))return;const lim=MAX_SUBS+(m.et?1:0);
+  const alive=active(m,s).filter(id=>id!==m.on[s][0]);
+  const benchGK=m.bn[s].map(id=>S.pl[id]).filter(p=>p&&avail(p)&&p.pos==='GK').sort((a,b)=>b.o-a.o)[0];
+  if(useSub&&benchGK&&m.sb[s]<lim&&alive.length){
+    const off=alive.map(id=>S.pl[id]).sort((a,b)=>(a.pos==='FW'?0:a.pos==='MF'?1:2)-(b.pos==='FW'?0:b.pos==='MF'?1:2)||a.o-b.o)[0];
+    if(off&&gkSub(m,s,off.id,benchGK.id,min))return;
+  }
+  const df=alive.map(id=>S.pl[id]).sort((a,b)=>(a.pos==='DF'?0:1)-(b.pos==='DF'?0:1)||b.o-a.o)[0];
+  if(df)gkField(m,s,df.id,min,true);
+}
 function aiMatch(m,min){
   for(let s=0;s<2;s++){
-    const T=T_(s?m.a:m.h);if(humanCtl(T))continue;
+    const T=T_(s?m.a:m.h);
+    if(humanCtl(T)){ // ทีมเรา: ถ้าไม่มีโกลเกิน 2 นาที ระบบย้ายผู้เล่นไปเฝ้าประตูให้เอง
+      if(gkDead(m,s)){m.gkd=m.gkd||[0,0];if(++m.gkd[s]>=3){fixGK(m,s,min,false);m.gkd[s]=0}}else if(m.gkd)m.gkd[s]=0;
+      continue}
+    if(gkDead(m,s))fixGK(m,s,min,true);
     const diff=m.sc[s]-m.sc[1-s];
     if(min===70&&diff<0&&T.tac!==2){T.tac=2;m.ev.push({m:min,s,k:'tac',x:'📋 '+T.name+' เปลี่ยนเป็นเกมบุก'})}
     if(min===82&&diff>0&&T.tac!==0){T.tac=0;m.ev.push({m:min,s,k:'tac',x:'📋 '+T.name+' ถอยมาตั้งรับ'})}
@@ -773,6 +804,11 @@ function act(u,m){
       if(!M.on[s].includes(m.off)||M.out.includes(m.off))return'ผู้เล่นคนนี้ไม่ได้อยู่ในสนาม';
       if(!M.bn[s].includes(m.on))return'ไม่มีผู้เล่นคนนี้บนม้านั่งสำรอง';
       doSub(M,s,m.off,m.on,'',S.lv.min);break}
+    case 'gkfield':{const L_=myLive(T);if(!L_)return;const M=L_.m;if(S.lv.st==='ft'||M.done)return'จบเกมแล้ว';
+      if(!gkField(M,L_.s,m.pid,S.lv.min,false))return'ย้ายผู้เล่นคนนี้ไม่ได้';break}
+    case 'gksub':{const L_=myLive(T);if(!L_)return;const M=L_.m,s=L_.s;if(S.lv.st==='ft'||M.done)return'จบเกมแล้ว';
+      const lim=MAX_SUBS+(M.et?1:0);if(M.sb[s]>=lim)return'เปลี่ยนตัวครบ '+lim+' คนแล้ว';
+      if(!gkSub(M,s,m.off,m.on,S.lv.min))return'เปลี่ยนตัวไม่สำเร็จ';break}
     case 'pause':{if(!S.lv||S.lv.st!=='run')return;S.lv.st='pause';S.lv.pu={by:h?h.name:'',u,until:Date.now()+864e5};break}
     case 'resume':{if(!S.lv||S.lv.st!=='pause')return;S.lv.pu.until=Date.now();break}
     default:return;
@@ -875,7 +911,7 @@ function toggleBench(pid){
 /* ---------- ตั้งค่า ---------- */
 /* ---------- Modal ---------- */
 function openModal(html){$('#modal').innerHTML='<div class="bg" data-a="closebg"><div class="sh">'+html+'</div></div>'}
-function closeModal(){$('#modal').innerHTML='';UI.subOpen=false;UI.subOff=null;if(UI.autoP){UI.autoP=false;if(S&&S.lv&&S.lv.st==='pause')act(uid,{type:'resume'})}}
+function closeModal(){$('#modal').innerHTML='';UI.subOpen=false;UI.subOff=null;UI.subMode=null;UI.gkOn=null;if(UI.autoP){UI.autoP=false;if(S&&S.lv&&S.lv.st==='pause')act(uid,{type:'resume'})}}
 function showBulk(){
   if(!myTeam())return;
   openModal('<h2>📝 แก้ชื่อนักเตะหลายคน</h2><p class="mut sm">วางรายชื่อ 1 คนต่อบรรทัด ใส่ตำแหน่งนำหน้าได้ (GK / DF / MF / FW) เช่น<br><code>GK ชื่อ นามสกุล</code><br>ถ้าไม่ใส่ตำแหน่ง จะไล่ใส่ตามลำดับ ผู้รักษาประตู → กองหลัง → กองกลาง → กองหน้า (เรียงจากคนเก่งสุด)</p>'+
@@ -1051,6 +1087,7 @@ function draw(){
   else if(UI.tab==='team')body=vTeam();else if(UI.tab==='staff')body=vStaff();else if(UI.tab==='market')body=vMarket();else if(UI.tab==='table')body=vTable();else body=vRoom();
   app.innerHTML=vTop()+'<div class="sec">'+body+'</div>'+vNav();
   liveWatch();endPops();
+  if(UI.tab==='home'&&liveShown())MV.attach();else MV.stop();
   if(UI.subOff!=null||UI.subOpen)drawSub();
 }
 function vTop(){
@@ -1140,6 +1177,7 @@ function vLive(){
    '<div class="vs" style="margin-top:6px"><div class="side">'+badge(H,46)+'<b>'+esc(H.name)+'</b><small class="mut">'+TACI[m.tc[0]]+' '+TAC[m.tc[0]]+'</small></div><div class="mid">'+m.sc[0]+' - '+m.sc[1]+(m.pen?'<small>จุดโทษ '+m.pen[0]+'-'+m.pen[1]+'</small>':m.et&&!m.done?'<small>ต่อเวลาพิเศษ</small>':'')+'</div><div class="side">'+badge(A,46)+'<b>'+esc(A.name)+'</b><small class="mut">'+TACI[m.tc[1]]+' '+TAC[m.tc[1]]+'</small></div></div>'+
    '<div class="bar" style="margin:10px 0 2px"><i style="width:'+(Math.min(V.min,V.min>93?123:93)/(V.min>93?123:93)*100)+'%;background:var(--ac)"></i></div>'+
    '<div class="row sm mut" style="justify-content:space-between;margin-top:6px"><span>ยิง '+m.sh[0]+' ('+m.ot[0]+')</span><span>ยิง (ตรงกรอบ)</span><span>'+m.sh[1]+' ('+m.ot[1]+')</span></div></div>';
+  html+='<div class="pitchHost" id="pitchHost"></div>';
   const evs=m.ev.filter(e=>e.k!=='ko').slice().reverse();
   html+='<div class="card"><div class="feed">'+(evs.length?evs.map(evHtml).join(''):'<div class="ev"><span class="m">0\'</span><span>🟢 เริ่มเกม!</span></div>')+'</div></div>';
   if(isMine&&V.st!=='ft'&&!m.done)html+=vControl(m,mine.s,T);
@@ -1149,7 +1187,7 @@ function vLive(){
   html+='<div class="row"><button class="btn grow" data-a="skip">🙈 ซ่อนจอสด</button>'+(V.st!=='ft'?'<button class="btn grow" data-a="skiplive">⏭️ ข้ามไปดูผล</button>':'')+'</div>';
   return html;
 }
-function evHtml(e){return '<div class="ev '+(e.k==='g'?'g':e.k==='r'?'r':e.k==='sub'||e.k==='tac'?'sb':e.k==='et'||e.k==='pen'?'g':'')+'"><span class="m">'+evMin(e)+'</span><span>'+esc(e.x)+'</span></div>'}
+function evHtml(e){return '<div class="ev '+(e.k==='g'?'g':e.k==='r'?'r':e.k==='sub'||e.k==='tac'||e.k==='gk'?'sb':e.k==='et'||e.k==='pen'?'g':'')+'"><span class="m">'+evMin(e)+'</span><span>'+esc(e.x)+'</span></div>'}
 function vControl(m,s,T){
   const left=MAX_SUBS+(m.et?1:0)-m.sb[s];
   const onIds=m.on[s];const sl=m.sl[s];
@@ -1166,12 +1204,35 @@ function vControl(m,s,T){
   return h;
 }
 function drawSub(){
-  const T=myTeam();const mine=myLive(T);if(!mine||S.lv.st==='ft'||mine.m.done){UI.subOpen=false;UI.subOff=null;closeModal();return}
-  const m=mine.m,s=mine.s;const left=MAX_SUBS+(m.et?1:0)-m.sb[s];
+  const T=myTeam();const mine=myLive(T);if(!mine||S.lv.st==='ft'||mine.m.done){UI.subOpen=false;UI.subOff=null;UI.subMode=null;closeModal();return}
+  const m=mine.m,s=mine.s;const left=MAX_SUBS+(m.et?1:0)-m.sb[s];const dead=gkDead(m,s);
+  const alive=m.on[s].map((id,i)=>({id,i})).filter(x=>x.id&&x.i>0&&!m.out.includes(x.id));
+  const benchGK=m.bn[s].map(id=>S.pl[id]).filter(p=>p&&p.pos==='GK');
+  const fc=f=>f>=75?'var(--ac)':f>=60?'var(--ac2)':'var(--bad)';
+  const row=(a,id,lbl,extra)=>{const p=S.pl[id];const f=Math.round(fitNow(m,id));return '<button class="lrow btnrow" data-a="'+a+'" data-v="'+id+'"><span class="pos p'+lbl+'">'+lbl+'</span><span class="grow">'+esc(p.n)+(m.yel[id]?' 🟨':'')+(extra||'')+'</span><span class="ov sm">'+p.o+'</span><span class="sm" style="color:'+fc(f)+'">'+f+'%</span></button>'};
+  const gk0=S.pl[m.on[s][0]];
   let h='<h2>🔁 เปลี่ยนตัว</h2><div class="mut sm">'+clockLabel(S.lv)+' · เหลือสิทธิ์ '+left+' คน · เกมหยุดรอระหว่างเลือก</div>';
-  if(UI.subOff==null){
-    h+='<div class="gh"><span>1) เลือกคนที่จะเอาออก</span></div>'+m.on[s].map((id,i)=>{const p=S.pl[id];if(!p||m.out.includes(id))return'';const f=Math.round(fitNow(m,id));
-      return '<button class="lrow btnrow" data-a="suboff" data-v="'+id+'"><span class="pos p'+m.sl[s][i]+'">'+m.sl[s][i]+'</span><span class="grow">'+esc(p.n)+(m.yel[id]?' 🟨':'')+'</span><span class="ov sm">'+p.o+'</span><span class="sm" style="color:'+(f>=75?'var(--ac)':f>=60?'var(--ac2)':'var(--bad)')+'">'+f+'%</span></button>'}).join('');
+  if(UI.subMode==='gkf'){
+    h+='<div class="warn">🧤 เลือกผู้เล่นในสนามที่จะย้ายไปเฝ้าประตู (ไม่เสียสิทธิ์เปลี่ยนตัว)'+(dead?'':' — '+esc(gk0?gk0.n:'')+' จะย้ายไปเล่นตำแหน่งของคนนั้นแทน')+' <button class="btn sm" data-a="gkmode" data-v="">ย้อนกลับ</button></div>'+
+      alive.map(x=>row('gkf',x.id,m.sl[s][x.i],S.pl[x.id].pos==='GK'?' 🧤':'')).join('');
+  }else if(UI.subMode==='gks'){
+    if(UI.gkOn==null){
+      h+='<div class="warn">🧤 1) เลือกผู้รักษาประตูสำรองที่จะลง <button class="btn sm" data-a="gkmode" data-v="">ย้อนกลับ</button></div>'+
+        (benchGK.map(p=>'<button class="lrow btnrow" data-a="gkon" data-v="'+p.id+'">'+posTagS(p)+'<span class="grow">'+esc(p.n)+'</span><span class="ov sm">'+p.o+'</span><span class="sm">'+Math.round(p.ft)+'%</span></button>').join('')||'<div class="mut">ไม่มีผู้รักษาประตูสำรอง</div>');
+    }else{
+      h+='<div class="warn">🧤 ลง: <b>'+esc(S.pl[UI.gkOn].n)+'</b> · 2) เลือกผู้เล่นที่จะเอาออกเพื่อเปิดทางให้โกล <button class="btn sm" data-a="gkmode" data-v="gks">เปลี่ยน</button></div>'+
+        alive.map(x=>row('gkoff',x.id,m.sl[s][x.i])).join('');
+    }
+  }else if(UI.subOff==null){
+    if(dead){
+      h+='<div class="card gkalert"><b>🧤 ไม่มีผู้รักษาประตู!</b><div class="sm" style="margin:4px 0 8px">'+esc(gk0?gk0.n:'ผู้รักษาประตู')+' ออกจากสนามไปแล้ว — เลือกวิธีแก้ (ถ้าไม่เลือก ระบบจะย้ายกองหลังไปเฝ้าประตูให้อัตโนมัติ)</div>'+
+        '<button class="btn pri blk" data-a="gkmode" data-v="gks"'+(left>0&&benchGK.length?'':' disabled')+'>🔁 ส่งผู้รักษาประตูสำรองลง (เอาผู้เล่นออก 1 คน)</button>'+
+        (left>0&&benchGK.length?'':'<div class="mut sm" style="margin-top:4px">'+(left<=0?'สิทธิ์เปลี่ยนตัวหมดแล้ว':'ไม่มีผู้รักษาประตูบนม้านั่งสำรอง')+'</div>')+
+        '<button class="btn blk" style="margin-top:8px" data-a="gkmode" data-v="gkf">🧍 ให้ผู้เล่นในสนามไปเฝ้าประตูแทน</button></div>';
+    }else{
+      h+='<button class="btn sm blk" style="margin:8px 0" data-a="gkmode" data-v="gkf">🧤 ย้ายผู้เล่นในสนามไปเป็นผู้รักษาประตู</button>';
+    }
+    h+='<div class="gh"><span>1) เลือกคนที่จะเอาออก</span></div>'+m.on[s].map((id,i)=>{const p=S.pl[id];if(!p||m.out.includes(id))return'';return row('suboff',id,m.sl[s][i])}).join('');
   }else{
     const off=S.pl[UI.subOff];
     h+='<div class="warn">ออก: <b>'+esc(off?off.n:'-')+'</b> <button class="btn sm" data-a="suback">เปลี่ยน</button></div><div class="gh"><span>2) เลือกตัวสำรองที่จะลง</span></div>'+
@@ -1418,11 +1479,210 @@ function onLiveEvent(m,i,e,mine,feat){
     if(good)AU.cheer();else AU.groan();
     pop({icon:'⚽',title:good?(isMy?'GOAL! ประตู!':'GOAL!'):'เสียประตู!',team:T,c1:T.c1,c2:T.c2,main:pn(e.p),sub:e.a?'แอสซิสต์: '+pn(e.a):'',score:scoreLine(m,sc,e.m),big:1,conf:good,cls:good?'good':'bad',vib:good?[120,80,120]:[200]});
   }else if(e.k==='r'&&(isMy||isFeat)){AU.whistle(1);AU.boo();
-    pop({icon:'🟥',title:'ใบแดง!',team:T,c1:'#dc2626',c2:'#3b0a0a',main:pn(e.p),sub:'ต้องเล่นด้วย 10 คน',score:scoreLine(m,m.sc,e.m),big:1,cls:'red',vib:[300]});
+    const gkRed=isMy&&side===mine.s&&m.on[side].indexOf(e.p)===0&&gkDead(m,side)&&!m.done;
+    if(gkRed){if(S.lv.st==='run'){act(uid,{type:'pause'});UI.autoP=true}setTimeout(()=>{if(popCur&&popCur.gkr)nextPop();UI.subOpen=true;UI.subOff=null;UI.subMode=null;drawSub()},2200)}
+    pop({icon:'🟥',title:gkRed?'ผู้รักษาประตูโดนใบแดง!':'ใบแดง!',team:T,c1:'#dc2626',c2:'#3b0a0a',main:pn(e.p),sub:gkRed?'เลือกคนเฝ้าประตูแทน…':'ต้องเล่นด้วย 10 คน',score:scoreLine(m,m.sc,e.m),big:1,cls:'red',vib:[300],ms:gkRed?2200:5000,gkr:gkRed?1:0});
   }else if(e.k==='i'&&(isMy||isFeat)){AU.whistle(1);AU.ooh();
     pop({icon:'🚑',title:'บาดเจ็บ',team:T,c1:'#f59e0b',c2:'#3a2a07',main:pn(e.p),sub:isMy&&side===mine.s?'ตรวจตัวสำรองในแผงแก้เกม':'',score:scoreLine(m,m.sc,e.m),cls:'warnp'});
   }else if(e.k==='et'&&isMy){AU.whistle(2);pop({icon:'⏱️',title:'ต่อเวลาพิเศษ!',sub:'เสมอใน 90 นาที — ได้สิทธิ์เปลี่ยนตัวเพิ่ม 1 คน',score:scoreLine(m,m.sc),ms:4000,cls:'pn0'})}
 }
+
+/* ==========================================================
+   กราฟิกการแข่งขันสด (2D canvas)
+   - นักเตะ 22 คนวิ่งตามแผนการเล่นจริง (m.sl / m.on)
+   - บอลส่งไปมาระหว่างนักเตะ ทีมไหนครองบอลมากกว่าส่งบ่อยกว่า
+   - เหตุการณ์จริงจากเอนจิน: ประตู / เซฟ / ยิงพลาด / ใบเหลือง-แดง / บาดเจ็บ / เปลี่ยนตัว / ย้ายโกล
+     → เล่นเป็นฉากบนสนามตามลำดับ
+   ========================================================== */
+const MV={cv:null,ctx:null,raf:0,w:0,h:0,st:null,lt:0};
+function liveIdx(){const V=S&&S.lv;if(!V)return 0;const mine=myLive(myTeam());let i=UI.liveSel&&UI.liveSel.id===V.id?UI.liveSel.i:mine?mine.i:0;return V.ms[i]?i:0}
+MV.attach=function(){
+  const host=document.getElementById('pitchHost');
+  if(!host){MV.stop();return}
+  if(!MV.cv){MV.cv=document.createElement('canvas');MV.cv.className='mvc';MV.cv.setAttribute('aria-label','ภาพการแข่งขันสด')}
+  if(MV.cv.parentNode!==host)host.appendChild(MV.cv);
+  const w=Math.max(260,Math.round(host.clientWidth||340)),h=Math.round(w*0.62),dpr=Math.min(2,window.devicePixelRatio||1);
+  if(MV.w!==w||MV.dpr!==dpr){MV.w=w;MV.h=h;MV.dpr=dpr;MV.cv.width=Math.round(w*dpr);MV.cv.height=Math.round(h*dpr);MV.cv.style.width=w+'px';MV.cv.style.height=h+'px';MV.ctx=MV.cv.getContext('2d');MV.ctx.setTransform(dpr,0,0,dpr,0,0)}
+  if(!MV.raf){MV.lt=performance.now();MV.raf=requestAnimationFrame(MV.frame)}
+};
+MV.stop=function(){if(MV.raf)cancelAnimationFrame(MV.raf);MV.raf=0};
+/* ---------- สถานะของแมตช์ที่กำลังแสดง ---------- */
+function mvNew(V,idx,m){
+  const st={key:V.id+':'+idx,P:{},ball:{x:0.5,y:0.5,z:0},holder:null,team:0,act:null,q:[],evSeen:m.ev.length,ov:null,marks:[],cele:null,t:0,passes:0,focus:{}};
+  // จุดเริ่ม: ตำแหน่งตามแผน
+  for(let s=0;s<2;s++)m.on[s].forEach((id,i)=>{if(id){const p=mvBase(m,s,i,st,0);st.P[id]={x:p.x,y:p.y}}});
+  st.team=rnd()<0.5?0:1;st.holder=mvKickTaker(m,st.team);
+  return st;
+}
+function mvLineInfo(m,s){const sl=m.sl[s];const cnt={},idx=[];sl.forEach((r,i)=>{idx[i]=cnt[r]=(cnt[r]||0);cnt[r]++});return{sl,cnt,idx}}
+function mvBase(m,s,i,st,t){
+  const L=mvLineInfo(m,s);const role=L.sl[i]||'MF';const n=L.cnt[role]||1,k=L.idx[i]||0;
+  let x={GK:0.045,DF:0.22,MF:0.43,FW:0.62}[role];
+  let y=n===1?0.5:0.14+0.72*(k/(n-1));if(role==='MF'&&n>=4)y=0.1+0.8*(k/(n-1));
+  if(role!=='GK'){
+    const att=st.team===s;x+=att?0.07:-0.03;
+    const bx=s===0?st.ball.x:1-st.ball.x;x+=(bx-0.45)*0.24;
+    y+=(st.ball.y-y)*(role==='FW'?0.12:0.2);
+    y+=Math.sin(t*0.0009+i*1.7+s)*0.012;x+=Math.cos(t*0.0007+i*2.3+s)*0.01;
+  }else{y=0.5+(st.ball.y-0.5)*0.25;const bx=s===0?st.ball.x:1-st.ball.x;x+=bx<0.25?0.015:0}
+  x=clamp(x,0.03,0.97);y=clamp(y,0.06,0.94);
+  return{x:s===0?x:1-x,y};
+}
+const mvAlive=(m,s)=>m.on[s].filter(id=>id&&!m.out.includes(id));
+const mvSideOf=(m,id)=>m.on[0].includes(id)?0:m.on[1].includes(id)?1:-1;
+function mvKickTaker(m,s){const a=mvAlive(m,s);const L=mvLineInfo(m,s);const fw=a.filter(id=>L.sl[m.on[s].indexOf(id)]==='FW');return (fw[0]||a.find(id=>m.on[s].indexOf(id)>0)||a[0])||null}
+function mvGK(m,s){const id=m.on[s][0];return id&&!m.out.includes(id)?id:mvAlive(m,s)[0]}
+function mvPickReceiver(m,s,st){
+  const a=mvAlive(m,s).filter(id=>id!==st.holder&&m.on[s].indexOf(id)>0);if(!a.length)return null;
+  const hp=st.P[st.holder]||st.ball;const dir=s===0?1:-1;const deep=(s===0?hp.x:1-hp.x)<0.38;
+  return wpick(a,id=>{const p=st.P[id]||{x:0.5,y:0.5};const fwd=(p.x-hp.x)*dir;const d=Math.hypot(p.x-hp.x,p.y-hp.y);
+    return deep?Math.max(0.05,1+fwd*7)*Math.exp(-Math.abs(d-0.34)*3):Math.max(0.05,1+fwd*4)*Math.exp(-Math.abs(d-0.2)*4)});
+}
+/* ---------- ลำดับการเล่น ---------- */
+function mvAmbient(m,st){
+  const s=st.team;if(!st.holder||mvSideOf(m,st.holder)!==s||m.out.includes(st.holder)){st.holder=mvKickTaker(m,s);}
+  const to=mvPickReceiver(m,s,st);if(!to){st.q.push({k:'wait',d:600});return}
+  // ทีมที่ครองบอลน้อยกว่าเสียบอลบ่อยกว่า
+  const mid=m.mid[s]+1,omid=m.mid[1-s]+1;const pTurn=clamp(0.13*Math.pow(omid/mid,1.4),0.06,0.3);
+  const hp=st.P[st.holder]||st.ball;const bx=s===0?hp.x:1-hp.x;
+  if(rnd()<pTurn+(bx>0.72?0.16:bx>0.6?0.06:0)){
+    const opp=mvAlive(m,1-s).filter(id=>m.on[1-s].indexOf(id)>0);
+    const near=opp.map(id=>({id,d:Math.hypot((st.P[id]||{x:.5}).x-hp.x,(st.P[id]||{y:.5}).y-hp.y)})).sort((a,b)=>a.d-b.d)[0];
+    if(near){st.q.push({k:'pass',to:near.id,d:520,turn:1});return}
+  }
+  st.q.push({k:'hold',d:220+rnd()*380});st.q.push({k:'pass',to,d:420+rnd()*280});
+}
+function mvEventSeq(m,st,e){
+  const s=e.s;const pn=id=>S.pl[id]?shortN(S.pl[id]):'';
+  const own=()=>{ if(mvSideOf(m,st.holder)!==s){const mf=mvAlive(m,s).filter(id=>m.on[s].indexOf(id)>0);const g=pick(mf);if(g)st.q.push({k:'pass',to:g,d:380,turn:1})} };
+  switch(e.k){
+    case 'g':{st.q=[];own();if(e.a&&mvSideOf(m,e.a)===s)st.q.push({k:'pass',to:e.a,d:420});
+      st.q.push({k:'run',who:e.p,d:350});st.q.push({k:'pass',to:e.p,d:420});
+      st.q.push({k:'shot',s,who:e.p,res:'goal',d:520});st.q.push({k:'goal',s,who:e.p,d:1900,txt:'⚽ GOAL! '+pn(e.p)});
+      st.q.push({k:'kick',s:1-s,d:500});break}
+    case 'sv':{st.q=st.q.filter(a=>a.ev);own();st.q.push({k:'run',who:e.p,d:300,ev:1});st.q.push({k:'pass',to:e.p,d:400,ev:1});
+      st.q.push({k:'shot',s,who:e.p,res:'save',d:480,ev:1});st.q.push({k:'flash',txt:'🧤 เซฟ!',d:900,ev:1});break}
+    case 'c':{st.q=st.q.filter(a=>a.ev);own();st.q.push({k:'pass',to:e.p,d:400,ev:1});
+      st.q.push({k:'shot',s,who:e.p,res:'miss',d:500,ev:1});st.q.push({k:'flash',txt:'😬 ยิงพลาด',d:700,ev:1});st.q.push({k:'gkball',s:1-s,d:500,ev:1});break}
+    case 'y':st.marks.push({id:e.p,i:'🟨',t:2200});st.ov={txt:'🟨 ใบเหลือง '+pn(e.p),t:1600};break;
+    case 'r':st.marks.push({id:e.p,i:'🟥',t:2600});st.ov={txt:'🟥 ใบแดง! '+pn(e.p),t:2200,c:'#dc2626'};break;
+    case 'i':st.marks.push({id:e.p,i:'🚑',t:2600});st.ov={txt:'🚑 '+pn(e.p)+' บาดเจ็บ',t:1800};break;
+    case 'sub':st.ov={txt:e.x.replace(/^🔁🧤 |^🔁 /,'🔁 ').slice(0,46),t:1800};if(e.p)st.marks.push({id:e.p,i:'🔁',t:1800});break;
+    case 'gk':st.ov={txt:'🧤 '+pn(e.p)+' เฝ้าประตู',t:2000};st.marks.push({id:e.p,i:'🧤',t:2200});break;
+    case 'tac':st.ov={txt:e.x.slice(0,46),t:1500};break;
+    case 'ht':st.q=[];st.ov={txt:'⏸️ หมดครึ่งแรก',t:2500};st.q.push({k:'kick',s:1,d:400});break;
+    case 'et':st.ov={txt:'⏱️ ต่อเวลาพิเศษ',t:2500};break;
+    case 'pen':st.ov={txt:'🎯 ดวลจุดโทษ',t:3000};break;
+    case 'ft':st.q=[];st.ov={txt:'🏁 จบเกม',t:4000};st.end=1;break;
+  }
+}
+function mvStart(m,st,a){
+  a.t=0;a.from={x:st.ball.x,y:st.ball.y};
+  if(a.k==='shot'){const atkR=a.s===0;const gx=atkR?1:0;
+    if(a.res==='goal')a.tg={x:gx+(atkR?0.018:-0.018),y:0.5+(rnd()-0.5)*0.09};
+    else if(a.res==='save')a.tg={x:atkR?0.955:0.045,y:0.5+(rnd()-0.5)*0.1};
+    else a.tg={x:gx+(atkR?0.03:-0.03),y:rnd()<0.5?0.5-0.11-rnd()*0.12:0.5+0.11+rnd()*0.12};
+    a.from={x:st.ball.x,y:st.ball.y};
+  }
+  if(a.k==='run'){const s=mvSideOf(m,a.who);if(s>=0){const fx=0.8+rnd()*0.07,fy=0.5+(rnd()-0.5)*0.32;st.focus[a.who]={x:s===0?fx:1-fx,y:fy,t:2600}}}
+  if(a.k==='kick'){st.team=a.s;st.holder=mvKickTaker(m,a.s);st.ball={x:0.5,y:0.5,z:0};st.cele=null;st.focus={}}
+  if(a.k==='gkball'){st.team=a.s;st.holder=mvGK(m,a.s)}
+  if(a.k==='goal'){st.cele={s:a.s,who:a.who};st.ov={txt:a.txt,t:a.d,big:1}}
+  if(a.k==='flash'){st.ov={txt:a.txt,t:a.d}}
+}
+function mvStep(m,st,a,dt){
+  a.t+=dt;const k=Math.min(1,a.t/a.d);
+  if(a.k==='pass'){const tp=st.P[a.to];if(!tp)return true;const e=k<0.5?2*k*k:1-Math.pow(-2*k+2,2)/2;
+    st.ball.x=a.from.x+(tp.x-a.from.x)*e;st.ball.y=a.from.y+(tp.y-a.from.y)*e;const d=Math.hypot(tp.x-a.from.x,tp.y-a.from.y);st.ball.z=Math.sin(Math.PI*k)*Math.min(1,d*2.2);
+    st.holder=null;if(k>=1){st.holder=a.to;st.ball.z=0;const s2=mvSideOf(m,a.to);if(s2>=0)st.team=s2;st.passes++}}
+  else if(a.k==='shot'){const e=1-Math.pow(1-k,3);st.ball.x=a.from.x+(a.tg.x-a.from.x)*e;st.ball.y=a.from.y+(a.tg.y-a.from.y)*e;st.ball.z=Math.sin(Math.PI*k)*0.35;st.holder=null;
+    if(k>=1){st.ball.z=0;if(a.res==='save'){const g=mvGK(m,1-a.s);st.holder=g;st.team=1-a.s}}}
+  else if(a.k==='hold'){const hp=st.P[st.holder];if(hp){const dir=mvSideOf(m,st.holder)===0?1:-1;st.focus[st.holder]={x:clamp(hp.x+dir*0.02,0.03,0.97),y:hp.y,t:300}}}
+  return a.t>=a.d;
+}
+MV.frame=function(now){
+  MV.raf=0;const host=document.getElementById('pitchHost');if(!host||!MV.cv||!MV.cv.isConnected||!S||!S.lv)return;
+  const dt=Math.min(80,now-MV.lt);MV.lt=now;
+  const V=S.lv;const idx=liveIdx();const m=V.ms[idx];
+  let st=MV.st;if(!st||st.key!==V.id+':'+idx){st=MV.st=mvNew(V,idx,m)}
+  const frozen=V.st==='pause'||V.st==='ht'||V.st==='ft'||m.done;
+  const spd=(SPEED[S.spd??1].t<500?1.35:SPEED[S.spd??1].t>900?0.85:1)*(st.q.length>8?1.6:1);
+  if(m.ev.length>st.evSeen){m.ev.slice(st.evSeen).forEach(e=>mvEventSeq(m,st,e));st.evSeen=m.ev.length}
+  const gdt=dt*spd;st.t+=dt;
+  if(!frozen||st.act||st.q.length){
+    if(!st.act){if(!st.q.length&&!frozen&&!st.end)mvAmbient(m,st);st.act=st.q.shift()||null;if(st.act)mvStart(m,st,st.act)}
+    if(st.act&&mvStep(m,st,st.act,gdt))st.act=null;
+  }
+  // ตำแหน่งผู้เล่น
+  for(let s=0;s<2;s++)m.on[s].forEach((id,i)=>{if(!id)return;const P=st.P[id]||(st.P[id]={x:s===0?0.02:0.98,y:0.98});
+    let tg=mvBase(m,s,i,st,now);const f=st.focus[id];if(f){tg=f;f.t-=dt;if(f.t<=0)delete st.focus[id]}
+    if(st.cele&&st.cele.s===s&&i>0){const c=st.P[st.cele.who];if(c)tg={x:c.x+Math.cos(i*1.3)*0.05,y:c.y+Math.sin(i*1.3)*0.07}}
+    if(id===st.holder&&!(st.act&&st.act.k==='pass')){st.ball.x+=(P.x+(s===0?0.012:-0.012)-st.ball.x)*0.35;st.ball.y+=(P.y+0.008-st.ball.y)*0.35}
+    const sp=(frozen&&!st.act?0.02:0.06)*(dt/16);P.x+=(tg.x-P.x)*Math.min(1,sp);P.y+=(tg.y-P.y)*Math.min(1,sp)});
+  if(st.ov){st.ov.t-=dt;if(st.ov.t<=0)st.ov=null}
+  st.marks=st.marks.filter(x=>(x.t-=dt)>0);
+  mvDraw(m,st,V,frozen);
+  MV.raf=requestAnimationFrame(MV.frame);
+};
+/* ---------- วาด ---------- */
+function mvKit(T,s,other){
+  let c=T.c1;const hex=h=>{const n=parseInt(h.slice(1),16);return[n>>16&255,n>>8&255,n&255]};
+  const d=(a,b)=>{const x=hex(a),y=hex(b);return Math.hypot(x[0]-y[0],x[1]-y[1],x[2]-y[2])};
+  if(d(c,'#1d6b3a')<90)c=T.c2;
+  if(s===1&&d(c,other)<110)c=d(T.c2,other)>110?T.c2:'#f8fafc';
+  return c;
+}
+function mvDraw(m,st,V,frozen){
+  const c=MV.ctx,W=MV.w,H=MV.h;if(!c)return;
+  const mg=10,fx=mg,fy=mg+12,fw=W-mg*2,fh=H-mg*2-12;const X=x=>fx+x*fw,Y=y=>fy+y*fh;
+  c.clearRect(0,0,W,H);
+  c.fillStyle='#0e3b22';c.fillRect(0,0,W,H);
+  for(let i=0;i<12;i++){c.fillStyle=i%2?'#1c6e3c':'#1a6536';c.fillRect(fx+fw*i/12,fy,fw/12+0.5,fh)}
+  c.strokeStyle='rgba(255,255,255,.75)';c.lineWidth=1.4;c.strokeRect(fx,fy,fw,fh);
+  c.beginPath();c.moveTo(X(0.5),fy);c.lineTo(X(0.5),fy+fh);c.stroke();
+  c.beginPath();c.arc(X(0.5),Y(0.5),fh*0.16,0,Math.PI*2);c.stroke();
+  c.fillStyle='rgba(255,255,255,.8)';c.beginPath();c.arc(X(0.5),Y(0.5),1.6,0,Math.PI*2);c.fill();
+  [[0,1],[1,-1]].forEach(([gx,dir])=>{
+    c.strokeRect(gx?X(1-0.155):fx,Y(0.2),fw*0.155,fh*0.6);c.strokeRect(gx?X(1-0.055):fx,Y(0.36),fw*0.055,fh*0.28);
+    c.beginPath();c.arc(X(gx?0.895:0.105),Y(0.5),1.5,0,Math.PI*2);c.fill();
+    c.beginPath();c.arc(X(gx?0.895:0.105),Y(0.5),fh*0.15,gx?Math.PI*0.62:-Math.PI*0.38,gx?Math.PI*1.38:Math.PI*0.38);c.stroke();
+    c.save();c.fillStyle='rgba(255,255,255,.18)';c.strokeStyle='rgba(255,255,255,.9)';const gxp=gx?fx+fw:fx-7;c.fillRect(gxp,Y(0.43),7,fh*0.14);c.strokeRect(gxp,Y(0.43),7,fh*0.14);c.restore();
+  });
+  // หัวสนาม: ทีม + สกอร์
+  const TH=T_(m.h),TA=T_(m.a);const kH=mvKit(TH,0,''),kA=mvKit(TA,1,kH);
+  c.font='600 11px Kanit,sans-serif';c.textBaseline='middle';
+  c.fillStyle=kH;c.fillRect(mg,4,8,8);c.fillStyle='#ecf7ef';c.textAlign='left';c.fillText(TH.sh+' ▶',mg+12,9);
+  c.fillStyle=kA;c.fillRect(W-mg-8,4,8,8);c.fillStyle='#ecf7ef';c.textAlign='right';c.fillText('◀ '+TA.sh,W-mg-12,9);
+  c.textAlign='center';c.fillStyle='#facc15';c.fillText(m.sc[0]+' - '+m.sc[1]+'  ·  '+clockLabel(V),W/2,9);
+  // นักเตะ
+  const R=Math.max(5.5,W/54);const hm=st.holder;
+  for(let s=0;s<2;s++){const kit=s?kA:kH;
+    m.on[s].forEach((id,i)=>{const P=st.P[id];if(!id||!P)return;const dead=m.out.includes(id);if(dead&&!st.marks.some(x=>x.id===id))return;
+      const gk=i===0;const col=gk?(s?'#c084fc':'#fde047'):kit;const x=X(P.x),y=Y(P.y);
+      c.globalAlpha=dead?0.35:1;
+      c.fillStyle='rgba(0,0,0,.28)';c.beginPath();c.ellipse(x+1.5,y+R*0.8,R*0.9,R*0.4,0,0,Math.PI*2);c.fill();
+      c.fillStyle=col;c.beginPath();c.arc(x,y,R,0,Math.PI*2);c.fill();
+      c.lineWidth=id===hm?2.2:1.2;c.strokeStyle=id===hm?'#ffffff':'rgba(0,0,0,.55)';c.stroke();
+      c.fillStyle=lum(col)>0.6?'#111':'#fff';c.font='700 '+Math.round(R*1.05)+'px Kanit,sans-serif';c.fillText(String(i+1),x,y+0.5);
+      c.globalAlpha=1;
+    })}
+  // บอล
+  const bx=X(st.ball.x),by=Y(st.ball.y),bz=st.ball.z*14;
+  c.fillStyle='rgba(0,0,0,.35)';c.beginPath();c.ellipse(bx+1,by+2,3.6,1.8,0,0,Math.PI*2);c.fill();
+  c.fillStyle='#fff';c.strokeStyle='#111';c.lineWidth=1;c.beginPath();c.arc(bx,by-bz,3.4+st.ball.z*1.2,0,Math.PI*2);c.fill();c.stroke();
+  // ชื่อคนถือบอล
+  if(hm&&st.P[hm]&&S.pl[hm]){const P=st.P[hm];const t=shortN(S.pl[hm]);c.font='600 10px Kanit,sans-serif';const tw=c.measureText(t).width+8;
+    const x=clamp(X(P.x),tw/2+2,W-tw/2-2),y=Y(P.y)+R+8;c.fillStyle='rgba(0,0,0,.6)';mvRR(c,x-tw/2,y-6,tw,12,6);c.fill();c.fillStyle='#fff';c.fillText(t,x,y)}
+  // ไอคอนเหตุการณ์เหนือหัว
+  c.font=Math.round(R*1.6)+'px sans-serif';
+  st.marks.forEach(mk=>{const P=st.P[mk.id];if(P)c.fillText(mk.i,X(P.x),Y(P.y)-R-7)});
+  // ข้อความกลางจอ
+  const ov=st.ov||(V.st==='pause'?{txt:'⏸️ หยุดเกม'}:V.st==='ht'?{txt:'⏸️ พักครึ่ง'}:null);
+  if(ov){c.font=(ov.big?'700 22px':'600 14px')+' Kanit,sans-serif';const tw=Math.min(W-30,c.measureText(ov.txt).width+24),th=ov.big?38:26;
+    c.fillStyle=ov.big?'rgba(250,204,21,.94)':ov.c?'rgba(185,28,28,.92)':'rgba(0,0,0,.72)';mvRR(c,W/2-tw/2,fy+fh/2-th/2,tw,th,th/2);c.fill();
+    c.fillStyle=ov.big?'#2b2100':'#fff';c.fillText(ov.txt,W/2,fy+fh/2+1,W-40)}
+}
+function mvRR(c,x,y,w,h,r){c.beginPath();c.moveTo(x+r,y);c.arcTo(x+w,y,x+w,y+h,r);c.arcTo(x+w,y+h,x,y+h,r);c.arcTo(x,y+h,x,y,r);c.arcTo(x,y,x+w,y,r);c.closePath()}
 
 /* ---------- Events ---------- */
 const A={
@@ -1472,6 +1732,10 @@ const A={
   subon(d){send({type:'sub',off:UI.subOff,on:+d.v});UI.subOff=null;const T=myTeam(),mine=myLive(T);
     if(mine&&MAX_SUBS-mine.m.sb[mine.s]<=1){closeModal()}else drawSub()},
   subclose(){closeModal()},
+  gkmode(d){UI.subMode=d.v||null;UI.gkOn=null;UI.subOff=null;drawSub()},
+  gkf(d){send({type:'gkfield',pid:+d.v});UI.subMode=null;drawSub()},
+  gkon(d){UI.gkOn=+d.v;drawSub()},
+  gkoff(d){send({type:'gksub',off:+d.v,on:UI.gkOn});UI.subMode=null;UI.gkOn=null;drawSub()},
   close(){closeModal()},
   closebg(d,el,e){if(e.target===el)closeModal()}
 };
