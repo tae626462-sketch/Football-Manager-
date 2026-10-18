@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0a1d12">
-<meta name="description" content="เกมผู้จัดการทีมฟุตบอล ไทยลีก 1 & พรีเมียร์ลีก เล่นกับเพื่อนแบบเรียลไทม์">
+<meta name="description" content="เกมผู้จัดการทีมฟุตบอลพรีเมียร์ลีก คุมทีมจริง แก้เกมสดระหว่างแข่ง">
 <title>KG ผู้จัดการทีม</title>
 <link rel="manifest" href="manifest.json">
 <link rel="icon" type="image/png" href="icon-192.png">
@@ -212,6 +212,8 @@ code{background:#0a1c11;padding:1px 5px;border-radius:5px}
 .ibar>span{font-size:28px}.ibar b{display:block;font-size:14px}.ibar small{color:var(--mut);font-size:12px}
 .ibar .ix{background:none;border:0;color:var(--mut);font-size:18px;padding:4px 6px;cursor:pointer}
 .card.inst{border-color:#2e8b52;background:linear-gradient(135deg,#123a24,#0f2418)}
+
+.netbar{position:sticky;top:0;z-index:7;background:#3a2a07;border-bottom:1px solid #7a5f10;color:#fde68a;font-size:13px;padding:8px 16px;display:flex;align-items:center;gap:8px;justify-content:center;text-align:center}
 </style>
 </head>
 <body>
@@ -220,37 +222,31 @@ code{background:#0a1c11;padding:1px 5px;border-radius:5px}
 <div id="pop"></div>
 <div id="guide"></div>
 <div id="toast"></div>
-<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script>
-const DB={"th":[["บุรีรัมย์ ยูไนเต็ด","BRU","#1d4ed8","#f59e0b",76,"GK|Neil Etheridge|PHI|28|74;GK|Korraphat Nareechan|THA|26|71;GK|Chatchai Budprom|THA|31|70;DF|Sasalak Haiprakhon|THA|22|71;DF|Pansa Hemviboon|THA|20|72;DF|Nathan Pelae|BRA|30|70;DF|Curtis Good|AUS|31|73;DF|Narubadin Weerawatnodom|THA|20|71;DF|Marc Navarro|ESP|28|77;DF|Uros Radakovic|SRB|30|74;DF|Wanderson Caju|BRA|28|71;DF|Jakkapan Praisuwan|THA|31|69;DF|Eduardo Mancha|BRA|28|70;DF|Theerathon Bunmathan|THA|25|75;MF|Paulinho|BRA|27|73;MF|Sebas Moyano|ESP|29|72;MF|Anan Yodsangwal|THA|25|70;MF|Kenny Dougall|AUS|29|76;MF|Vukan Savićević|MNE|32|75;MF|Kingsley Schindler|GHA|28|78;MF|Goran Čaušić|SRB|30|77;MF|Phitiwat Sukjitthammakul|THA|29|72;MF|Darlan Mendes|BRA|25|76;FW|Guilherme Bissoli|BRA|27|78;FW|Supachai Chaided|THA|27|74;FW|Rubén Sánchez|ESP|27|73;FW|Stefan Schimmer|GER|31|76;FW|Alexandru Tudorie|ROU|30|74"],["บีจี ปทุม ยูไนเต็ด","BGP","#2563eb","#e5e7eb",73,"GK|Saranon Anuin|THA|30|70;GK|Nalawich Intacharoen|THA|30|66;GK|Chanasorn Kaewyos|THA|26|67;DF|Sanchai Nontasila|THA|21|70;DF|Nathan James|THA|29|70;DF|Waris Choolthong|THA|29|68;DF|Chanapach Buaphan|THA|30|71;DF|Takahiro Yanagi|JPN|32|73;DF|Marko Nikolić|SRB|27|71;DF|Edin Osmanovic|LUX|28|69;MF|Kritsada Kaman|THA|20|71;MF|Sarach Yooyen|THA|23|70;MF|Chanathip Songkrasin|THA|30|76;MF|Itthimon Tippanet|THA|27|67;MF|Akarapong Pumwisat|THA|28|71;MF|Leon James|THA|29|68;MF|Lucas Andersen|DEN|27|73;MF|Ryan Edwards|AUS|28|73;MF|Anthony Belmonte|FRA|26|68;FW|Raniel|BRA|31|71;FW|Surachat Sareepim|THA|20|70;FW|Patrik Gustavsson|THA|29|71;FW|Tomoyuki Doi|JPN|30|75;FW|Pichaya Chaiwarangkun|THA|28|67;FW|Siwakorn Ponsan|THA|32|67;FW|Witthawat Phraothaisong|THA|27|67;FW|Ikhsan Fandi|SGP|27|74;FW|João Magno|BRA|26|69"],["การท่าเรือ เอฟซี","PRT","#f97316","#1e3a8a",73,"GK|Somporn Yos|THA|27|69;GK|Sarawut Konglarp|THA|32|71;GK|Michael Falkesgaard|PHI|26|72;DF|Asnawi Mangkualam|IDN|30|73;DF|Suphanan Bureerat|THA|28|71;DF|Matheus Lins|BRA|29|72;DF|Manuel Bihr|THA|22|66;DF|Chinnawat Wongchai|THA|22|70;DF|Rebin Sulaka|IRQ|28|67;DF|Chaiyaphon Otton|THA|26|70;DF|Noboru Shimura|JPN|27|75;DF|Nitipong Selanon|THA|32|69;DF|Peerawat Akkratum|THA|30|70;MF|Peeradol Chamrasamee|THA|26|71;MF|Tanaboon Kesarat|THA|25|70;MF|Bordin Phala|THA|28|72;MF|Bruno Moreira|BRA|27|69;MF|Kaká Mendes|BRA|27|72;MF|Sivakorn Tiatrakul|THA|29|70;MF|Jakkaphan Kaewprom|THA|31|66;MF|Lucas Tocantins|BRA|25|70;MF|Worachit Kanitsribampen|THA|27|72;MF|Sittha Boonlha|THA|20|65;FW|Issam Al-Sabhi|OMA|32|71;FW|Ruan Ribeiro|BRA|29|67;FW|Teerasak Poeiphimai|THA|32|71;FW|Jude Soonsup-Bell|THA|29|70;FW|Natthakit Phosri|THA|25|70"],["ทรู แบงค็อก ยูไนเต็ด","TBU","#dc2626","#111827",72,"GK|Patiwat Khammai|THA|23|72;GK|Phuwadol Pholsongkram|THA|20|68;GK|Supanut Sudathip|THA|21|64;DF|Everton|BRA|28|72;DF|Philipe Maia|BRA|25|71;DF|Wichan Inaram|THA|20|68;DF|Lee Ki-je|KOR|25|72;DF|Wanchai Jarunongkran|THA|32|64;DF|Surachai Booncharee|THA|21|64;MF|Weerathep Pomphan|THA|20|73;MF|John-Patrick Strauß|PHI|28|73;MF|Kakana Khamyok|THA|26|67;MF|Thitiphan Puangchan|THA|22|69;MF|Wisarut Imura|THA|28|70;MF|Yonatan Cohen|ISR|29|75;MF|Anthony Caceres|AUS|28|69;MF|Kritsada Nontharat|THA|28|66;MF|Pokklaw Anan|THA|29|65;MF|Krit Klangpan|THA|21|64;MF|Aekkarat Sansuwan|THA|25|65;FW|Teerasil Dangda|THA|26|72;FW|Muhsen Al-Ghassani|OMA|25|66;FW|Willian Popp|BRA|28|71;FW|Marc Cardona|ESP|27|70;FW|Achita Nawathit|THA|23|68;FW|Thanawat Deelert|THA|24|65;FW|Arthur Moura|BRA|32|72;FW|Felipe Santos|BRA|29|71"],["ราชบุรี เอฟซี","RBR","#0ea5e9","#facc15",70,"GK|Ukrit Wongmeema|THA|25|62;GK|Kampol Pathomakkakul|THA|20|60;DF|Jonathan Khemdee|THA|30|69;DF|Daniel Ting|MAS|29|67;DF|Adisorn Promrak|THA|32|67;DF|Kevin Deeromram|THA|32|69;DF|Kiatisak Jiamudom|THA|20|64;DF|Pethey Promjan|THA|20|66;DF|Tarek Aggoun|ALG|31|70;MF|Tana|ESP|28|64;MF|Thanawat Suengchitthawon|THA|27|65;MF|Roque Mesa|ESP|27|75;MF|Siwakorn Jakkuprasat|THA|27|69;MF|Teeraphol Yoryoei|THA|23|66;MF|Jesse Curran|PHI|25|64;MF|Thossawat Limwannasathian|THA|23|61;MF|Kritsananon Srisuwan|THA|20|61;MF|Faiq Bolkiah|BRU|31|72;MF|Chotipat Poomkaew|THA|26|60;MF|Njiva Rakotoharimalala|MAD|27|64;MF|Sorawit Panthong|THA|20|62;MF|Akinkunmi Amoo|NGA|27|64;MF|Jonathan Viera|ESP|30|76;FW|Denílson|BRA|31|70;FW|Gleyson|BRA|32|71;FW|Jordan Gele|FRA|30|68;FW|Rafael Bilú|BRA|32|70;FW|Harhys Stewart|SGP|27|67"],["สิงห์ เชียงราย ยูไนเต็ด","CRU","#0369a1","#f97316",68,"GK|Apirak Worawong|THA|25|58;GK|Farus Patee|THA|30|59;GK|Sirassawut Wongruankhum|THA|27|61;GK|Jetnipat Khomsom|THA|25|64;DF|Banphakit Phormmanee|THA|24|58;DF|Tanasak Srisai|THA|25|63;DF|Piyaphon Phanichakul|THA|31|64;DF|Victor Cardozo|BRA|26|62;DF|Hélio|BRA|32|64;DF|Ongsa Singthong|THA|22|64;DF|Jordan Emaviwe|SGP|32|69;MF|Settasit Suvannaseat|THA|28|60;MF|Dudu|BRA|29|66;MF|Gionata Verzura|THA|21|58;MF|Thakdanai Jaihan|THA|20|59;MF|Montree Promsawat|THA|32|59;MF|Phoptham Pornkod|THA|26|64;MF|Gabriel Henrique|BRA|29|66;FW|Lee Seung-won|KOR|30|65;FW|Carlos Iury|BRA|27|68;FW|Chinngoen Phutonyong|THA|26|66"],["ชลบุรี เอฟซี","CBR","#1e40af","#f8fafc",67,"GK|Kevin Ray Mendoza|PHI|31|65;GK|Siwat Chomphooviset|THA|22|60;GK|Thanawat Panthong|THA|20|58;DF|Kike Linares|PHI|28|67;DF|Peerapat Notchaiya|THA|29|65;DF|Kittipong Sansanit|THA|26|64;DF|Tristan Do|THA|26|70;DF|Suksan Bunta|THA|20|63;DF|Santiphap Channgom|THA|23|59;DF|Rachata Moraksa|THA|26|63;DF|Nattapong Sayriya|THA|25|62;DF|Jorge Fellipe|BRA|32|61;DF|Thanphisit Peanksikum|THA|22|62;DF|Wathanyu Nairatsami|THA|24|62;MF|Wellington Priori|BRA|28|66;MF|Channarong Promsrikaew|THA|31|64;MF|Chaowat Veerachat|THA|25|65;MF|Saharat Sontisawat|THA|27|59;MF|Siraphop Wandee|THA|31|58;MF|Richmond Darko|GHA|32|64;MF|Tanakon Pinkaew|THA|29|64;MF|Chayathorn Tapsuvanavon|THA|20|63;FW|Yotsakorn Burapha|THA|30|61;FW|Dennis Murillo|BRA|30|65;FW|Korawich Tasa|THA|20|62;FW|Stênio Júnior|BRA|30|62;FW|Sittichok Paso|THA|22|59;FW|Ryoma Ito|JPN|32|68"],["พีที ประจวบ เอฟซี","PTP","#b91c1c","#fde047",67,"GK|Soponwit Rakyart|THA|21|65;GK|Wattanachai Srathongjan|THA|31|64;GK|Abdulfarus Sama-Ae|THA|28|58;DF|Oussama Thiangkham|THA|32|63;DF|Bernardo Vilar|BRA|25|68;DF|Airton|BRA|30|69;DF|Jesper Nyholm|PHI|25|65;DF|Prommin Pinkaew|THA|32|63;DF|Wanchat Choosong|THA|29|63;DF|Pittawat Jeenthai|THA|28|60;DF|Aymen Thiangkham|THA|27|59;DF|Lucas Grossi|BRA|26|63;DF|Nick Taylor|CAM|31|61;DF|Phon-Ek Maneekorn|THA|32|60;DF|Jirapan Phasukkhan|THA|22|61;MF|Saharat Kanyarot|THA|29|59;MF|Tauã|BRA|32|65;MF|Rei Tachikawa|JPN|27|62;MF|Tailson|BRA|30|68;MF|Kannarin Thawornsak|THA|25|64;MF|Jittiphat Wasungnoen|THA|32|64;MF|Wuttikai Sritong|THA|31|59;FW|Lee Jeong-hyeop|KOR|27|63;FW|Andros Townsend|ENG|27|75;FW|Édgar Méndez|ESP|31|69;FW|Phanthamit Praphanth|THA|22|60;FW|Chitsanuphong Phimpsang|THA|32|61;FW|Jehhanafee Mamah|THA|32|57"],["อุทัยธานี เอฟซี","UTH","#ea580c","#fef3c7",66,"GK|Boonyakait Wongsajaem|THA|30|58;GK|Chirawat Wangthaphan|THA|20|61;DF|Martin Angha|SUI|29|64;DF|Possawee Muanmart|THA|26|60;DF|Thitathorn Aksornsri|THA|21|61;DF|Suporn Peenagatapho|THA|21|64;MF|William Weidersjö|THA|32|56;MF|Ben Davis|THA|23|61;MF|Sumanya Purisai|THA|29|69;MF|Jakkit Wachpirom|THA|25|62;MF|Wattana Playnum|THA|28|58;MF|Sirimongkol Rattanapoom|THA|20|64;MF|Pavarit Boonmalert|THA|31|58;MF|Atikun Mheetuam|THA|30|64;MF|Ratthanakorn Maikami|THA|22|57;FW|Amornthep Muangdee|THA|20|58;FW|Nonthaphat Naksawad|THA|21|56;FW|Kelvin Oliveira|BRA|29|67;FW|Siroch Chatthong|THA|21|68;FW|Arthit Boodjinda|THA|27|60"],["ลำพูน วอริเออร์","LPW","#7c3aed","#facc15",66,"GK|Nont Muangngam|THA|31|58;GK|Kwanchai Suklom|THA|30|60;DF|Witthaya Moonwong|THA|22|56;DF|Todsapol Lated|THA|31|57;DF|Tossaporn Chuchin|THA|28|58;DF|Aly Cissokho|FRA|29|67;DF|Charlie Clough|ENG|26|63;DF|Noppol Kerdkaew|THA|27|59;DF|Nuttee Noiwilai|THA|29|60;DF|Suriya Singmui|THA|28|64;DF|Putthinan Wannasri|THA|23|56;MF|Dominik Schad|GER|27|65;MF|Mohammed Osman|SYR|31|60;MF|Ralph|BRA|28|63;MF|Baworn Tapla|THA|23|56;MF|Oskari Kekkonen|PHI|27|60;MF|Chatmongkol Thongkiri|THA|31|62;MF|Purachet Thodsanit|THA|30|56;MF|Osarenren Okungbowa|AUT|31|60;FW|Kenshiro Daniels|PHI|31|65;FW|Tawan Khotrsupho|THA|27|62;FW|Surat Suriyachai|THA|28|61;FW|Willen Mota|BRA|27|68;FW|Athit Berg|THA|27|59;FW|Rodrigo Maranhão|BRA|27|67"],["สุโขทัย เอฟซี","SKT","#facc15","#dc2626",65,"GK|Phanuphong Sunon|THA|26|59;GK|Supazin Hnupichai|THA|22|58;GK|Thitikit Samerjai|THA|30|55;GK|Kittipun Saensuk|THA|26|55;DF|Surawich Logarwit|THA|27|63;DF|Pattarapon Suksakit|THA|22|59;DF|Saringkan Promsupa|THA|32|55;DF|Tassanapong Muaddarak|THA|22|60;DF|Pharadon Phatthaphon|THA|29|57;DF|Sarawut Kanlayanabandit|THA|29|58;DF|Thiti Thumporn|THA|21|58;DF|Cláudio|BRA|30|61;MF|Romeu|BRA|27|64;MF|Lursan Thiamrat|THA|31|57;MF|Ratchanat Aranpiroj|THA|26|57;MF|Nalu Jandke|THA|30|59;MF|Apichart Denman|THA|24|55;MF|Phattharaphon Jansuwan|THA|24|56;MF|Athirat Jantrapho|THA|20|55;MF|Mateusinho|BRA|28|65;MF|Lucas Barreto|BRA|25|64;FW|João Paredes|POR|29|67;FW|John Baggio|MAD|30|66;FW|Gildo|BRA|27|65;FW|Phiraphat Khamphaeng|THA|26|57"],["ระยอง เอฟซี","RYG","#0d9488","#fde68a",64,"GK|Wichaya Gantong|THA|25|58;GK|Worawut Srisupha|THA|24|56;GK|Ketanuson Junrung|THA|30|55;GK|Chainarong Boonkerd|THA|21|61;DF|Stefan Cebara|CAN|31|64;DF|Supawit Romphopak|THA|28|61;DF|Leonardo Justiniano|BOL|32|61;DF|Parkin Harape|THA|24|62;MF|João Afonso|BRA|32|59;MF|Keven Alemán|CAN|29|63;MF|Somkaet Kunmee|THA|32|54;MF|Nonthawat Bathong|THA|31|54;MF|Porrameth Ittiprasert|THA|24|61;MF|Wattanapong Withunat|THA|30|62;MF|Manuel Ott|PHI|30|61;MF|Peerapat Kaminthong|THA|25|58;MF|Parndecha Ngernprasert|THA|24|61;MF|Yeo Hong-gyu|KOR|25|65;FW|Mehti Sarakham|THA|29|60;FW|Thanphisit Hempandan|THA|27|56;FW|Weslen Júnior|BRA|29|62"],["อยุธยา ยูไนเต็ด","AYU","#991b1b","#facc15",64,"GK|Warut Mekmusik|THA|29|62;GK|Teerath Nakchamnarn|THA|27|54;DF|Hwang Hyun-soo|KOR|30|58;DF|Atsadawut Changthong|THA|32|60;DF|Kitphom Bunsan|THA|21|54;DF|Worawut Sataporn|THA|31|57;DF|Chatnipat Janpong|THA|24|59;MF|Nattapon Worasut|THA|22|54;MF|Anucha Sakaekum|THA|28|61;MF|Chakkit Laptrakul|THA|29|59;MF|Sanrawat Dechmitr|THA|20|54;MF|Veeraphong Aon-pean|THA|20|55;FW|Kritsana Kasemkulvilai|THA|21|61;FW|Thanet Suknate|THA|22|59;FW|Caíque Lemes|BRA|29|64"],["ศรีสะเกษ ยูไนเต็ด","SSK","#f59e0b","#7c2d12",64,"GK|Victor Golas|BRA|28|61;GK|Phiyawat Intarapim|THA|23|54;GK|Natthasan Pakkarano|THA|28|59;GK|Steven van Dijk|NED|32|62;DF|Guilherme Borech|BRA|25|66;DF|Pakornkiat Kaena|THA|25|54;DF|Isaac Honny|GHA|29|62;DF|Anusak Jaiphet|THA|31|58;DF|Chutikom Klinchampasri|THA|29|58;DF|Arthit Buangam|THA|32|56;DF|Sakkarawit Nimma|THA|32|61;MF|Denis Darbellay|THA|24|59;MF|Hikaru Matsui|JPN|30|59;MF|Phattharpong Phengchaem|THA|24|55;MF|Narongrit Kamnet|THA|26|60;MF|Suphaphon Sutthisak|THA|32|57;MF|Kritidet Nanthawong|THA|20|55;MF|Suttichai Pongson|THA|24|55;FW|Alex Mermoz|CMR|30|66;FW|Jefesson Vieira|BRA|27|58;FW|Deyvison Fernandes|BRA|26|60;FW|Wongsakorn Saenruecha|THA|20|55;FW|Kittipong Wongma|THA|20|54;FW|Patrick Valverde|BRA|28|64;FW|Mahamadou Doucouré|MLI|29|58;FW|Sittichok Kannoo|THA|27|54"],["ราษีไศล ยูไนเต็ด","RSL","#16a34a","#fef08a",63,"GK|Pongsakorn Buatab|THA|31|58;GK|Sakkongpop Sukprasert|THA|24|55;DF|Ramon Mesquita|BRA|29|59;DF|Apsit Nusonsala|THA|24|54;DF|Apirak Thongjan|THA|23|57;DF|Chawanthananchai Sirichoo|THA|28|57;DF|Thitiphong Photumtha|THA|24|55;DF|Hamed Bakhtiari|IRN|29|61;DF|Yingyong Butngam|THA|28|57;DF|Puttiphong Sriputta|THA|29|56;DF|Nelson Orji|NGA|28|64;DF|Nattapon Malapun|THA|25|55;MF|Natchanon Yongsakool|THA|27|60;MF|Gilberto Macena|BRA|25|57;MF|Nakhwan Gamol|THA|25|61;MF|Wichit Thanee|THA|29|56;MF|Jirawat Chingchaiyaphum|THA|27|61;MF|Thanongsak Khrutthasarn|THA|32|55;MF|Teerapol Anupan|THA|26|56;MF|Somyot Pongsuwan|THA|22|58;MF|Matias Panigazzi|ARG|26|65;MF|Wichit Kongsinkaew|THA|28|58;MF|Natthaphob Chaimongkhon|THA|28|60;FW|Yuga Watanabe|JPN|31|63;FW|Ricardo Cardoso|STP|26|60;FW|Phitchanon Chanluang|THA|21|58;FW|Supab Muengchan|THA|25|54;FW|Kim Ji-min|KOR|31|63"],["ปัตตานี เอฟซี","PTN","#15803d","#ffffff",63,"GK|Ninuruddin Nideha|THA|32|61;GK|Amran Bungosayu|THA|25|54;GK|Muhammat Mamah|THA|26|60;DF|Ekkachai Sumrei|THA|31|58;DF|Afis Waeyama|THA|29|54;DF|Tinnakorn Asurin|THA|28|54;DF|Ratthakron Thongkae|THA|26|59;DF|Abdulhakim Cehsani|THA|31|54;DF|Ittipon Khampliw|THA|21|61;DF|Nasree Dueloh|THA|32|56;DF|Marlon Silva|BRA|28|59;DF|Anuwa Koowing|THA|29|57;DF|Kittipong Buathong|THA|32|58;MF|Muhammadnasay Kolaeh|THA|21|54;MF|Felipe Nunes|BRA|29|62;MF|Shuto Ono|JPN|31|63;MF|Adam Lassamano|THA|31|58;MF|Kirati Kaewnongdang|THA|21|55;MF|Naruephon Proomimas|THA|20|60;FW|Adithep Chaipraman|THA|32|54;FW|Janepob Phokhi|THA|28|53;FW|Rushdan Katemmadee|THA|20|54;FW|Rico Andes|PHI|30|62;FW|Imron Hayiyusoh|THA|23|58;FW|Carlos Neto|BRA|30|65"]],"epl":[["Arsenal","ARS","#ef0107","#ffffff",84,"GK|David Raya|ESP|30|86;GK|Kepa Arrizabalaga|ESP|31|79;GK|Illan Meslier|FRA|26|77;GK|Tommy Setford|ENG|20|64;DF|William Saliba|FRA|25|88;DF|Cristhian Mosquera|ESP|22|79;DF|Ben White|ENG|28|81;DF|Piero Hincapié|ECU|24|82;DF|Gabriel Magalhães|BRA|28|87;DF|Jurriën Timber|NED|25|84;DF|Ezri Konsa|ENG|28|82;DF|Riccardo Calafiori|ITA|24|81;DF|Myles Lewis-Skelly|ENG|19|78;MF|Martin Ødegaard|NOR|27|86;MF|Eberechi Eze|ENG|28|84;MF|Mikel Merino|ESP|30|82;MF|Martín Zubimendi|ESP|27|85;MF|Bruno Guimarães|BRA|28|86;MF|Declan Rice|ENG|27|88;MF|Ethan Nwaneri|ENG|19|79;FW|Bukayo Saka|ENG|25|88;FW|Viktor Gyökeres|SWE|28|85;FW|Christos Tzolis|GRE|24|79;FW|Noni Madueke|ENG|24|81;FW|Kai Havertz|GER|27|83"],["Aston Villa","AVL","#670e36","#95bfe5",79,"GK|Zion Suzuki|JPN|24|80;GK|Marco Bizot|NED|35|75;GK|James Wright|ENG|21|60;DF|Matty Cash|POL|29|79;DF|Victor Lindelöf|SWE|32|77;DF|Taylor Harwood-Bellis|ENG|24|76;DF|Tyrone Mings|ENG|33|76;DF|Matteo Ruggeri|ITA|24|77;DF|Pau Torres|ESP|29|81;DF|Ian Maatsen|NED|24|78;DF|Aaron Wan-Bissaka|COD|28|79;DF|Modou Kéba Cissé|SEN|21|72;DF|Travis Patterson|ENG|20|62;MF|Ross Barkley|ENG|32|76;MF|John McGinn|SCO|31|79;MF|Boubacar Kamara|FRA|26|82;MF|Emiliano Buendía|ARG|29|78;MF|Jamaldeen Jimoh-Aloba|ENG|19|66;MF|Amadou Onana|BEL|25|81;MF|Lamare Bogarde|NED|22|72;MF|Leon Goretzka|GER|31|82;MF|João Gomes|BRA|25|81;MF|Johan Manzambi|SUI|20|76;FW|Nicolas Jackson|SEN|25|80;FW|Alejandro Garnacho|ARG|22|80;FW|Tammy Abraham|ENG|28|77;FW|Ibrahim Mbaye|SEN|18|72;FW|Alysson|BRA|20|70"],["Bournemouth","BOU","#da291c","#111111",76,"GK|Đorđe Petrović|SRB|26|80;GK|Michele Di Gregorio|ITA|29|81;DF|Adrien Truffert|FRA|24|79;DF|James Hill|ENG|24|72;DF|Julio Soler|ARG|21|75;DF|António Silva|POR|23|81;DF|Adam Smith|ENG|35|70;DF|Bafodé Diakité|FRA|25|78;DF|Juanlu Sánchez|ESP|23|76;MF|Lewis Cook|ENG|29|76;MF|David Brooks|WAL|29|74;MF|Alex Scott|ENG|23|78;MF|Ryan Christie|SCO|33|75;MF|Tyler Adams|USA|27|79;MF|Marcus Tavernier|ENG|27|78;MF|Alex Tóth|HUN|21|73;FW|Evanilson|BRA|27|80;FW|Ben Gannon-Doak|SCO|21|74;FW|Justin Kluivert|NED|27|79;FW|Daniel Jebbison|CAN|23|70;FW|Álvaro Rodríguez|URU|22|74;FW|Rayan|BRA|20|76"],["Brentford","BRE","#e30613","#ffffff",75,"GK|Caoimhín Kelleher|IRL|27|81;GK|Hákon Valdimarsson|ISL|24|72;GK|Ellery Balcombe|ENG|26|62;DF|Aaron Hickey|SCO|24|76;DF|Rico Henry|JAM|29|74;DF|Sepp van den Berg|NED|24|78;DF|Kristoffer Ajer|NOR|28|76;DF|Jayden Meghoma|ENG|20|66;DF|Nathan Collins|IRL|25|79;DF|Michael Kayode|ITA|22|77;DF|Jannik Schuster|AUT|20|72;DF|Benjamin Fredrick|NGA|21|68;DF|El Hadji Malick Diouf|SEN|21|76;MF|Yehor Yarmolyuk|UKR|22|77;MF|Mathias Jensen|DEN|30|77;MF|Josh Dasilva|ENG|27|72;MF|Fábio Carvalho|POR|23|74;MF|Antoni Milambo|NED|21|75;MF|Mamadou Sangaré|MLI|24|73;MF|Mikkel Damsgaard|DEN|26|79;MF|Vitaly Janelt|GER|28|76;FW|Kevin Schade|GER|24|78;FW|Igor Thiago|BRA|25|80;FW|Dango Ouattara|BFA|24|78;FW|Callum Wilson|ENG|34|73;FW|Jaidon Anthony|ENG|26|74;FW|Keane Lewis-Potter|ENG|25|76;FW|Gustavo Nunes|BRA|20|70"],["Brighton","BHA","#0057b8","#ffffff",77,"GK|Bart Verbruggen|NED|24|81;GK|Jason Steele|ENG|36|68;DF|Jaouen Hadjam|ALG|23|75;DF|Pascal Struijk|NED|27|76;DF|Lewis Dunk|ENG|35|76;DF|Costinha|POR|26|75;DF|Olivier Boscagli|FRA|28|77;DF|Ferdi Kadıoğlu|TUR|27|80;DF|Mats Wieffer|NED|27|78;DF|Maxim De Cuyper|BEL|26|78;DF|Michael Svoboda|AUT|28|74;DF|Luka Vušković|CRO|19|76;MF|Jack Hinshelwood|ENG|21|76;MF|Pascal Groß|GER|35|77;MF|Chema Andrés|ESP|21|74;MF|Ibrahim Osman|GHA|22|74;MF|Diego Gómez|PAR|23|78;MF|Yasin Ayari|SWE|23|77;MF|Matt O'Riley|DEN|26|79;MF|Malick Yalcouyé|CIV|20|72;MF|Zadok Yohanna|NGA|19|66;FW|Georginio Rutter|FRA|24|79;FW|Promise David|CAN|25|74;FW|Charalampos Kostoulas|GRE|19|73"],["Chelsea","CHE","#034694","#ffffff",82,"GK|Robert Sánchez|ESP|28|80;GK|Emiliano Martínez|ARG|33|83;GK|Mike Penders|BEL|21|72;DF|Marco Palestra|ITA|21|78;DF|Wesley Fofana|FRA|25|80;DF|Maxence Lacroix|FRA|26|80;DF|Levi Colwill|ENG|23|83;DF|Jorrel Hato|NED|20|79;DF|Reece James|ENG|26|84;DF|Malo Gusto|FRA|23|81;DF|Pep Chavarría|ESP|28|76;DF|Aarón Anselmino|ARG|21|72;DF|Josh Acheampong|ENG|20|74;DF|Tosin Adarabioyo|ENG|28|77;MF|Valentín Barco|ARG|22|74;MF|Enzo Fernández|ARG|25|85;MF|Cole Palmer|ENG|24|87;MF|Dário Essugo|POR|21|73;MF|Morgan Rogers|ENG|24|83;MF|Moisés Caicedo|ECU|24|87;MF|Roméo Lavia|BEL|22|79;FW|Pedro Neto|POR|26|82;FW|João Pedro|BRA|24|83;FW|Jamie Gittens|ENG|22|79;FW|Emmanuel Emegha|NED|23|75;FW|Geovany Quenda|POR|19|76;FW|Mykhailo Mudryk|UKR|25|74;FW|Estêvão|BRA|19|82"],["Coventry City","COV","#59cbe8","#ffffff",71,"GK|Ben Wilson|ENG|33|68;GK|Carl Rushworth|ENG|24|74;GK|Dan Bentley|ENG|32|68;DF|Ethan Pinnock|JAM|33|72;DF|Jay Dasilva|WAL|28|70;DF|Bobby Thomas|ENG|25|72;DF|Kaine Kesler-Hayden|ENG|23|72;DF|Jake Bidwell|ENG|33|66;DF|Joel Latibeaudiere|JAM|26|70;DF|Aurèle Amenda|SUI|22|72;DF|Luke Woolfenden|ENG|27|72;DF|Milan van Ewijk|NED|25|73;MF|Jack Rudoni|ENG|25|74;MF|Matt Grimes|ENG|30|72;MF|Tatsuhiro Sakamoto|JPN|29|73;MF|Caleb Yirenkyi|GHA|20|66;MF|Ephron Mason-Clark|JAM|26|70;MF|Frank Onyeka|NGA|26|73;MF|Josh Eccles|ENG|25|70;MF|Victor Torp|DEN|26|72;MF|Yann Gboho|FRA|25|71;MF|Gustavo Hamer|NED|29|75;FW|Ellis Simms|ENG|25|74;FW|Haji Wright|USA|28|74;FW|Taiwo Awoniyi|NGA|28|73;FW|Loum Tchaouna|FRA|22|72;FW|Brandon Thomas-Asante|GHA|27|70;FW|Sidiki Chérif|GUI|19|70"],["Crystal Palace","CRY","#1b458f","#c4122e",77,"GK|Dean Henderson|ENG|29|80;GK|Walter Benítez|ARG|33|74;GK|Remi Matthews|ENG|32|64;DF|Tyrick Mitchell|ENG|26|77;DF|Chadi Riad|MAR|23|74;DF|Jaydee Canvot|FRA|20|74;DF|Takehiro Tomiyasu|JPN|27|76;DF|Anan Khalaili|ISR|22|74;DF|Chris Richards|USA|26|78;DF|Óscar Mingueza|ESP|27|77;DF|Ben Chilwell|ENG|29|74;DF|Axel Disasi|FRA|28|77;MF|Jefferson Lerma|COL|31|76;MF|Daichi Kamada|JPN|30|77;MF|Will Hughes|ENG|31|75;MF|Adam Wharton|ENG|22|82;MF|Quinten Timber|NED|25|78;MF|Cheick Doucouré|MLI|26|77;FW|Ismaïla Sarr|SEN|28|80;FW|Eddie Nketiah|ENG|27|74;FW|Yéremy Pino|ESP|23|78;FW|Dwight McNeil|ENG|26|75;FW|Zavier Gozo|USA|18|66;FW|Jean-Philippe Mateta|FRA|29|80;FW|Jørgen Strand Larsen|NOR|26|77;FW|Evann Guessand|CIV|25|75"],["Everton","EVE","#003399","#ffffff",75,"GK|Jordan Pickford|ENG|32|82;GK|Mark Travers|IRL|26|72;GK|Tom King|WAL|31|62;DF|Nathan Patterson|SCO|24|74;DF|Jarrad Branthwaite|ENG|24|80;DF|Michael Keane|ENG|33|74;DF|James Tarkowski|ENG|33|77;DF|Jake O'Brien|IRL|25|76;DF|Vitaliy Mykolenko|UKR|27|76;DF|Adam Aznou|MAR|20|70;MF|Kiernan Dewsbury-Hall|ENG|27|77;MF|Christian Nørgaard|DEN|32|76;MF|Charly Alcaraz|ARG|23|76;MF|Hayden Hackney|ENG|24|76;MF|Merlin Röhl|GER|24|75;MF|James Garner|ENG|25|78;MF|Tim Iroegbunam|ENG|23|72;MF|Harrison Armstrong|ENG|19|70;FW|Beto|GNB|28|76;FW|Iliman Ndiaye|SEN|26|79;FW|Thierno Barry|FRA|23|76;FW|Tyrique George|ENG|20|74;FW|Tyler Dibling|ENG|20|76;FW|Brennan Johnson|WAL|25|79"],["Fulham","FUL","#ffffff","#111111",75,"GK|Bernd Leno|GER|34|79;GK|Benjamin Lecomte|FRA|35|70;DF|Kenny Tete|NED|30|76;DF|Calvin Bassey|NGA|26|77;DF|Jorge Cuenca|ESP|26|75;DF|Joachim Andersen|DEN|30|78;DF|Timothy Castagne|BEL|30|75;DF|Ryan Sessegnon|ENG|26|74;DF|Antonee Robinson|USA|28|79;MF|Harrison Reed|ENG|31|74;MF|César Palacios|ESP|22|72;MF|Hugo Larsson|SWE|21|77;MF|Sander Berge|NOR|28|77;MF|Shea Charles|NIR|22|73;MF|Josh King|ENG|19|72;MF|Emile Smith Rowe|ENG|26|77;MF|Chibuzo Nwoko|ENG|18|62;FW|Gonzalo García|ESP|22|76;FW|Rodrigo Muniz|BRA|25|76;FW|Kevin|BRA|23|77;FW|Oscar Bobb|NOR|23|76;FW|Alex Iwobi|NGA|30|78;FW|Macauley Zepa|CMR|18|58"],["Hull City","HUL","#f5a12d","#111111",70,"GK|Jack Butland|ENG|33|72;GK|Dillon Phillips|ENG|31|66;GK|Konstantinos Tzolakis|GRE|23|70;DF|Lewie Coyle|ENG|30|68;DF|Ryan Giles|ENG|26|70;DF|Charlie Hughes|ENG|22|69;DF|Semi Ajayi|NGA|32|69;DF|John Egan|IRL|33|70;DF|Paddy McNair|NIR|31|70;DF|Brooke Norton-Cuffy|ENG|22|72;DF|Matt Targett|ENG|30|70;DF|Nobel Mendy|SEN|21|68;MF|Hidemasa Morita|JPN|31|74;MF|Eliot Matazo|BEL|24|70;MF|Joe Gelhardt|ENG|24|70;MF|Óscar Zambrano|ECU|22|70;MF|Darko Gyabi|ENG|22|68;MF|Kieran Dowell|ENG|28|68;MF|Regan Slater|ENG|26|69;MF|Lucas Gourna-Douath|FRA|22|71;MF|Abdülkadir Ömür|TUR|27|72;MF|Christos Mouzakitis|GRE|19|68;FW|Sorba Thomas|WAL|27|70;FW|Oli McBurnie|SCO|30|70;FW|Mohamed Belloumi|ALG|24|71;FW|Ilyas Ansah|GER|21|70;FW|Robinio Vaz|FRA|19|68;FW|Mohamed-Ali Cho|FRA|22|72"],["Ipswich Town","IPS","#0044a9","#ffffff",71,"GK|Alex Palmer|ENG|29|73;GK|Christian Walton|ENG|30|68;GK|Cieran Slicker|SCO|23|64;DF|Harry Clarke|ENG|25|71;DF|Leif Davis|ENG|26|75;DF|Cédric Kipré|CIV|29|70;DF|Ben Johnson|ENG|26|72;DF|Darnell Furlong|ENG|30|70;DF|Jacob Greaves|ENG|25|72;DF|Elkan Baggott|IDN|23|66;DF|Dara O'Shea|IRL|27|74;MF|Azor Matusiwa|NED|28|72;MF|Wes Burns|WAL|31|70;MF|Jack Taylor|IRL|28|71;MF|Cameron Humphreys|ENG|22|66;MF|Marcelino Núñez|CHI|26|73;FW|Sindre Walle Egeli|NOR|20|68;FW|George Hirst|SCO|27|71;FW|Jaden Philogene|ENG|24|74;FW|Ali Al-Hamadi|IRQ|24|68;FW|Kasey McAteer|IRL|24|68;FW|Chiedozie Ogbene|IRL|29|71;FW|Sammie Szmodics|IRL|30|71;FW|Chuba Akpom|ENG|30|72;FW|Anis Mehmeti|ALB|25|72;FW|Jack Clarke|ENG|25|75"],["Leeds United","LEE","#ffffff","#1d428a",73,"GK|James Trafford|ENG|23|80;GK|Michael Zetterer|GER|31|72;DF|Jayden Bogle|ENG|25|75;DF|Gabriel Gudmundsson|SWE|27|75;DF|Tarik Muharemović|BIH|23|75;DF|Joe Rodon|WAL|28|76;DF|Jaka Bijol|SVN|27|77;DF|James Justin|ENG|28|74;DF|Melvin Bard|FRA|26|75;DF|Nico Elvedi|SUI|30|76;MF|Ethan Ampadu|WAL|26|76;MF|Daniel James|WAL|28|75;MF|Sean Longstaff|ENG|28|75;MF|Brenden Aaronson|USA|25|76;MF|Anton Stach|GER|27|77;MF|Ao Tanaka|JPN|27|76;MF|Ilia Gruev|BUL|26|74;FW|Dominic Calvert-Lewin|ENG|29|76;FW|Harry Wilson|WAL|29|77;FW|Lukas Nmecha|GER|27|73;FW|Noah Okafor|SUI|26|76;FW|Jean-Mattéo Bahoya|FRA|21|72"],["Liverpool","LIV","#c8102e","#00b2a9",84,"GK|Alisson Becker|BRA|34|85;GK|Giorgi Mamardashvili|GEO|26|82;GK|Freddie Woodman|ENG|29|66;GK|Vítězslav Jaroš|CZE|25|68;DF|Joe Gomez|ENG|29|78;DF|Virgil van Dijk|NED|35|85;DF|Jérémy Jacquet|FRA|21|78;DF|Milos Kerkez|HUN|22|82;DF|Conor Bradley|NIR|23|80;DF|Giovanni Leoni|ITA|19|77;DF|Kostas Tsimikas|GRE|30|76;DF|Jeremie Frimpong|NED|25|81;DF|Ronald Araújo|URU|27|83;DF|Luke Chambers|ENG|22|70;MF|Wataru Endo|JPN|33|76;MF|Florian Wirtz|GER|23|88;MF|Dominik Szoboszlai|HUN|25|85;MF|Alexis Mac Allister|ARG|27|86;MF|Ryan Gravenberch|NED|24|86;MF|Trey Nyoni|ENG|19|74;MF|James McConnell|ENG|22|72;FW|Alexander Isak|SWE|27|87;FW|Federico Chiesa|ITA|28|78;FW|Cody Gakpo|NED|27|83;FW|Hugo Ekitike|FRA|24|84;FW|Víctor Muñoz|ESP|23|78;FW|Bradley Barcola|FRA|24|83;FW|Rio Ngumoha|ENG|18|74"],["Manchester City","MCI","#6cabdd","#1c2c5b",84,"GK|Gianluigi Donnarumma|ITA|27|87;GK|Marcus Bettinelli|ENG|34|64;DF|Rúben Dias|POR|29|86;DF|Nathan Aké|NED|31|80;DF|Marc Guéhi|ENG|25|84;DF|Rayan Aït-Nouri|ALG|25|81;DF|Vitor Reis|BRA|20|76;DF|Joško Gvardiol|CRO|24|85;DF|Abdukodir Khusanov|UZB|22|80;DF|Rico Lewis|ENG|21|80;DF|Manuel Akanji|SUI|30|82;MF|Tijjani Reijnders|NED|27|85;MF|Mateo Kovačić|CRO|32|80;MF|Rayan Cherki|FRA|22|84;MF|Jérémy Doku|BEL|24|83;MF|Nico González|ESP|24|80;MF|Rodri|ESP|30|88;MF|Savinho|BRA|22|81;MF|Matheus Nunes|POR|27|80;MF|Claudio Echeverri|ARG|20|76;MF|Nico O'Reilly|ENG|21|81;MF|Sverre Nypan|NOR|19|74;MF|Antoine Semenyo|GHA|26|84;MF|Phil Foden|ENG|26|85;MF|Kalvin Phillips|ENG|30|72;MF|Jack Grealish|ENG|30|78;FW|Omar Marmoush|EGY|27|82;FW|Erling Haaland|NOR|25|91"],["Manchester United","MUN","#da291c","#fbe122",79,"GK|Senne Lammens|BEL|24|80;GK|Karl Darlow|WAL|35|66;DF|Diogo Dalot|POR|27|79;DF|Noussair Mazraoui|MAR|28|78;DF|Matthijs de Ligt|NED|26|81;DF|Harry Maguire|ENG|33|76;DF|Lisandro Martínez|ARG|28|81;DF|Patrick Dorgu|DEN|21|77;DF|Leny Yoro|FRA|20|80;DF|Luke Shaw|ENG|31|76;DF|Ayden Heaven|ENG|19|74;DF|Harry Amass|ENG|19|72;MF|Mason Mount|ENG|27|77;MF|Bruno Fernandes|POR|31|86;MF|Andrey Santos|BRA|22|79;MF|Youri Tielemans|BEL|29|80;MF|Carlos Baleba|CMR|22|81;MF|Manuel Ugarte|URU|25|78;MF|Kobbie Mainoo|ENG|21|79;MF|Jack Fletcher|ENG|19|62;MF|Tyler Fletcher|SCO|19|62;FW|Marcus Rashford|ENG|28|80;FW|Matheus Cunha|BRA|27|83;FW|Joshua Zirkzee|NED|25|76;FW|Amad Diallo|CIV|23|81;FW|Bryan Mbeumo|CMR|26|84;FW|Benjamin Šeško|SVN|23|81;FW|Shea Lacey|ENG|19|68"],["Newcastle United","NEW","#241f20","#ffffff",79,"GK|Nick Pope|ENG|34|79;GK|Lukáš Horníček|CZE|24|70;GK|Ewen Jaouen|FRA|21|62;GK|Mark Gillespie|ENG|35|60;DF|Tino Livramento|ENG|24|81;DF|Lewis Hall|ENG|22|80;DF|Sven Botman|NED|27|81;DF|Fabian Schär|SUI|35|76;DF|Malick Thiaw|GER|25|80;DF|Dan Burn|ENG|35|76;DF|Amar Dedić|BIH|24|78;MF|Joelinton|BRA|30|80;MF|Aladji Bamba|FRA|20|70;MF|Harvey Barnes|ENG|29|78;MF|Sean Steur|NED|19|68;MF|Bazoumana Touré|CIV|21|72;MF|Anthony Elanga|SWE|25|80;MF|Jacob Murphy|ENG|32|77;MF|Joe Willock|ENG|27|76;MF|Jacob Ramsey|ENG|26|78;MF|Lewis Miley|ENG|21|77;FW|Yoane Wissa|COD|30|80;FW|William Osula|DEN|23|75;FW|Matias Fernandez-Pardo|BEL|22|74"],["Nottingham Forest","NFO","#dd0000","#ffffff",76,"GK|John Victor|BRA|30|76;GK|Matz Sels|BEL|34|79;GK|Steven Benda|GER|27|68;DF|Ousmane Diomande|CIV|22|81;DF|Neco Williams|WAL|25|78;DF|Murillo|BRA|24|82;DF|Jair Cunha|BRA|21|74;DF|Luca Netz|GER|23|74;DF|Daniel Muñoz|COL|30|80;DF|Nikola Milenković|SRB|28|81;DF|Ola Aina|NGA|29|78;DF|Nicolò Savona|ITA|23|76;MF|Ibrahim Sangaré|CIV|28|78;MF|Nicolás Domínguez|ARG|28|78;MF|Morgan Gibbs-White|ENG|26|82;MF|Xaver Schlager|AUT|28|79;MF|Ryan Yates|ENG|28|75;MF|James McAtee|ENG|23|77;FW|Callum Hudson-Odoi|ENG|25|78;FW|Chris Wood|NZL|34|78;FW|Igor Jesus|BRA|25|77;FW|Dan Ndoye|SUI|25|80;FW|Arnaud Kalimuendo|FRA|24|77;FW|Liam Delap|ENG|23|79"],["Sunderland","SUN","#eb172b","#ffffff",74,"GK|Robin Roefs|NED|23|78;GK|Simon Moore|ENG|36|62;GK|Melker Ellborg|SWE|22|62;DF|Kevin Danso|AUT|27|79;DF|Daniel Ballard|NIR|26|76;DF|Dayann Methalie|FRA|21|66;DF|Thomas Meunier|BEL|34|74;DF|Omar Alderete|PAR|29|78;DF|Reinildo|MOZ|32|76;DF|Nordi Mukiele|FRA|28|78;DF|Trai Hume|NIR|24|76;DF|Aji Alese|ENG|25|68;MF|Alan Browne|IRL|31|70;MF|Chris Rigg|ENG|18|74;MF|Luke O'Nien|ENG|31|72;MF|Habib Diarra|SEN|22|79;MF|Noah Sadiki|COD|21|77;MF|Enzo Le Fée|FRA|26|79;MF|Jules Ahoka|COD|19|62;MF|Granit Xhaka|SUI|33|82;MF|Abdoullah Ba|FRA|22|72;FW|Chemsdine Talbi|MAR|21|76;FW|Brian Brobbey|NED|24|77;FW|Nilson Angulo|ECU|22|74;FW|Romaine Mundle|ENG|23|74;FW|Wilson Isidor|HAI|25|77;FW|Jocelin Ta Bi|CIV|18|62;FW|Malick Fofana|BEL|21|78"],["Tottenham Hotspur","TOT","#132257","#ffffff",79,"GK|Antonín Kinský|CZE|23|77;GK|Martin Dúbravka|SVK|37|72;GK|Brandon Austin|USA|27|64;DF|Andy Robertson|SCO|32|80;DF|Marcos Senesi|ARG|29|79;DF|Jan Paul van Hecke|NED|26|79;DF|Destiny Udogie|ITA|23|80;DF|Pedro Porro|ESP|26|82;DF|Ben Davies|WAL|33|74;DF|Micky van de Ven|NED|25|84;MF|Xavi Simons|NED|23|84;MF|Conor Gallagher|ENG|26|81;MF|James Maddison|ENG|29|81;MF|Archie Gray|ENG|20|78;MF|Lucas Bergvall|SWE|20|80;MF|Sandro Tonali|ITA|26|85;MF|Mateus Fernandes|POR|22|78;MF|Rodrigo Bentancur|URU|29|79;FW|Richarlison|BRA|29|77;FW|Mathys Tel|FRA|21|77;FW|Sávio|BRA|22|81;FW|Dominic Solanke|ENG|28|79;FW|Mohammed Kudus|GHA|26|83;FW|Dejan Kulusevski|SWE|26|82;FW|Wilson Odobert|FRA|21|75"]]};
+const DB={"epl":[["Arsenal","ARS","#ef0107","#ffffff",84,"GK|David Raya|ESP|30|86;GK|Kepa Arrizabalaga|ESP|31|79;GK|Illan Meslier|FRA|26|77;GK|Tommy Setford|ENG|20|64;DF|William Saliba|FRA|25|88;DF|Cristhian Mosquera|ESP|22|79;DF|Ben White|ENG|28|81;DF|Piero Hincapié|ECU|24|82;DF|Gabriel Magalhães|BRA|28|87;DF|Jurriën Timber|NED|25|84;DF|Ezri Konsa|ENG|28|82;DF|Riccardo Calafiori|ITA|24|81;DF|Myles Lewis-Skelly|ENG|19|78;MF|Martin Ødegaard|NOR|27|86;MF|Eberechi Eze|ENG|28|84;MF|Mikel Merino|ESP|30|82;MF|Martín Zubimendi|ESP|27|85;MF|Bruno Guimarães|BRA|28|86;MF|Declan Rice|ENG|27|88;MF|Ethan Nwaneri|ENG|19|79;FW|Bukayo Saka|ENG|25|88;FW|Viktor Gyökeres|SWE|28|85;FW|Christos Tzolis|GRE|24|79;FW|Noni Madueke|ENG|24|81;FW|Kai Havertz|GER|27|83"],["Aston Villa","AVL","#670e36","#95bfe5",79,"GK|Zion Suzuki|JPN|24|80;GK|Marco Bizot|NED|35|75;GK|James Wright|ENG|21|60;DF|Matty Cash|POL|29|79;DF|Victor Lindelöf|SWE|32|77;DF|Taylor Harwood-Bellis|ENG|24|76;DF|Tyrone Mings|ENG|33|76;DF|Matteo Ruggeri|ITA|24|77;DF|Pau Torres|ESP|29|81;DF|Ian Maatsen|NED|24|78;DF|Aaron Wan-Bissaka|COD|28|79;DF|Modou Kéba Cissé|SEN|21|72;DF|Travis Patterson|ENG|20|62;MF|Ross Barkley|ENG|32|76;MF|John McGinn|SCO|31|79;MF|Boubacar Kamara|FRA|26|82;MF|Emiliano Buendía|ARG|29|78;MF|Jamaldeen Jimoh-Aloba|ENG|19|66;MF|Amadou Onana|BEL|25|81;MF|Lamare Bogarde|NED|22|72;MF|Leon Goretzka|GER|31|82;MF|João Gomes|BRA|25|81;MF|Johan Manzambi|SUI|20|76;FW|Nicolas Jackson|SEN|25|80;FW|Alejandro Garnacho|ARG|22|80;FW|Tammy Abraham|ENG|28|77;FW|Ibrahim Mbaye|SEN|18|72;FW|Alysson|BRA|20|70"],["Bournemouth","BOU","#da291c","#111111",76,"GK|Đorđe Petrović|SRB|26|80;GK|Michele Di Gregorio|ITA|29|81;DF|Adrien Truffert|FRA|24|79;DF|James Hill|ENG|24|72;DF|Julio Soler|ARG|21|75;DF|António Silva|POR|23|81;DF|Adam Smith|ENG|35|70;DF|Bafodé Diakité|FRA|25|78;DF|Juanlu Sánchez|ESP|23|76;MF|Lewis Cook|ENG|29|76;MF|David Brooks|WAL|29|74;MF|Alex Scott|ENG|23|78;MF|Ryan Christie|SCO|33|75;MF|Tyler Adams|USA|27|79;MF|Marcus Tavernier|ENG|27|78;MF|Alex Tóth|HUN|21|73;FW|Evanilson|BRA|27|80;FW|Ben Gannon-Doak|SCO|21|74;FW|Justin Kluivert|NED|27|79;FW|Daniel Jebbison|CAN|23|70;FW|Álvaro Rodríguez|URU|22|74;FW|Rayan|BRA|20|76"],["Brentford","BRE","#e30613","#ffffff",75,"GK|Caoimhín Kelleher|IRL|27|81;GK|Hákon Valdimarsson|ISL|24|72;GK|Ellery Balcombe|ENG|26|62;DF|Aaron Hickey|SCO|24|76;DF|Rico Henry|JAM|29|74;DF|Sepp van den Berg|NED|24|78;DF|Kristoffer Ajer|NOR|28|76;DF|Jayden Meghoma|ENG|20|66;DF|Nathan Collins|IRL|25|79;DF|Michael Kayode|ITA|22|77;DF|Jannik Schuster|AUT|20|72;DF|Benjamin Fredrick|NGA|21|68;DF|El Hadji Malick Diouf|SEN|21|76;MF|Yehor Yarmolyuk|UKR|22|77;MF|Mathias Jensen|DEN|30|77;MF|Josh Dasilva|ENG|27|72;MF|Fábio Carvalho|POR|23|74;MF|Antoni Milambo|NED|21|75;MF|Mamadou Sangaré|MLI|24|73;MF|Mikkel Damsgaard|DEN|26|79;MF|Vitaly Janelt|GER|28|76;FW|Kevin Schade|GER|24|78;FW|Igor Thiago|BRA|25|80;FW|Dango Ouattara|BFA|24|78;FW|Callum Wilson|ENG|34|73;FW|Jaidon Anthony|ENG|26|74;FW|Keane Lewis-Potter|ENG|25|76;FW|Gustavo Nunes|BRA|20|70"],["Brighton","BHA","#0057b8","#ffffff",77,"GK|Bart Verbruggen|NED|24|81;GK|Jason Steele|ENG|36|68;DF|Jaouen Hadjam|ALG|23|75;DF|Pascal Struijk|NED|27|76;DF|Lewis Dunk|ENG|35|76;DF|Costinha|POR|26|75;DF|Olivier Boscagli|FRA|28|77;DF|Ferdi Kadıoğlu|TUR|27|80;DF|Mats Wieffer|NED|27|78;DF|Maxim De Cuyper|BEL|26|78;DF|Michael Svoboda|AUT|28|74;DF|Luka Vušković|CRO|19|76;MF|Jack Hinshelwood|ENG|21|76;MF|Pascal Groß|GER|35|77;MF|Chema Andrés|ESP|21|74;MF|Ibrahim Osman|GHA|22|74;MF|Diego Gómez|PAR|23|78;MF|Yasin Ayari|SWE|23|77;MF|Matt O'Riley|DEN|26|79;MF|Malick Yalcouyé|CIV|20|72;MF|Zadok Yohanna|NGA|19|66;FW|Georginio Rutter|FRA|24|79;FW|Promise David|CAN|25|74;FW|Charalampos Kostoulas|GRE|19|73"],["Chelsea","CHE","#034694","#ffffff",82,"GK|Robert Sánchez|ESP|28|80;GK|Emiliano Martínez|ARG|33|83;GK|Mike Penders|BEL|21|72;DF|Marco Palestra|ITA|21|78;DF|Wesley Fofana|FRA|25|80;DF|Maxence Lacroix|FRA|26|80;DF|Levi Colwill|ENG|23|83;DF|Jorrel Hato|NED|20|79;DF|Reece James|ENG|26|84;DF|Malo Gusto|FRA|23|81;DF|Pep Chavarría|ESP|28|76;DF|Aarón Anselmino|ARG|21|72;DF|Josh Acheampong|ENG|20|74;DF|Tosin Adarabioyo|ENG|28|77;MF|Valentín Barco|ARG|22|74;MF|Enzo Fernández|ARG|25|85;MF|Cole Palmer|ENG|24|87;MF|Dário Essugo|POR|21|73;MF|Morgan Rogers|ENG|24|83;MF|Moisés Caicedo|ECU|24|87;MF|Roméo Lavia|BEL|22|79;FW|Pedro Neto|POR|26|82;FW|João Pedro|BRA|24|83;FW|Jamie Gittens|ENG|22|79;FW|Emmanuel Emegha|NED|23|75;FW|Geovany Quenda|POR|19|76;FW|Mykhailo Mudryk|UKR|25|74;FW|Estêvão|BRA|19|82"],["Coventry City","COV","#59cbe8","#ffffff",71,"GK|Ben Wilson|ENG|33|68;GK|Carl Rushworth|ENG|24|74;GK|Dan Bentley|ENG|32|68;DF|Ethan Pinnock|JAM|33|72;DF|Jay Dasilva|WAL|28|70;DF|Bobby Thomas|ENG|25|72;DF|Kaine Kesler-Hayden|ENG|23|72;DF|Jake Bidwell|ENG|33|66;DF|Joel Latibeaudiere|JAM|26|70;DF|Aurèle Amenda|SUI|22|72;DF|Luke Woolfenden|ENG|27|72;DF|Milan van Ewijk|NED|25|73;MF|Jack Rudoni|ENG|25|74;MF|Matt Grimes|ENG|30|72;MF|Tatsuhiro Sakamoto|JPN|29|73;MF|Caleb Yirenkyi|GHA|20|66;MF|Ephron Mason-Clark|JAM|26|70;MF|Frank Onyeka|NGA|26|73;MF|Josh Eccles|ENG|25|70;MF|Victor Torp|DEN|26|72;MF|Yann Gboho|FRA|25|71;MF|Gustavo Hamer|NED|29|75;FW|Ellis Simms|ENG|25|74;FW|Haji Wright|USA|28|74;FW|Taiwo Awoniyi|NGA|28|73;FW|Loum Tchaouna|FRA|22|72;FW|Brandon Thomas-Asante|GHA|27|70;FW|Sidiki Chérif|GUI|19|70"],["Crystal Palace","CRY","#1b458f","#c4122e",77,"GK|Dean Henderson|ENG|29|80;GK|Walter Benítez|ARG|33|74;GK|Remi Matthews|ENG|32|64;DF|Tyrick Mitchell|ENG|26|77;DF|Chadi Riad|MAR|23|74;DF|Jaydee Canvot|FRA|20|74;DF|Takehiro Tomiyasu|JPN|27|76;DF|Anan Khalaili|ISR|22|74;DF|Chris Richards|USA|26|78;DF|Óscar Mingueza|ESP|27|77;DF|Ben Chilwell|ENG|29|74;DF|Axel Disasi|FRA|28|77;MF|Jefferson Lerma|COL|31|76;MF|Daichi Kamada|JPN|30|77;MF|Will Hughes|ENG|31|75;MF|Adam Wharton|ENG|22|82;MF|Quinten Timber|NED|25|78;MF|Cheick Doucouré|MLI|26|77;FW|Ismaïla Sarr|SEN|28|80;FW|Eddie Nketiah|ENG|27|74;FW|Yéremy Pino|ESP|23|78;FW|Dwight McNeil|ENG|26|75;FW|Zavier Gozo|USA|18|66;FW|Jean-Philippe Mateta|FRA|29|80;FW|Jørgen Strand Larsen|NOR|26|77;FW|Evann Guessand|CIV|25|75"],["Everton","EVE","#003399","#ffffff",75,"GK|Jordan Pickford|ENG|32|82;GK|Mark Travers|IRL|26|72;GK|Tom King|WAL|31|62;DF|Nathan Patterson|SCO|24|74;DF|Jarrad Branthwaite|ENG|24|80;DF|Michael Keane|ENG|33|74;DF|James Tarkowski|ENG|33|77;DF|Jake O'Brien|IRL|25|76;DF|Vitaliy Mykolenko|UKR|27|76;DF|Adam Aznou|MAR|20|70;MF|Kiernan Dewsbury-Hall|ENG|27|77;MF|Christian Nørgaard|DEN|32|76;MF|Charly Alcaraz|ARG|23|76;MF|Hayden Hackney|ENG|24|76;MF|Merlin Röhl|GER|24|75;MF|James Garner|ENG|25|78;MF|Tim Iroegbunam|ENG|23|72;MF|Harrison Armstrong|ENG|19|70;FW|Beto|GNB|28|76;FW|Iliman Ndiaye|SEN|26|79;FW|Thierno Barry|FRA|23|76;FW|Tyrique George|ENG|20|74;FW|Tyler Dibling|ENG|20|76;FW|Brennan Johnson|WAL|25|79"],["Fulham","FUL","#ffffff","#111111",75,"GK|Bernd Leno|GER|34|79;GK|Benjamin Lecomte|FRA|35|70;DF|Kenny Tete|NED|30|76;DF|Calvin Bassey|NGA|26|77;DF|Jorge Cuenca|ESP|26|75;DF|Joachim Andersen|DEN|30|78;DF|Timothy Castagne|BEL|30|75;DF|Ryan Sessegnon|ENG|26|74;DF|Antonee Robinson|USA|28|79;MF|Harrison Reed|ENG|31|74;MF|César Palacios|ESP|22|72;MF|Hugo Larsson|SWE|21|77;MF|Sander Berge|NOR|28|77;MF|Shea Charles|NIR|22|73;MF|Josh King|ENG|19|72;MF|Emile Smith Rowe|ENG|26|77;MF|Chibuzo Nwoko|ENG|18|62;FW|Gonzalo García|ESP|22|76;FW|Rodrigo Muniz|BRA|25|76;FW|Kevin|BRA|23|77;FW|Oscar Bobb|NOR|23|76;FW|Alex Iwobi|NGA|30|78;FW|Macauley Zepa|CMR|18|58"],["Hull City","HUL","#f5a12d","#111111",70,"GK|Jack Butland|ENG|33|72;GK|Dillon Phillips|ENG|31|66;GK|Konstantinos Tzolakis|GRE|23|70;DF|Lewie Coyle|ENG|30|68;DF|Ryan Giles|ENG|26|70;DF|Charlie Hughes|ENG|22|69;DF|Semi Ajayi|NGA|32|69;DF|John Egan|IRL|33|70;DF|Paddy McNair|NIR|31|70;DF|Brooke Norton-Cuffy|ENG|22|72;DF|Matt Targett|ENG|30|70;DF|Nobel Mendy|SEN|21|68;MF|Hidemasa Morita|JPN|31|74;MF|Eliot Matazo|BEL|24|70;MF|Joe Gelhardt|ENG|24|70;MF|Óscar Zambrano|ECU|22|70;MF|Darko Gyabi|ENG|22|68;MF|Kieran Dowell|ENG|28|68;MF|Regan Slater|ENG|26|69;MF|Lucas Gourna-Douath|FRA|22|71;MF|Abdülkadir Ömür|TUR|27|72;MF|Christos Mouzakitis|GRE|19|68;FW|Sorba Thomas|WAL|27|70;FW|Oli McBurnie|SCO|30|70;FW|Mohamed Belloumi|ALG|24|71;FW|Ilyas Ansah|GER|21|70;FW|Robinio Vaz|FRA|19|68;FW|Mohamed-Ali Cho|FRA|22|72"],["Ipswich Town","IPS","#0044a9","#ffffff",71,"GK|Alex Palmer|ENG|29|73;GK|Christian Walton|ENG|30|68;GK|Cieran Slicker|SCO|23|64;DF|Harry Clarke|ENG|25|71;DF|Leif Davis|ENG|26|75;DF|Cédric Kipré|CIV|29|70;DF|Ben Johnson|ENG|26|72;DF|Darnell Furlong|ENG|30|70;DF|Jacob Greaves|ENG|25|72;DF|Elkan Baggott|IDN|23|66;DF|Dara O'Shea|IRL|27|74;MF|Azor Matusiwa|NED|28|72;MF|Wes Burns|WAL|31|70;MF|Jack Taylor|IRL|28|71;MF|Cameron Humphreys|ENG|22|66;MF|Marcelino Núñez|CHI|26|73;FW|Sindre Walle Egeli|NOR|20|68;FW|George Hirst|SCO|27|71;FW|Jaden Philogene|ENG|24|74;FW|Ali Al-Hamadi|IRQ|24|68;FW|Kasey McAteer|IRL|24|68;FW|Chiedozie Ogbene|IRL|29|71;FW|Sammie Szmodics|IRL|30|71;FW|Chuba Akpom|ENG|30|72;FW|Anis Mehmeti|ALB|25|72;FW|Jack Clarke|ENG|25|75"],["Leeds United","LEE","#ffffff","#1d428a",73,"GK|James Trafford|ENG|23|80;GK|Michael Zetterer|GER|31|72;DF|Jayden Bogle|ENG|25|75;DF|Gabriel Gudmundsson|SWE|27|75;DF|Tarik Muharemović|BIH|23|75;DF|Joe Rodon|WAL|28|76;DF|Jaka Bijol|SVN|27|77;DF|James Justin|ENG|28|74;DF|Melvin Bard|FRA|26|75;DF|Nico Elvedi|SUI|30|76;MF|Ethan Ampadu|WAL|26|76;MF|Daniel James|WAL|28|75;MF|Sean Longstaff|ENG|28|75;MF|Brenden Aaronson|USA|25|76;MF|Anton Stach|GER|27|77;MF|Ao Tanaka|JPN|27|76;MF|Ilia Gruev|BUL|26|74;FW|Dominic Calvert-Lewin|ENG|29|76;FW|Harry Wilson|WAL|29|77;FW|Lukas Nmecha|GER|27|73;FW|Noah Okafor|SUI|26|76;FW|Jean-Mattéo Bahoya|FRA|21|72"],["Liverpool","LIV","#c8102e","#00b2a9",84,"GK|Alisson Becker|BRA|34|85;GK|Giorgi Mamardashvili|GEO|26|82;GK|Freddie Woodman|ENG|29|66;GK|Vítězslav Jaroš|CZE|25|68;DF|Joe Gomez|ENG|29|78;DF|Virgil van Dijk|NED|35|85;DF|Jérémy Jacquet|FRA|21|78;DF|Milos Kerkez|HUN|22|82;DF|Conor Bradley|NIR|23|80;DF|Giovanni Leoni|ITA|19|77;DF|Kostas Tsimikas|GRE|30|76;DF|Jeremie Frimpong|NED|25|81;DF|Ronald Araújo|URU|27|83;DF|Luke Chambers|ENG|22|70;MF|Wataru Endo|JPN|33|76;MF|Florian Wirtz|GER|23|88;MF|Dominik Szoboszlai|HUN|25|85;MF|Alexis Mac Allister|ARG|27|86;MF|Ryan Gravenberch|NED|24|86;MF|Trey Nyoni|ENG|19|74;MF|James McConnell|ENG|22|72;FW|Alexander Isak|SWE|27|87;FW|Federico Chiesa|ITA|28|78;FW|Cody Gakpo|NED|27|83;FW|Hugo Ekitike|FRA|24|84;FW|Víctor Muñoz|ESP|23|78;FW|Bradley Barcola|FRA|24|83;FW|Rio Ngumoha|ENG|18|74"],["Manchester City","MCI","#6cabdd","#1c2c5b",84,"GK|Gianluigi Donnarumma|ITA|27|87;GK|Marcus Bettinelli|ENG|34|64;DF|Rúben Dias|POR|29|86;DF|Nathan Aké|NED|31|80;DF|Marc Guéhi|ENG|25|84;DF|Rayan Aït-Nouri|ALG|25|81;DF|Vitor Reis|BRA|20|76;DF|Joško Gvardiol|CRO|24|85;DF|Abdukodir Khusanov|UZB|22|80;DF|Rico Lewis|ENG|21|80;DF|Manuel Akanji|SUI|30|82;MF|Tijjani Reijnders|NED|27|85;MF|Mateo Kovačić|CRO|32|80;MF|Rayan Cherki|FRA|22|84;MF|Jérémy Doku|BEL|24|83;MF|Nico González|ESP|24|80;MF|Rodri|ESP|30|88;MF|Savinho|BRA|22|81;MF|Matheus Nunes|POR|27|80;MF|Claudio Echeverri|ARG|20|76;MF|Nico O'Reilly|ENG|21|81;MF|Sverre Nypan|NOR|19|74;MF|Antoine Semenyo|GHA|26|84;MF|Phil Foden|ENG|26|85;MF|Kalvin Phillips|ENG|30|72;MF|Jack Grealish|ENG|30|78;FW|Omar Marmoush|EGY|27|82;FW|Erling Haaland|NOR|25|91"],["Manchester United","MUN","#da291c","#fbe122",79,"GK|Senne Lammens|BEL|24|80;GK|Karl Darlow|WAL|35|66;DF|Diogo Dalot|POR|27|79;DF|Noussair Mazraoui|MAR|28|78;DF|Matthijs de Ligt|NED|26|81;DF|Harry Maguire|ENG|33|76;DF|Lisandro Martínez|ARG|28|81;DF|Patrick Dorgu|DEN|21|77;DF|Leny Yoro|FRA|20|80;DF|Luke Shaw|ENG|31|76;DF|Ayden Heaven|ENG|19|74;DF|Harry Amass|ENG|19|72;MF|Mason Mount|ENG|27|77;MF|Bruno Fernandes|POR|31|86;MF|Andrey Santos|BRA|22|79;MF|Youri Tielemans|BEL|29|80;MF|Carlos Baleba|CMR|22|81;MF|Manuel Ugarte|URU|25|78;MF|Kobbie Mainoo|ENG|21|79;MF|Jack Fletcher|ENG|19|62;MF|Tyler Fletcher|SCO|19|62;FW|Marcus Rashford|ENG|28|80;FW|Matheus Cunha|BRA|27|83;FW|Joshua Zirkzee|NED|25|76;FW|Amad Diallo|CIV|23|81;FW|Bryan Mbeumo|CMR|26|84;FW|Benjamin Šeško|SVN|23|81;FW|Shea Lacey|ENG|19|68"],["Newcastle United","NEW","#241f20","#ffffff",79,"GK|Nick Pope|ENG|34|79;GK|Lukáš Horníček|CZE|24|70;GK|Ewen Jaouen|FRA|21|62;GK|Mark Gillespie|ENG|35|60;DF|Tino Livramento|ENG|24|81;DF|Lewis Hall|ENG|22|80;DF|Sven Botman|NED|27|81;DF|Fabian Schär|SUI|35|76;DF|Malick Thiaw|GER|25|80;DF|Dan Burn|ENG|35|76;DF|Amar Dedić|BIH|24|78;MF|Joelinton|BRA|30|80;MF|Aladji Bamba|FRA|20|70;MF|Harvey Barnes|ENG|29|78;MF|Sean Steur|NED|19|68;MF|Bazoumana Touré|CIV|21|72;MF|Anthony Elanga|SWE|25|80;MF|Jacob Murphy|ENG|32|77;MF|Joe Willock|ENG|27|76;MF|Jacob Ramsey|ENG|26|78;MF|Lewis Miley|ENG|21|77;FW|Yoane Wissa|COD|30|80;FW|William Osula|DEN|23|75;FW|Matias Fernandez-Pardo|BEL|22|74"],["Nottingham Forest","NFO","#dd0000","#ffffff",76,"GK|John Victor|BRA|30|76;GK|Matz Sels|BEL|34|79;GK|Steven Benda|GER|27|68;DF|Ousmane Diomande|CIV|22|81;DF|Neco Williams|WAL|25|78;DF|Murillo|BRA|24|82;DF|Jair Cunha|BRA|21|74;DF|Luca Netz|GER|23|74;DF|Daniel Muñoz|COL|30|80;DF|Nikola Milenković|SRB|28|81;DF|Ola Aina|NGA|29|78;DF|Nicolò Savona|ITA|23|76;MF|Ibrahim Sangaré|CIV|28|78;MF|Nicolás Domínguez|ARG|28|78;MF|Morgan Gibbs-White|ENG|26|82;MF|Xaver Schlager|AUT|28|79;MF|Ryan Yates|ENG|28|75;MF|James McAtee|ENG|23|77;FW|Callum Hudson-Odoi|ENG|25|78;FW|Chris Wood|NZL|34|78;FW|Igor Jesus|BRA|25|77;FW|Dan Ndoye|SUI|25|80;FW|Arnaud Kalimuendo|FRA|24|77;FW|Liam Delap|ENG|23|79"],["Sunderland","SUN","#eb172b","#ffffff",74,"GK|Robin Roefs|NED|23|78;GK|Simon Moore|ENG|36|62;GK|Melker Ellborg|SWE|22|62;DF|Kevin Danso|AUT|27|79;DF|Daniel Ballard|NIR|26|76;DF|Dayann Methalie|FRA|21|66;DF|Thomas Meunier|BEL|34|74;DF|Omar Alderete|PAR|29|78;DF|Reinildo|MOZ|32|76;DF|Nordi Mukiele|FRA|28|78;DF|Trai Hume|NIR|24|76;DF|Aji Alese|ENG|25|68;MF|Alan Browne|IRL|31|70;MF|Chris Rigg|ENG|18|74;MF|Luke O'Nien|ENG|31|72;MF|Habib Diarra|SEN|22|79;MF|Noah Sadiki|COD|21|77;MF|Enzo Le Fée|FRA|26|79;MF|Jules Ahoka|COD|19|62;MF|Granit Xhaka|SUI|33|82;MF|Abdoullah Ba|FRA|22|72;FW|Chemsdine Talbi|MAR|21|76;FW|Brian Brobbey|NED|24|77;FW|Nilson Angulo|ECU|22|74;FW|Romaine Mundle|ENG|23|74;FW|Wilson Isidor|HAI|25|77;FW|Jocelin Ta Bi|CIV|18|62;FW|Malick Fofana|BEL|21|78"],["Tottenham Hotspur","TOT","#132257","#ffffff",79,"GK|Antonín Kinský|CZE|23|77;GK|Martin Dúbravka|SVK|37|72;GK|Brandon Austin|USA|27|64;DF|Andy Robertson|SCO|32|80;DF|Marcos Senesi|ARG|29|79;DF|Jan Paul van Hecke|NED|26|79;DF|Destiny Udogie|ITA|23|80;DF|Pedro Porro|ESP|26|82;DF|Ben Davies|WAL|33|74;DF|Micky van de Ven|NED|25|84;MF|Xavi Simons|NED|23|84;MF|Conor Gallagher|ENG|26|81;MF|James Maddison|ENG|29|81;MF|Archie Gray|ENG|20|78;MF|Lucas Bergvall|SWE|20|80;MF|Sandro Tonali|ITA|26|85;MF|Mateus Fernandes|POR|22|78;MF|Rodrigo Bentancur|URU|29|79;FW|Richarlison|BRA|29|77;FW|Mathys Tel|FRA|21|77;FW|Sávio|BRA|22|81;FW|Dominic Solanke|ENG|28|79;FW|Mohammed Kudus|GHA|26|83;FW|Dejan Kulusevski|SWE|26|82;FW|Wilson Odobert|FRA|21|75"]]};
 'use strict';
 /* ==========================================================
-   KG Football Manager v2 — ไทยลีก 1 / พรีเมียร์ลีก
-   เครื่องที่ "สร้างห้อง" เป็นตัวคุมเกม (PeerJS) ทีมที่ว่าง AI คุม
-   แมตช์จำลองสดทีละนาที — เปลี่ยนตัว/แผน/แท็กติก/ขอเวลานอกได้ระหว่างแข่ง
+   KG Football Manager — พรีเมียร์ลีก (เล่นคนเดียว)
+   คุม 1 ทีม อีก 19 ทีม AI คุม
+   แมตช์จำลองสดทีละนาที — เปลี่ยนตัว/แผน/แท็กติก/หยุดเกมได้ระหว่างแข่ง
    รายชื่อนักเตะจริงตามข้อมูลต้นฤดูกาล 2026/27 (ค่าพลังเป็นค่าประเมินในเกม)
    ========================================================== */
-const VER=2, PREFIX='kgfm-', SAVE_KEY='fm_host2', MAX_SQUAD=30, MIN_SQUAD=16, MAX_SUBS=5, BENCH=7, PAUSE_MS=30000, TIMEOUTS=2;
+const VER=3, SAVE_KEY='fm_epl3', MAX_SQUAD=30, MIN_SQUAD=16, MAX_SUBS=5, BENCH=7;
 const SPEED=[{n:'เร็ว',t:380,ht:5000},{n:'ปกติ',t:750,ht:9000},{n:'ช้า',t:1150,ht:12000}];
 const QS=new URLSearchParams(location.search);
-const PEER_OPTS=(()=>{const o={debug:0,config:{iceServers:[{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'},{urls:'stun:global.stun.twilio.com:3478'}]}};
-  const ph=QS.get('peerhost');if(ph){const [h,p]=ph.split(':');Object.assign(o,{host:h,port:+p||9000,path:'/',secure:false})}return o})();
 const LS={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:v}catch(e){return d}},set(k,v){try{localStorage.setItem(k,v)}catch(e){}},del(k){try{localStorage.removeItem(k)}catch(e){}}};
 let uid=LS.get('fm_uid',null);if(!uid){uid='u'+Math.random().toString(36).slice(2,10);LS.set('fm_uid',uid)}
 let myName=LS.get('fm_name','');
 
 /* ---------------- ลีก ---------------- */
 const LG={
- th:{name:'ไทยลีก 1',flag:'🇹🇭',home:'THA',cur:'ล.',vk:42,ve:2.5,vm:1,bud:r=>r1(Math.max(10,(r-58)*3.8)+5),tv:0.5,gate:r=>0.6+(r-55)*0.07,wage:0.005,prize:i=>Math.max(3,30-i*1.8),zone:[2,3],zt:'ลุ้นไปเอเชีย'},
  epl:{name:'พรีเมียร์ลีก',flag:'🏴󠁧󠁢󠁥󠁮󠁧󠁿',home:'ENG',cur:'£',vk:55,ve:2.8,vm:4,bud:r=>r1(Math.max(15,(r-68)*9+15)),tv:3.5,gate:r=>Math.max(0.3,(r-60)*0.1),wage:0.0025,prize:i=>Math.max(10,100-i*4.5),zone:[4,3],zt:'แชมเปียนส์ลีก'}
 };
-const L=()=>LG[(S&&S.lg)||'th'];
+const L=()=>LG.epl;
 const FORMS={'4-4-2':[4,4,2],'4-3-3':[4,3,3],'4-5-1':[4,5,1],'3-5-2':[3,5,2],'3-4-3':[3,4,3],'5-3-2':[5,3,2],'5-4-1':[5,4,1]};
 const TAC=['ตั้งรับ','สมดุล','บุก'],TACI=['🛡️','⚖️','🔥'];
 const POSN={GK:'ผู้รักษาประตู',DF:'กองหลัง',MF:'กองกลาง',FW:'กองหน้า'};
-const FA={th:{a:['Anucha','Thanakorn','Kittipong','Nattapon','Weerapong','Somchai','Panuwat','Piyapong','Apisit','Jakkrit','Worawut','Chaiwat','Sakchai','Thanapol','Pongsakorn','Kritsada','Surachet','Nattawut','Adisorn','Patiphan','Kiattisak','Teerathep','Sarawut','Noppadol','Attapol','Thawatchai','Wuttichai','Sitthichai','Mongkol','Rattapol'],
-  b:['Jaidee','Srisuk','Kaewmanee','Boonma','Thongkham','Suksawat','Wongyai','Prommma','Chaimongkol','Saengthong','Sriwilai','Thongsuk','Meesuk','Petcharat','Boonyuen','Saithong','Inkaew','Janhom','Pimthong','Sakdee','Sapmak','Panyadee','Klaharn','Yodying','Ruangsri','Naksawat','Boonruang','Srion','Chanchai','Prasertsuk']},
- en:{a:['Lucas','Mateus','Rafael','Thiago','Bruno','Diego','Kenji','Daiki','Yuto','Ibrahim','Moussa','Kwame','Ivan','Marko','Pedro','Felipe','Jack','Harry','Oliver','George','Charlie','Alfie','Tom','Sam','Leo','Nathan','Joe','Callum','Liam','Ryan'],
+const FA={ en:{a:['Lucas','Mateus','Rafael','Thiago','Bruno','Diego','Kenji','Daiki','Yuto','Ibrahim','Moussa','Kwame','Ivan','Marko','Pedro','Felipe','Jack','Harry','Oliver','George','Charlie','Alfie','Tom','Sam','Leo','Nathan','Joe','Callum','Liam','Ryan'],
   b:['Silva','Souza','Costa','Pereira','Almeida','Tanaka','Sato','Kim','Park','Diallo','Traore','Mensah','Okafor','Petrovic','Kovac','Santos','Smith','Jones','Taylor','Brown','Walker','Wright','Hughes','Evans','Clarke','Hall','Wood','Turner','Hill','Ward']}};
 const NATS=['BRA','JPN','KOR','ESP','FRA','NGA','ARG','SRB','POR','GHA'];
 
@@ -270,7 +266,7 @@ const slotsOf=f=>{const [d,m,w]=FORMS[f]||FORMS['4-4-2'];return ['GK',...Array(d
 const seasonLabel=s=>s+'/'+String((s+1)%100).padStart(2,'0');
 const nR=()=>(S.teams.length-1)*2;
 function lum(hex){const n=parseInt(hex.slice(1),16);const r=n>>16&255,g=n>>8&255,b=n&255;return (0.299*r+0.587*g+0.114*b)/255}
-const hnow=()=>Date.now()+(isHost?0:clockOff);
+const hnow=()=>Date.now();
 
 /* ==========================================================
    GAME STATE
@@ -286,10 +282,10 @@ function addPlayer(t,pos,n,nat,ag,o){
   const id=S.nid++;o=clamp(Math.round(o),40,93);
   const p={id,n,pos,o,pt:potOf(o,ag),ag,ft:100,ij:0,sp:0,t,g:0,as:0,ap:0,nat,v:0};p.v=valueOf(p);S.pl[id]=p;return p;
 }
-function fakeName(){const f=FA[S.lg==='th'?'th':'en'];for(let k=0;k<30;k++){const n=pick(f.a)+' '+pick(f.b);if(!Object.values(S.pl).some(p=>p.n===n))return n}return pick(f.a)+' '+pick(f.b)+' Jr.'}
+function fakeName(){const f=FA.en;for(let k=0;k<30;k++){const n=pick(f.a)+' '+pick(f.b);if(!Object.values(S.pl).some(p=>p.n===n))return n}return pick(f.a)+' '+pick(f.b)+' Jr.'}
 function genFree(t){
   const pos=pick(['GK','DF','DF','DF','MF','MF','MF','FW','FW']);const ag=ri(19,33);
-  const base=S.lg==='epl'?66:57;const nat=S.lg==='th'?(rnd()<0.3?pick(NATS):'THA'):(rnd()<0.5?'ENG':pick(NATS));
+  const base=66;const nat=rnd()<0.5?'ENG':pick(NATS);
   return addPlayer(t==null?-1:t,pos,fakeName(),nat,ag,base+gauss()*5);
 }
 const squad=t=>Object.values(S.pl).filter(p=>p.t===t);
@@ -361,7 +357,6 @@ const fill=(s,o)=>s.replace(/\{(\w)\}/g,(_,k)=>o[k]||'');
 function wpick(list,wf){if(!list.length)return null;let tot=0;const w=list.map(x=>{const v=Math.max(0.01,wf(x));tot+=v;return v});let r=rnd()*tot;for(let i=0;i<list.length;i++){r-=w[i];if(r<=0)return list[i]}return list[list.length-1]}
 function shortN(p){
   if(!p)return'-';const w=p.n.trim().split(' ');if(w.length===1)return p.n;if(p.cu&&p.n.length<=13)return p.n;
-  if(S&&S.lg==='th'&&p.nat==='THA')return w[0];
   let i=w.length-1;while(i>0&&/^(van|de|den|der|di|da|dos|von|le|la|el|al|ten|ter)$/i.test(w[i-1]))i--;return w.slice(i).join(' ');
 }
 const nm=id=>S.pl[id]?S.pl[id].n:'-';
@@ -495,7 +490,7 @@ function newSeason(){
     p.ag++;p.g=0;p.as=0;p.ap=0;p.ft=100;p.ij=0;p.sp=0;if(p.ag>=29)p.pt=p.o;
     if(p.ag>=37||(p.ag>=35&&rnd()<0.4)){
       const T=S.teams[p.t];delete S.pl[p.id];
-      if(T){if(p.o>=(S.lg==='epl'?78:68))addNews('👋 '+p.n+' ('+T.sh+') ประกาศแขวนสตั๊ด');
+      if(T){if(p.o>=78)addNews('👋 '+p.n+' ('+T.sh+') ประกาศแขวนสตั๊ด');
         if(squad(T.id).length<22){const y=genFree(T.id);y.pos=p.pos;y.ag=ri(17,19);y.o=clamp(T.rep-12+Math.round(gauss()*4),40,85);y.pt=clamp(y.o+ri(10,20),y.o,92);y.v=valueOf(y)}}
     }else p.v=valueOf(p);
   });
@@ -517,7 +512,7 @@ function startRound(){
   });
   S.lv={id:Math.random().toString(36).slice(2,8),r:S.round,min:0,st:'run',pu:null,htu:0,tu:{},ms:S.fx[S.round].map(([h,a])=>newLiveMatch(h,a))};
   Object.values(S.humans).forEach(h=>h.ready=false);
-  S.phase='live';bump();runTicker();
+  S.phase='live';bump();runTicker();wake();
 }
 function runTicker(){clearInterval(tickT);tickT=setInterval(tick,SPEED[S.spd??1].t)}
 function tick(force){
@@ -556,18 +551,8 @@ function endLive(){
   if(S.round>=nR())seasonEnd();else S.phase='pre';
   bump();
 }
-function liveSend(d){
-  const V=S.lv;if(!V)return;
-  const pk={t:'l',id:V.id,min:V.min,st:V.st,pu:V.pu,htu:V.htu,tu:V.tu,now:Date.now(),d:[]};
-  for(let k=0;k<d.length;k+=2){const i=d[k],n0=d[k+1],m=V.ms[i];pk.d.push({i,n:m.ev.length,e:m.ev.slice(n0),sc:m.sc,sh:m.sh,ot:m.ot,cd:m.cd,on:m.on,bn:m.bn,sb:m.sb,out:m.out,inj:m.inj,mp:m.mp,tc:m.tc})}
-  if(isHost){for(const c of conns.keys())if(c.open)try{c.send(pk)}catch(e){}}
-  render();
-}
-function checkReady(){
-  if(!S||S.phase!=='pre')return;
-  const hs=Object.values(S.humans).filter(h=>h.team!=null&&h.on);
-  if(hs.length&&hs.every(h=>h.ready)){clearTimeout(playTimer);playTimer=setTimeout(startRound,1200)}else clearTimeout(playTimer);
-}
+function liveSend(){render()}
+function checkReady(){}
 
 /* ---------------- คำสั่งจากผู้เล่น (รันบนโฮสต์) ---------------- */
 function teamOf(u){const h=S.humans[u];return h&&h.team!=null?S.teams[h.team]:null}
@@ -577,11 +562,11 @@ function act(u,m){
   const isH=u===S.host,h=S.humans[u],T=teamOf(u);
   switch(m.type){
     case 'hello':{const n=String(m.name||'ผู้จัดการ').trim().slice(0,16)||'ผู้จัดการ';
-      if(!h){if(Object.keys(S.humans).length>=24)return'ห้องเต็มแล้ว';S.humans[u]={name:n,team:null,ready:false,on:true}}else{h.name=n;h.on=true}break}
-    case 'league':{if(!isH||S.phase!=='lobby'||!LG[m.lg])return;const keep=S.humans,code=S.code,solo=S.solo,spd=S.spd;newGame(code,solo,m.lg,keep);S.spd=spd;break}
+      if(!h)S.humans[u]={name:n,team:null,ready:false,on:true};else{h.name=n;h.on=true}break}
     case 'speed':{if(!isH)return;S.spd=clamp(+m.v|0,0,2);if(S.phase==='live')runTicker();break}
     case 'pick':{if(!h)return;const X=S.teams[+m.team];if(!X)return;if(S.phase==='live')return'รอให้จบนัดนี้ก่อน';
-      if(X.owner&&X.owner!==u)return'ทีมนี้มีคนคุมแล้ว';if(T&&T!==X)T.owner=null;X.owner=u;h.team=X.id;h.ready=false;
+      if(X.owner&&X.owner!==u){const oh=S.humans[X.owner];if(oh&&oh.on)return'ทีมนี้มีคนคุมอยู่ (ออนไลน์)';if(oh){oh.team=null;oh.ready=false}}
+      if(T&&T!==X)T.owner=null;X.owner=u;h.team=X.id;h.ready=false;
       if(S.phase!=='lobby')addNews('👔 '+h.name+' เข้ารับตำแหน่งผู้จัดการ '+X.name);break}
     case 'unpick':{if(T){T.owner=null;h.team=null;h.ready=false}break}
     case 'lineup':{if(!T||S.phase==='live')return;if(m.form&&FORMS[m.form])T.form=m.form;if([0,1,2].includes(m.tac))T.tac=m.tac;
@@ -590,9 +575,8 @@ function act(u,m){
       if(Array.isArray(m.bn))T.bn=m.bn.filter(id=>own(id)&&!seen.has(id)&&(seen.add(id),true)).slice(0,BENCH);
       break}
     case 'auto':{if(!T||S.phase==='live')return;autoXI(T);break}
-    case 'ready':{if(!T||S.phase!=='pre')return;h.ready=!!m.v;break}
     case 'buy':{if(!T)return;if(S.phase==='live')return'ซื้อขายได้หลังจบนัด';const p=S.pl[m.pid];if(!p)return'ไม่พบนักเตะ';if(p.t===T.id)return;
-      const seller=p.t>=0?S.teams[p.t]:null;if(seller&&seller.owner)return'ซื้อจากทีมของเพื่อนไม่ได้';
+      const seller=p.t>=0?S.teams[p.t]:null;
       if(seller&&squad(seller.id).length<=18)return seller.name+' ไม่ยอมปล่อยตัว (ผู้เล่นไม่พอ)';
       if(squad(T.id).length>=MAX_SQUAD)return'ทีมเต็ม '+MAX_SQUAD+' คนแล้ว';
       const price=priceOf(p);if(T.budget<price)return'งบไม่พอ';
@@ -620,10 +604,8 @@ function act(u,m){
       if(!M.on[s].includes(m.off)||M.out.includes(m.off))return'ผู้เล่นคนนี้ไม่ได้อยู่ในสนาม';
       if(!M.bn[s].includes(m.on))return'ไม่มีผู้เล่นคนนี้บนม้านั่งสำรอง';
       doSub(M,s,m.off,m.on,'');break}
-    case 'pause':{if(!S.lv||!T||S.lv.st!=='run')return;const n=S.lv.tu[u]||0;if(n>=TIMEOUTS)return'ใช้สิทธิ์ขอเวลานอกครบแล้ว';
-      S.lv.tu[u]=n+1;S.lv.st='pause';S.lv.pu={by:h.name,u,until:Date.now()+PAUSE_MS};
-      const L_=myLive(T);if(L_)L_.m.ev.push({m:S.lv.min,s:L_.s,k:'tac',x:'⏸️ '+h.name+' ('+T.sh+') ขอเวลานอก'});break}
-    case 'resume':{if(!S.lv||S.lv.st!=='pause')return;if(!(isH||S.lv.pu.u===u))return'เฉพาะคนที่ขอเวลานอกหรือเจ้าของห้อง';S.lv.pu.until=Date.now();break}
+    case 'pause':{if(!S.lv||S.lv.st!=='run')return;S.lv.st='pause';S.lv.pu={by:h?h.name:'',u,until:Date.now()+864e5};break}
+    case 'resume':{if(!S.lv||S.lv.st!=='pause')return;S.lv.pu.until=Date.now();break}
     default:return;
   }
   bump();checkReady();
@@ -641,85 +623,58 @@ function bulkRename(T,txt){
 }
 
 /* ==========================================================
-   NETWORK
+   บันทึกเกม (เครื่องนี้) + สำรอง/ย้ายเกมเป็นไฟล์
    ========================================================== */
-let isHost=false,peer=null,conn=null,netOk=false,clockOff=0,retryT=null,leaving=false,joinCode=null;
-const conns=new Map();
-function genCode(){const c='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';let s='';for(let i=0;i<5;i++)s+=c[ri(0,c.length-1)];return s}
-let bcT=null,saveT=null;
-function bump(){
-  if(!S)return;S.seq++;
-  if(isHost){clearTimeout(bcT);bcT=setTimeout(broadcast,40);clearTimeout(saveT);saveT=setTimeout(saveGame,400)}
-  render();
+let isHost=true,leaving=false,saveT=null;
+const rid=()=>Math.random().toString(36).slice(2,10);
+function bump(){if(!S)return;S.seq++;clearTimeout(saveT);saveT=setTimeout(saveGame,500);render()}
+function saveGame(){if(S)LS.set(SAVE_KEY,JSON.stringify(S))}
+function send(m){const err=act(uid,m);if(err)toast(err)}
+function loadSave(){
+  let o=null;try{o=JSON.parse(LS.get(SAVE_KEY,'null'))}catch(e){}
+  if(!o){try{const old=JSON.parse(LS.get('fm_host2','null'));if(old&&old.lg==='epl')o=old}catch(e){}} // เกมพรีเมียร์ลีกจากรุ่นก่อน
+  if(!o||!o.teams||o.lg!=='epl')return null;
+  if(o.v!==VER){o.v=VER;o.solo=true;o.code='SOLO';
+    const mine=o.humans[uid]?uid:Object.keys(o.humans).find(k=>k===o.host);
+    Object.keys(o.humans).forEach(k=>{if(k!==mine){const t=o.humans[k].team;if(t!=null&&o.teams[t].owner===k)o.teams[t].owner=null;delete o.humans[k]}});
+    if(mine&&mine!==uid){o.humans[uid]=o.humans[mine];delete o.humans[mine];o.teams.forEach(T=>{if(T.owner===mine)T.owner=uid})}
+  }
+  return o;
 }
-function saveGame(){if(isHost&&S)LS.set(SAVE_KEY,JSON.stringify(S))}
-function broadcast(){if(!isHost||!S)return;const msg={t:'s',s:S,now:Date.now()};for(const c of conns.keys())if(c.open)try{c.send(msg)}catch(e){}}
-function send(m){
-  if(isHost){const err=act(uid,m);if(err)toast(err);return}
-  if(conn&&conn.open){try{conn.send({t:'a',u:uid,m})}catch(e){toast('ส่งไม่สำเร็จ')}}else toast('กำลังเชื่อมต่อใหม่...');
+function startGame(){leaving=false;newGame('SOLO',true,'epl');S.sid=rid();act(uid,{type:'hello',name:myName||'ผู้จัดการ'});UI.tab='home';bump();wake()}
+function resumeGame(){
+  const o=loadSave();if(!o){toast('ไม่พบเกมที่บันทึกไว้');return}
+  S=o;leaving=false;S.host=uid;if(!S.humans[uid])S.humans[uid]={name:myName||'ผู้จัดการ',team:null,ready:false,on:true};S.humans[uid].on=true;
+  if(S.phase==='live'){if(!S.lv)S.phase='pre';else if(S.lv.st==='ft'){S.lv.st='run';endLive()}else{S.lv.st='pause';S.lv.pu={by:'',u:uid,until:Date.now()+864e5};runTicker()}}
+  UI.tab='home';bump();wake();
 }
-function hostStart(solo,lg){isHost=true;leaving=false;newGame(solo?'SOLO':genCode(),solo,lg||'th');act(uid,{type:'hello',name:myName});if(!solo)openHostPeer(0);UI.tab='home';bump()}
-function resumeHost(){
-  try{S=JSON.parse(LS.get(SAVE_KEY,'null'))}catch(e){S=null}
-  if(!S||S.v!==VER){S=null;toast('ไม่พบเกมที่บันทึกไว้');return}
-  isHost=true;leaving=false;S.host=uid;Object.values(S.humans).forEach(h=>h.on=false);
-  if(S.humans[uid])S.humans[uid].on=true;else act(uid,{type:'hello',name:myName});
-  if(S.phase==='live'){if(!S.lv)S.phase='pre';else if(S.lv.st==='ft'){S.lv.st='run';endLive()}else{S.lv.st='run';S.lv.pu=null;runTicker()}}
-  if(!S.solo)openHostPeer(0);UI.tab='home';bump();
+function onWake(){
+  if(!S)return;
+  if(document.hidden){if(S.phase==='live'&&S.lv&&S.lv.st==='run'){act(uid,{type:'pause'});UI.autoP=false}saveGame();return} // สลับแอประหว่างแข่ง → หยุดเกมให้อัตโนมัติ
+  wake();
 }
-function openHostPeer(tries){
-  if(typeof Peer==='undefined'){netOk=false;toast('โหลดระบบออนไลน์ไม่ได้ — เล่นคนเดียวได้ปกติ');return}
-  try{if(peer)peer.destroy()}catch(e){}
-  peer=new Peer(PREFIX+S.code,PEER_OPTS);
-  peer.on('open',()=>{netOk=true;render()});
-  peer.on('connection',c=>{c.on('data',d=>hostData(c,d));c.on('close',()=>hostClose(c));c.on('error',()=>hostClose(c))});
-  peer.on('disconnected',()=>{netOk=false;render();if(!leaving)setTimeout(()=>{try{peer&&!peer.destroyed&&peer.reconnect()}catch(e){}},1500)});
-  peer.on('error',e=>{netOk=false;render();if(leaving)return;
-    if(e.type==='unavailable-id'){if(tries<12)setTimeout(()=>openHostPeer(tries+1),4000);else toast('รหัสห้องถูกใช้อยู่ ลองสร้างห้องใหม่')}
-    else if(['network','server-error','socket-error','socket-closed'].includes(e.type))setTimeout(()=>openHostPeer(tries+1),4000)});
-}
-function hostData(c,d){
-  if(!d||d.t!=='a'||!S)return;const u=String(d.u||'').slice(0,24);if(!u)return;
-  if(d.m&&d.m.type==='hello'){for(const [cc,uu] of conns)if(uu===u&&cc!==c){conns.delete(cc);try{cc.close()}catch(e){}}conns.set(c,u)}
-  if(conns.get(c)!==u)return;
-  const err=act(u,d.m);if(err)try{c.send({t:'err',m:err})}catch(e){}
-  if(d.m&&d.m.type==='hello')try{c.send({t:'s',s:S,now:Date.now()})}catch(e){}
-}
-function hostClose(c){const u=conns.get(c);conns.delete(c);if(u&&S&&S.humans[u]&&![...conns.values()].includes(u)){S.humans[u].on=false;S.humans[u].ready=false;bump();checkReady()}}
-function joinRoom(code){
-  code=String(code||'').toUpperCase().replace(/[^A-Z0-9]/g,'');if(code.length<4){toast('ใส่รหัสห้องให้ถูกต้อง');return}
-  if(typeof Peer==='undefined'){toast('โหลดระบบออนไลน์ไม่ได้ ลองรีเฟรช');return}
-  isHost=false;leaving=false;LS.set('fm_last',code);joinCode=code;UI.tab='home';connectClient();render();
-}
-function connectClient(){
-  clearTimeout(retryT);try{if(peer)peer.destroy()}catch(e){}
-  netOk=false;peer=new Peer(PEER_OPTS);
-  peer.on('open',()=>{conn=peer.connect(PREFIX+joinCode,{reliable:true});
-    conn.on('open',()=>{netOk=true;conn.send({t:'a',u:uid,m:{type:'hello',name:myName}});render()});
-    conn.on('data',onClientData);conn.on('close',lost);conn.on('error',lost)});
-  peer.on('error',e=>{if(leaving)return;if(e.type==='peer-unavailable'&&!S){toast('ไม่พบห้อง '+joinCode+' (เจ้าของห้องอาจออฟไลน์)');goHome();return}lost()});
-}
-function lost(){if(leaving||isHost)return;netOk=false;render();clearTimeout(retryT);retryT=setTimeout(connectClient,3000)}
-function onClientData(d){
-  if(!d)return;
-  if(d.t==='s'){const prev=S&&S.lv&&S.lv.id;S=d.s;clockOff=d.now-Date.now();if(S.lv&&S.lv.id!==prev){UI.tab='home';UI.liveSel=null}render()}
-  else if(d.t==='l'){if(!S||!S.lv||S.lv.id!==d.id)return;const V=S.lv;clockOff=d.now-Date.now();
-    Object.assign(V,{min:d.min,st:d.st,pu:d.pu,htu:d.htu,tu:d.tu});
-    d.d.forEach(x=>{const m=V.ms[x.i];if(!m)return;if(m.ev.length+x.e.length===x.n)m.ev.push(...x.e);
-      Object.assign(m,{sc:x.sc,sh:x.sh,ot:x.ot,cd:x.cd,on:x.on,bn:x.bn,sb:x.sb,out:x.out,inj:x.inj,mp:x.mp,tc:x.tc})});
-    render()}
-  else if(d.t==='err')toast(d.m);
-}
+document.addEventListener('visibilitychange',onWake);
+let wakeLock=null;
+async function wake(){try{if(!('wakeLock' in navigator)||document.hidden||!S||S.phase!=='live')return;if(wakeLock&&!wakeLock.released)return;wakeLock=await navigator.wakeLock.request('screen')}catch(e){}}
 function goHome(){
-  if(isHost)saveGame();
-  leaving=true;clearTimeout(retryT);clearInterval(tickT);clearTimeout(endT);clearTimeout(playTimer);
-  try{if(peer)peer.destroy()}catch(e){}peer=null;conn=null;conns.clear();S=null;isHost=false;netOk=false;closeModal();render();
+  saveGame();leaving=true;clearInterval(tickT);clearTimeout(endT);clearTimeout(playTimer);
+  try{wakeLock&&wakeLock.release()}catch(e){}wakeLock=null;S=null;closeModal();render();
+}
+function exportSave(){
+  if(!S)return;saveGame();const blob=new Blob([JSON.stringify(S)],{type:'application/json'});
+  const name='kg-manager-epl-'+seasonLabel(S.season).replace('/','-')+'-r'+(S.round+1)+'.json';
+  const file=new File([blob],name,{type:'application/json'});
+  if(navigator.canShare&&navigator.canShare({files:[file]})){navigator.share({files:[file],title:'สำรองเกม KG ผู้จัดการทีม'}).catch(()=>{});return}
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1000);toast('บันทึกไฟล์แล้ว');
+}
+function importSave(file){
+  const r=new FileReader();r.onload=()=>{try{const o=JSON.parse(r.result);if(!o||!o.teams||o.lg!=='epl')throw 0;LS.set(SAVE_KEY,JSON.stringify(o));LS.del('fm_host2');toast('โหลดเกมแล้ว กด “เล่นต่อ” ได้เลย');render()}catch(e){toast('ไฟล์ไม่ถูกต้อง (ใช้ได้เฉพาะเกมพรีเมียร์ลีก)')}};r.readAsText(file);
 }
 
 /* ==========================================================
    UI
    ========================================================== */
-const UI={tab:'home',lg:LS.get('fm_lg','th'),mkPos:'ALL',mkSrc:'all',mkSort:'o',tbl:'table',fxR:null,skip:{},sound:LS.get('fm_snd','1')==='1',music:LS.get('fm_mus','1')==='1',mute:LS.get('fm_mute','0')==='1',liveSel:null,subOff:null};
+const UI={tab:'home',mkPos:'ALL',mkSrc:'all',mkSort:'o',tbl:'table',fxR:null,skip:{},sound:LS.get('fm_snd','1')==='1',music:LS.get('fm_mus','1')==='1',mute:LS.get('fm_mute','0')==='1',liveSel:null,subOff:null};
 let rq=false;
 function render(){if(rq)return;rq=true;requestAnimationFrame(()=>{rq=false;draw()})}
 function badge(T,sz){sz=sz||38;return '<span class="badge" style="width:'+sz+'px;height:'+sz+'px;background:'+T.c1+';border-color:'+T.c2+';color:'+(lum(T.c1)>0.6?'#111':'#fff')+';font-size:'+Math.round(sz*0.28)+'px">'+T.sh+'</span>'}
@@ -733,65 +688,58 @@ const liveShown=()=>S&&S.phase==='live'&&S.lv&&!UI.skip[S.lv.id];
 
 function draw(){
   const app=$('#app');AU.sync();
-  if(!S){app.innerHTML=joinCode&&!isHost&&!leaving?vConnecting():vStart()+vInstallBar();return}
+  if(!S){app.innerHTML=vStart()+vInstallBar();return}
   if(S.phase==='lobby'){app.innerHTML=vLobby();return}
   let body='';
   if(UI.tab==='home')body=liveShown()?vLive():S.phase==='end'?vEnd():vHome();
   else if(UI.tab==='team')body=vTeam();else if(UI.tab==='market')body=vMarket();else if(UI.tab==='table')body=vTable();else body=vRoom();
-  const sy=window.scrollY;app.innerHTML=vTop()+'<div class="sec">'+body+'</div>'+vNav();
+  app.innerHTML=vTop()+'<div class="sec">'+body+'</div>'+vNav();
   liveWatch();
   if(UI.subOff!=null||UI.subOpen)drawSub();
 }
 function vTop(){
-  const T=myTeam();const off=!S.solo&&!netOk;
+  const T=myTeam();
   const st=S.phase==='end'?'จบฤดูกาล '+seasonLabel(S.season):S.phase==='live'?'🔴 กำลังแข่ง นัดที่ '+(S.lv.r+1):'นัดที่ '+(S.round+1)+'/'+nR()+' · '+seasonLabel(S.season);
   return '<div class="top">'+(T?badge(T):'<span style="font-size:30px">⚽</span>')+
-   '<div class="tt"><b>'+(T?esc(T.name):'ผู้ชม')+'</b><small>'+(S.solo?'':'<span class="dot'+(off?' off':'')+'"></span>')+L().flag+' '+st+'</small></div>'+
+   '<div class="tt"><b>'+(T?esc(T.name):'ยังไม่ได้เลือกทีม')+'</b><small>'+L().flag+' '+st+'</small></div>'+
    '<button class="mute" data-a="mute" aria-label="เสียง">'+(UI.mute?'🔇':'🔊')+'</button>'+
    (T?'<div class="money">'+money(T.budget)+'<small>งบประมาณ</small></div>':'')+'</div>';
 }
 function vNav(){
-  const it=[['home','🏟️','หน้าหลัก'],['team','👕','ทีม'],['market','🛒','ตลาด'],['table','📊','ตาราง'],['room','👥','ห้อง']];
+  const it=[['home','🏟️','หน้าหลัก'],['team','👕','ทีม'],['market','🛒','ตลาด'],['table','📊','ตาราง'],['room','⚙️','ตั้งค่า']];
   return '<div class="nav">'+it.map(([k,i,l])=>'<button class="'+(UI.tab===k?'on':'')+'" data-a="tab" data-v="'+k+'"><i>'+i+'</i>'+l+'</button>').join('')+'</div>';
 }
-function vConnecting(){return '<div class="hero"><div class="ball">📡</div><h1>กำลังเข้าห้อง '+esc(joinCode)+'</h1><p>รอเชื่อมต่อกับเจ้าของห้อง...</p></div><div class="sec"><button class="btn blk" data-a="leave">ยกเลิก</button></div>'}
-function lgSeg(cur,act){return '<div class="seg">'+Object.entries(LG).map(([k,c])=>'<button class="'+(cur===k?'on':'')+'" data-a="'+act+'" data-v="'+k+'">'+c.flag+' '+c.name+'</button>').join('')+'</div>'}
 function vStart(){
-  let hsInfo='';try{const o=JSON.parse(LS.get(SAVE_KEY,'null'));if(o&&o.v===VER)hsInfo=LG[o.lg].flag+' '+LG[o.lg].name+' · '+(o.solo?'เกมคนเดียว':'ห้อง '+o.code)+' · '+seasonLabel(o.season)+' นัดที่ '+(o.round+1)}catch(e){}
-  const last=LS.get('fm_last','');const qroom=(QS.get('room')||'').toUpperCase();
-  return '<div class="hero"><div class="ball">⚽</div><h1>KG ผู้จัดการทีม</h1><p>ไทยลีก 1 & พรีเมียร์ลีก · เล่นกับเพื่อนแบบเรียลไทม์</p></div><div class="sec">'+
-  '<div class="card"><label class="lb">ชื่อผู้จัดการ</label><input class="in" id="nm" maxlength="16" placeholder="เช่น โค้ชต้น" value="'+esc(myName)+'"></div>'+
-  (qroom?'<div class="card"><h3>📨 เพื่อนชวนเข้าห้อง '+esc(qroom)+'</h3><button class="btn pri blk" data-a="join" data-v="'+esc(qroom)+'">เข้าห้องนี้เลย</button></div>':'')+
-  '<div class="card"><h3>เลือกลีก</h3>'+lgSeg(UI.lg,'slg')+'</div>'+
-  '<div class="card"><h3>เล่นกับเพื่อน</h3><button class="btn pri blk" data-a="create">➕ สร้างห้องใหม่</button>'+
-  '<div class="row" style="margin-top:10px"><input class="in grow" id="jc" maxlength="6" placeholder="รหัสห้อง" style="text-transform:uppercase;letter-spacing:3px" value="'+esc(qroom||'')+'"><button class="btn" data-a="join">เข้าห้อง</button></div>'+
-  (last&&last!==qroom?'<button class="btn blk" style="margin-top:8px" data-a="join" data-v="'+esc(last)+'">↩️ เข้าห้องล่าสุด '+esc(last)+'</button>':'')+'</div>'+
-  '<div class="card"><h3>เล่นคนเดียว</h3><button class="btn blk" data-a="solo">🎮 เริ่มเกมคนเดียว (แข่งกับ AI)</button></div>'+
-  vInstallCard()+(hsInfo?'<div class="card"><h3>เกมที่บันทึกไว้ (คุณเป็นเจ้าของห้อง)</h3><p class="mut sm" style="margin:0 0 8px">'+esc(hsInfo)+'</p><button class="btn gold blk" data-a="resume">▶️ เล่นต่อ</button></div>':'')+
+  let info='';const o=loadSave();
+  if(o){const T=o.teams.find(t=>o.humans[uid]&&t.id===o.humans[uid].team)||o.teams.find(t=>t.owner);info=(T?T.name+' · ':'')+'ฤดูกาล '+seasonLabel(o.season)+' · '+(o.phase==='end'?'จบฤดูกาล':'นัดที่ '+(o.round+1)+'/38')}
+  return '<div class="hero"><div class="ball">⚽</div><h1>KG ผู้จัดการทีม</h1><p>'+L().flag+' พรีเมียร์ลีก '+seasonLabel(2026)+' · คุมทีมแข่งกับ AI</p></div><div class="sec">'+
+  (o?'<div class="card"><h3>เกมที่บันทึกไว้</h3><p class="mut sm" style="margin:0 0 8px">'+esc(info)+'</p><button class="btn gold blk" data-a="resume" style="min-height:52px;font-size:17px">▶️ เล่นต่อ</button></div>':'')+
+  '<div class="card"><label class="lb">ชื่อผู้จัดการ</label><input class="in" id="nm" maxlength="16" placeholder="เช่น โค้ชต้น" value="'+esc(myName)+'">'+
+  '<button class="btn '+(o?'':'pri ')+'blk" style="margin-top:10px;min-height:50px" data-a="newgame">🆕 เริ่มเกมใหม่</button>'+(o?'<div class="mut sm" style="margin-top:6px">เริ่มใหม่จะลบเกมที่บันทึกไว้</div>':'')+'</div>'+
+  vInstallCard()+
+  '<div class="card"><h3>📂 ย้ายเกมมาจากเครื่อง/แอปอื่น</h3><label class="btn blk">โหลดไฟล์สำรองเกม<input type="file" id="impf" accept=".json,application/json" hidden></label></div>'+
   '<p class="mut sm">รายชื่อนักเตะจริงตามข้อมูลต้นฤดูกาล 2026/27 ค่าพลังเป็นค่าประเมินในเกม ฟรีเอเย่นต์และเด็กปั้นเป็นชื่อสมมติ — แก้ชื่อได้ในแท็บ “ทีม”</p>'+
   '<div class="foot">KG Football Manager · By Thitipong Srisomwong</div></div>';
 }
 function vLobby(){
-  const T=myTeam();const hs=Object.entries(S.humans);const link=location.origin+location.pathname+'?room='+S.code;
-  return '<div class="top"><span style="font-size:28px">⚽</span><div class="tt"><b>'+(S.solo?'เลือกทีมของคุณ':'ห้องรอเริ่มเกม')+'</b><small>'+(S.solo?'เกมคนเดียว':'<span class="dot'+(netOk?'':' off')+'"></span>'+(netOk?'ออนไลน์':'กำลังเชื่อมต่อ...'))+' · '+L().flag+' '+L().name+'</small></div></div><div class="sec">'+
-   (S.solo?'':'<div class="card"><div class="mut sm" style="text-align:center">รหัสห้อง — ส่งให้เพื่อน</div><div class="code">'+S.code+'</div><div class="row" style="margin-top:8px"><button class="btn grow" data-a="share" data-v="'+esc(link)+'">📤 ชวนเพื่อน</button><button class="btn grow" data-a="copy" data-v="'+esc(link)+'">📋 คัดลอกลิงก์</button></div></div>')+
-   (amHost()?'<div class="card"><h3>ลีก</h3>'+lgSeg(S.lg,'hlg')+'<h3 style="margin-top:12px">ความเร็วแมตช์สด</h3>'+speedSeg()+'</div>':'')+
-   (S.solo?'':'<div class="card"><h3>ผู้จัดการในห้อง ('+hs.length+')</h3><div class="hl">'+hs.map(([u,x])=>'<div class="hu"><span class="dot'+(x.on?'':' off')+'"></span><b>'+esc(x.name)+'</b>'+(u===S.host?' <span class="mut sm">(เจ้าของห้อง)</span>':'')+'<span class="grow"></span>'+(x.team!=null?badge(S.teams[x.team],26)+' <span class="sm">'+esc(S.teams[x.team].name)+'</span>':'<span class="mut sm">ยังไม่เลือกทีม</span>')+'</div>').join('')+'</div></div>')+
+  const T=myTeam();
+  return '<div class="top"><span style="font-size:28px">⚽</span><div class="tt"><b>เลือกทีมที่จะคุม</b><small>'+L().flag+' '+L().name+' '+seasonLabel(S.season)+'</small></div></div><div class="sec">'+
    '<div class="card"><h3>เลือกทีม '+(T?'· <span style="color:var(--ac)">'+esc(T.name)+'</span>':'')+'</h3>'+vTeamGrid()+'</div>'+
-   (amHost()?'<button class="btn pri blk" data-a="start" '+(T?'':'disabled')+'>🏁 เริ่มฤดูกาล '+seasonLabel(S.season)+'</button><p class="mut sm" style="text-align:center">ทีมที่ไม่มีใครเลือก AI จะคุมให้ · เพื่อนเข้ามาเพิ่มระหว่างฤดูกาลได้</p>':'<p class="mut" style="text-align:center">รอเจ้าของห้องกดเริ่มเกม...</p>')+
-   '<button class="btn blk" style="margin-top:8px" data-a="leave">ออกจากห้อง</button></div>';
+   '<div class="card"><h3>ความเร็วแมตช์สด</h3>'+speedSeg()+'</div>'+
+   '<button class="btn pri blk" data-a="start" style="min-height:52px;font-size:17px" '+(T?'':'disabled')+'>🏁 เริ่มฤดูกาล '+seasonLabel(S.season)+'</button>'+
+   '<button class="btn blk" style="margin-top:8px" data-a="leave">↩️ กลับหน้าแรก</button></div>';
 }
 function speedSeg(){return '<div class="seg">'+SPEED.map((s,i)=>'<button class="'+((S.spd??1)===i?'on':'')+'" data-a="speed" data-v="'+i+'">'+s.n+'</button>').join('')+'</div><div class="mut sm" style="margin-top:4px">แมตช์ละประมาณ '+Math.round((93*SPEED[S.spd??1].t+SPEED[S.spd??1].ht)/1000)+' วินาที</div>'}
 function vTeamGrid(){
-  return '<div class="tgrid">'+S.teams.map(T=>{const mine=T.owner===uid;const tk=T.owner&&!mine;const on=tk&&S.humans[T.owner];
-    return '<button class="tpick'+(mine?' mine':'')+(tk?' taken':'')+'" data-a="pick" data-v="'+T.id+'">'+badge(T,34)+'<div style="min-width:0"><b>'+esc(T.name)+'</b><small>'+(tk?'👔 '+esc(on?on.name:'?'):stars(T.rep)+' · '+money(T.budget))+'</small></div></button>'}).join('')+'</div>';
+  return '<div class="tgrid">'+S.teams.map(T=>{const mine=T.owner===uid;
+    return '<button class="tpick'+(mine?' mine':'')+'" data-a="pick" data-v="'+T.id+'">'+badge(T,34)+'<div style="min-width:0"><b>'+esc(T.name)+'</b><small>'+stars(T.rep)+' · '+money(T.budget)+'</small></div></button>'}).join('')+'</div>';
 }
 const formOf=(id,n)=>{const t=table().find(x=>x.id===id);return t?t.fm.slice(-n):[]};
 const formHtml=a=>'<span class="form">'+a.map(x=>'<i class="f'+x+'">'+({W:'ช',D:'ส',L:'พ'})[x]+'</i>').join('')+'</span>';
 const avgXI=T=>{const a=T.xi.map(id=>S.pl[id]).filter(Boolean);return a.length?Math.round(a.reduce((s,p)=>s+p.o,0)/a.length):'-'};
 function vHome(){
   const T=myTeam();let html='';
-  if(!T)html+='<div class="warn">คุณยังไม่มีทีม — ไปที่แท็บ “ห้อง” เพื่อเลือกทีมที่ยังว่าง</div>';
+  if(!T)html+='<div class="warn">คุณยังไม่มีทีม — เลือกทีมได้ในแท็บ “ตั้งค่า”</div>';
   if(S.phase==='live')html+='<div class="card row"><b class="grow">🔴 นัดที่ '+(S.lv.r+1)+' กำลังแข่ง ('+Math.min(S.lv.min,90)+'\')</b><button class="btn sm pri" data-a="unskip">ดูสด / แก้เกม</button></div>';
   if(T&&S.phase==='pre'){
     const fx=S.fx[S.round].find(([h,a])=>h===T.id||a===T.id);const home=fx[0]===T.id;const O=S.teams[home?fx[1]:fx[0]];
@@ -801,15 +749,9 @@ function vHome(){
     '<div class="vs"><div class="side">'+badge(H,48)+'<b>'+esc(H.name)+'</b>'+formHtml(formOf(H.id,5))+'</div><div class="mid">VS<small>อันดับ '+(home?posM:posO)+' vs '+(home?posO:posM)+'</small></div><div class="side">'+badge(A,48)+'<b>'+esc(A.name)+'</b>'+formHtml(formOf(A.id,5))+'</div></div>'+
     '<div class="mut sm" style="text-align:center;margin-top:10px">คู่แข่ง: '+O.form+' · พลังเฉลี่ยตัวจริง '+avgXI(O)+' · ของคุณ '+avgXI(T)+'</div></div>';
     if(empty)html+='<div class="warn">ตัวจริงยังไม่ครบ 11 คน (ขาด '+empty+') — ถ้าไม่จัด ระบบจะเติมให้อัตโนมัติ</div>';
-    const ready=me().ready;
-    html+='<button class="btn '+(ready?'':'pri')+' blk" data-a="ready" data-v="'+(ready?0:1)+'" style="min-height:54px;font-size:17px">'+(ready?'⏳ รอเพื่อน... (แตะเพื่อยกเลิก)':'✅ พร้อมเตะ!')+'</button>';
+    html+='<button class="btn pri blk" data-a="play" style="min-height:54px;font-size:17px">⚽ เริ่มแข่ง!</button>';
   }
-  if(S.phase==='pre'){
-    const hs=Object.values(S.humans).filter(x=>x.team!=null);
-    if(!S.solo&&hs.length)html+='<div class="card" style="margin-top:12px"><h3>สถานะผู้จัดการ</h3><div class="hl">'+hs.map(x=>'<div class="hu"><span class="dot'+(x.on?'':' off')+'"></span>'+badge(S.teams[x.team],24)+'<span class="grow">'+esc(x.name)+'</span>'+(!x.on?'<span class="mut sm">ออฟไลน์</span>':x.ready?'✅':'⏳')+'</div>').join('')+'</div>'+
-      (amHost()?'<button class="btn sm blk" style="margin-top:10px" data-a="play">▶️ เริ่มนัดนี้เลย (ไม่ต้องรอ)</button>':'')+'</div>';
-    else if(amHost()&&!T)html+='<button class="btn blk" data-a="play" style="margin-top:12px">▶️ เริ่มนัดนี้</button>';
-  }
+  if(S.phase==='pre'&&!T)html+='<button class="btn blk" data-a="play" style="margin-top:12px">▶️ ข้ามนัดนี้ (ให้ AI แข่ง)</button>';
   html+=vLastResults();
   html+='<div class="card"><h3>📰 ข่าว</h3>'+(S.news.slice(0,8).map(n=>'<div class="news">'+esc(n.txt)+'</div>').join('')||'<div class="mut sm">ยังไม่มีข่าว</div>')+'</div>';
   return html;
@@ -825,7 +767,7 @@ function vLive(){
   const m=V.ms[idx];const H=S.teams[m.h],A=S.teams[m.a];const isMine=mine&&mine.i===idx;
   const clk=V.st==='ft'?'จบเกม':V.st==='ht'?'พักครึ่ง ⏱️'+Math.max(0,Math.ceil((V.htu-hnow())/1000))+'s':V.min>90?'90+'+(V.min-90)+"'":V.min+"'";
   let html='';
-  if(V.st==='pause')html+='<div class="warn" style="text-align:center">⏸️ เกมหยุดชั่วคราว — '+esc(V.pu.by)+' ขอเวลานอก (เหลือ '+Math.max(0,Math.ceil((V.pu.until-hnow())/1000))+' วิ)'+((V.pu.u===uid||amHost())?' <button class="btn sm" data-a="resume">▶️ เล่นต่อ</button>':'')+'</div>';
+  if(V.st==='pause')html+='<div class="warn pausebar">⏸️ หยุดเกมอยู่ — ทุกสนามหยุดรอ <button class="btn sm pri" data-a="lresume">▶️ เล่นต่อ</button></div>';
   html+='<div class="card live"><div style="text-align:center" class="clock">🔴 สด · นัดที่ '+(V.r+1)+' · '+clk+'</div>'+
    '<div class="vs" style="margin-top:6px"><div class="side">'+badge(H,46)+'<b>'+esc(H.name)+'</b><small class="mut">'+TACI[m.tc[0]]+' '+TAC[m.tc[0]]+'</small></div><div class="mid">'+m.sc[0]+' - '+m.sc[1]+'</div><div class="side">'+badge(A,46)+'<b>'+esc(A.name)+'</b><small class="mut">'+TACI[m.tc[1]]+' '+TAC[m.tc[1]]+'</small></div></div>'+
    '<div class="bar" style="margin:10px 0 2px"><i style="width:'+(Math.min(V.min,93)/93*100)+'%;background:var(--ac)"></i></div>'+
@@ -841,13 +783,13 @@ function vLive(){
 }
 function evHtml(e){return '<div class="ev '+(e.k==='g'?'g':e.k==='r'?'r':e.k==='sub'||e.k==='tac'?'sb':'')+'"><span class="m">'+(e.m>90?'90+'+(e.m-90):e.m)+"'</span><span>"+esc(e.x)+'</span></div>'}
 function vControl(m,s,T){
-  const left=MAX_SUBS-m.sb[s];const tu=TIMEOUTS-((S.lv.tu||{})[uid]||0);
+  const left=MAX_SUBS-m.sb[s];
   const onIds=m.on[s];const sl=m.sl[s];
   let h='<div class="card ctl"><h3>🎛️ แก้เกม</h3>'+
    '<div class="seg" style="margin-bottom:8px">'+TAC.map((t,i)=>'<button class="'+(T.tac===i?'on':'')+'" data-a="ltac" data-v="'+i+'">'+TACI[i]+' '+t+'</button>').join('')+'</div>'+
    '<div class="chips" style="margin-bottom:8px">'+Object.keys(FORMS).map(f=>'<button class="chip'+(T.form===f?' on':'')+'" data-a="lform" data-v="'+f+'">'+f+'</button>').join('')+'</div>'+
    '<div class="row"><button class="btn pri grow" data-a="subopen"'+(left>0?'':' disabled')+'>🔁 เปลี่ยนตัว ('+left+')</button>'+
-   (S.lv.st==='run'?'<button class="btn grow" data-a="pause"'+(tu>0?'':' disabled')+'>⏸️ ขอเวลานอก ('+tu+')</button>':'')+'</div>'+
+   (S.lv.st==='pause'?'<button class="btn gold grow" data-a="lresume">▶️ เล่นต่อ</button>':'<button class="btn grow" data-a="pause"'+(S.lv.st==='run'?'':' disabled')+'>⏸️ หยุดเกม</button>')+'</div>'+
    '<div class="gh"><span>ในสนาม</span><span>ความฟิตตอนนี้</span></div>';
   h+=onIds.map((id,i)=>{const p=S.pl[id];if(!p)return'';const out=m.out.includes(id);const f=Math.round(fitNow(m,id));
     return '<div class="lrow'+(out?' dead':'')+'"><span class="pos p'+sl[i]+'">'+sl[i]+'</span><span class="grow">'+esc(p.n)+(out?' 🟥':'')+(m.yel[id]?' 🟨':'')+(p.pos!==sl[i]?' <span class="fx">ผิดตำแหน่ง</span>':'')+'</span><span class="ov sm">'+p.o+'</span><div class="fit"><i style="width:'+f+'%;background:'+(f>=75?'var(--ac)':f>=60?'var(--ac2)':'var(--bad)')+'"></i></div></div>'}).join('');
@@ -876,11 +818,11 @@ function vEnd(){
   (T?'<div class="card"><h3>ผลงานของคุณ</h3><div class="kv"><div><b>'+myPos+'</b><small>อันดับ</small></div><div><b>+'+money(L().prize(myPos-1))+'</b><small>เงินรางวัล</small></div><div><b>'+money(T.budget)+'</b><small>งบตอนนี้</small></div></div></div>':'')+
   (F.top?'<div class="card"><h3>👟 ดาวซัลโว</h3>'+esc(F.top.n)+' ('+(S.teams[F.top.t]?S.teams[F.top.t].sh:'-')+') — '+F.top.g+' ประตู</div>':'')+
   '<div class="card"><h3>ตารางสุดท้าย</h3>'+vTableHtml(table())+'</div>'+
-  (amHost()?'<button class="btn pri blk" data-a="newseason">📅 เริ่มฤดูกาล '+seasonLabel(S.season+1)+'</button>':'<p class="mut" style="text-align:center">รอเจ้าของห้องเริ่มฤดูกาลใหม่...</p>');
+  (amHost()?'<button class="btn pri blk" data-a="newseason">📅 เริ่มฤดูกาล '+seasonLabel(S.season+1)+'</button>':'');
 }
 /* ---------- แท็บทีม ---------- */
 function vTeam(){
-  const T=myTeam();if(!T)return '<div class="warn">ยังไม่มีทีม — เลือกทีมในแท็บ “ห้อง”</div>';
+  const T=myTeam();if(!T)return '<div class="warn">ยังไม่มีทีม — เลือกทีมในแท็บ “ตั้งค่า”</div>';
   if(S.phase==='live')return '<div class="warn">กำลังแข่งอยู่ — เปลี่ยนตัว/แผน/แท็กติกได้ที่หน้าจอแมตช์สด</div><button class="btn pri blk" data-a="unskip">🎛️ ไปหน้าแก้เกม</button>';
   const sl=slotsOf(T.form);const rows={FW:[],MF:[],DF:[],GK:[]};sl.forEach((pos,i)=>rows[pos].push(i));
   const slotHtml=i=>{const p=S.pl[T.xi[i]];const pos=sl[i];
@@ -973,23 +915,21 @@ function vTable(){
   if(S.champs.length)html+='<div class="card"><h3>🏆 ทำเนียบแชมป์</h3>'+S.champs.slice().reverse().map(c=>'<div class="mini"><span>'+seasonLabel(c.s)+'</span><span class="grow"></span>'+badge(S.teams[c.t],22)+' '+esc(S.teams[c.t].name)+'</div>').join('')+'</div>';
   return html;
 }
-/* ---------- ห้อง ---------- */
+/* ---------- ตั้งค่า ---------- */
 function vRoom(){
-  const link=location.origin+location.pathname+'?room='+S.code;const hs=Object.entries(S.humans);const T=myTeam();let html='';
-  if(!S.solo)html+='<div class="card"><div class="mut sm" style="text-align:center">รหัสห้อง</div><div class="code">'+S.code+'</div><div class="mut sm" style="text-align:center">'+(isHost?'คุณเป็นเจ้าของห้อง — ต้องเปิดแอปค้างไว้ระหว่างเล่น':'')+'</div><div class="row" style="margin-top:8px"><button class="btn grow" data-a="share" data-v="'+esc(link)+'">📤 ชวนเพื่อน</button><button class="btn grow" data-a="copy" data-v="'+esc(link)+'">📋 คัดลอก</button></div></div>'+
-   '<div class="card"><h3>ผู้จัดการ ('+hs.length+')</h3><div class="hl">'+hs.map(([u,x])=>'<div class="hu"><span class="dot'+(x.on?'':' off')+'"></span><b>'+esc(x.name)+'</b>'+(u===S.host?'<span class="mut sm">👑</span>':'')+'<span class="grow"></span>'+(x.team!=null?badge(S.teams[x.team],24)+' <span class="sm">'+esc(S.teams[x.team].sh)+'</span>':'<span class="mut sm">ผู้ชม</span>')+'</div>').join('')+'</div></div>';
-  if(amHost())html+='<div class="card"><h3>ความเร็วแมตช์สด</h3>'+speedSeg()+'</div>';
-  html+='<div class="card"><h3>'+(T?'ย้ายไปคุมทีมอื่น':'เลือกทีมที่ยังว่าง')+'</h3><div class="mut sm" style="margin-bottom:8px">ทีมเดิมจะกลับไปให้ AI คุม</div>'+vTeamGrid()+'</div>';
+  const T=myTeam();let html='';
+  html+='<div class="card"><h3>ความเร็วแมตช์สด</h3>'+speedSeg()+'</div>';
   html+='<div class="card"><h3>เสียง</h3><div class="row"><button class="btn grow'+(UI.music?' pri':'')+'" data-a="mus">'+(UI.music?'🎵 เพลง: เปิด':'🎵 เพลง: ปิด')+'</button><button class="btn grow'+(UI.sound?' pri':'')+'" data-a="snd">'+(UI.sound?'📣 เสียงเชียร์: เปิด':'📣 เสียงเชียร์: ปิด')+'</button></div><div class="mut sm" style="margin-top:6px">เพลงเล่นนอกเวลาแข่ง · ระหว่างแข่งเป็นเสียงกองเชียร์ นกหวีด และเสียงเฮตอนยิงประตู</div></div>';
+  html+='<div class="card"><h3>'+(T?'ย้ายไปคุมทีมอื่น':'เลือกทีม')+'</h3><div class="mut sm" style="margin-bottom:8px">'+(S.phase==='live'?'ย้ายทีมได้หลังจบนัด':'ทีมเดิมจะกลับไปให้ AI คุม')+'</div>'+vTeamGrid()+'</div>';
   html+=vInstallCard();
-  html+='<div class="card"><h3>วิธีเล่น</h3><div class="sm mut">1) จัดตัวจริง 11 คน + ตัวสำรอง '+BENCH+' คน เลือกแผนและแท็กติกในแท็บ “ทีม”<br>2) ซื้อ-ขายนักเตะในแท็บ “ตลาด”<br>3) กด “พร้อมเตะ” — ทุกคู่แข่งพร้อมกันแบบสด<br>4) ระหว่างแข่ง: เปลี่ยนตัวได้ '+MAX_SUBS+' คน เปลี่ยนแผน/แท็กติกได้ตลอด และขอเวลานอกได้ '+TIMEOUTS+' ครั้ง/นัด (หยุดทุกสนาม '+PAUSE_MS/1000+' วิ)<br>5) นักเตะเหนื่อยลงระหว่างเกม เปลี่ยนตัวสดช่วงท้ายเกมช่วยได้มาก<br>6) จบฤดูกาลรับเงินรางวัลตามอันดับ</div></div>';
-  html+='<button class="btn red blk" data-a="leave">🚪 ออกจากห้อง</button>';
-  if(isHost)html+='<p class="mut sm" style="text-align:center">เกมถูกบันทึกในเครื่องนี้ กลับมาเล่นต่อได้จากหน้าแรก</p>';
+  html+='<div class="card"><h3>💾 สำรอง / ย้ายเกม</h3><div class="mut sm" style="margin-bottom:8px">เกมบันทึกในเครื่องนี้อัตโนมัติ ถ้าจะย้ายไปเล่นในแอปที่ติดตั้ง หรือเปลี่ยนเครื่อง ให้สำรองเป็นไฟล์ แล้วโหลดในหน้าแรกของเครื่อง/แอปใหม่</div><button class="btn blk" data-a="export">💾 สำรองเกมเป็นไฟล์</button></div>';
+  html+='<div class="card"><h3>วิธีเล่น</h3><div class="sm mut">1) จัดตัวจริง 11 คน + ตัวสำรอง '+BENCH+' คน เลือกแผนและแท็กติกในแท็บ “ทีม”<br>2) ซื้อ-ขายนักเตะในแท็บ “ตลาด”<br>3) กด “เริ่มแข่ง” — ทุกคู่แข่งพร้อมกันแบบสด<br>4) ระหว่างแข่ง: เปลี่ยนตัวได้ '+MAX_SUBS+' คน (เกมหยุดรอตอนเลือกตัว) เปลี่ยนแผน/แท็กติกได้ตลอด และกดหยุดเกมได้ไม่จำกัด<br>5) นักเตะเหนื่อยลงระหว่างเกม เปลี่ยนตัวช่วงท้ายเกมช่วยได้มาก<br>6) แข่ง 38 นัด จบฤดูกาลรับเงินรางวัลตามอันดับ แล้วเล่นฤดูกาลต่อไปได้เรื่อยๆ</div></div>';
+  html+='<button class="btn blk" data-a="leave">🏠 กลับหน้าแรก</button><p class="mut sm" style="text-align:center">เกมบันทึกอัตโนมัติ กลับมากด “เล่นต่อ” ได้ทุกเมื่อ</p>';
   return html;
 }
 /* ---------- Modal ---------- */
 function openModal(html){$('#modal').innerHTML='<div class="bg" data-a="closebg"><div class="sh">'+html+'</div></div>'}
-function closeModal(){$('#modal').innerHTML='';UI.subOpen=false;UI.subOff=null}
+function closeModal(){$('#modal').innerHTML='';UI.subOpen=false;UI.subOff=null;if(UI.autoP){UI.autoP=false;if(S&&S.lv&&S.lv.st==='pause')act(uid,{type:'resume'})}}
 function showPlayer(pid){
   const p=S.pl[pid];if(!p)return;const T=myTeam();const own=p.t>=0?S.teams[p.t]:null;const mine=T&&p.t===T.id;
   const canRename=mine||amHost();const buyable=T&&!mine&&!(own&&own.owner)&&S.phase!=='live';
@@ -1018,11 +958,6 @@ function showBulk(){
 }
 let toastT=null;
 function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>t.classList.remove('on'),2400)}
-async function shareLink(link){
-  const text='มาเล่นเกมผู้จัดการทีม'+L().name+'ด้วยกัน! รหัสห้อง '+S.code;
-  if(navigator.share){try{await navigator.share({title:'KG ผู้จัดการทีม',text,url:link});return}catch(e){if(e&&e.name==='AbortError')return}}
-  copyText(link);
-}
 function copyText(t){if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>toast('คัดลอกแล้ว'),()=>prompt('คัดลอกลิงก์นี้',t));else prompt('คัดลอกลิงก์นี้',t)}
 function saveName(){const el=$('#nm');if(el){myName=el.value.trim().slice(0,16);LS.set('fm_name',myName)}return myName}
 
@@ -1141,7 +1076,6 @@ function liveWatch(){
         if(d>0)AU.cheer();else if(d<0)AU.groan();
         pop({icon:d>0?'🎉':d<0?'😞':'🤝',title:d>0?'ชนะแล้ว!':d<0?'แพ้ไปนัดนี้':'เสมอกัน',team:T2,c1:T2.c1,c2:T2.c2,score:scoreLine(m,m.sc),big:1,conf:d>0,cls:d>0?'good':d<0?'bad':'pn0',vib:d>0?[80,60,80]:null})}
       else pop({icon:'🏁',title:'จบเกม',score:scoreLine(m,m.sc),ms:3500,cls:'pn0'})}
-    else if(V.st==='pause'&&V.pu){pop({icon:'⏸️',title:'ขอเวลานอก',main:V.pu.by,sub:'ทุกสนามหยุดชั่วคราว '+PAUSE_MS/1000+' วินาที',ms:3500,cls:'pn0'})}
   }
   LW.min=V.min;LW.st=V.st;
 }
@@ -1192,7 +1126,7 @@ function showGuide(k){
 }
 function closeGuide(){const g=$('#guide');if(g){g.className='';g.innerHTML=''}}
 async function shareApp(){
-  const url=location.origin+location.pathname;const text='เกมผู้จัดการทีมฟุตบอล ไทยลีก & พรีเมียร์ลีก เล่นกับเพื่อนได้ 👉';
+  const url=location.origin+location.pathname;const text='เกมผู้จัดการทีมฟุตบอลพรีเมียร์ลีก คุมทีมจริง แก้เกมสด 👉';
   if(navigator.share){try{await navigator.share({title:'KG ผู้จัดการทีม',text,url});return}catch(e){if(e&&e.name==='AbortError')return}}
   copyText(url);
 }
@@ -1209,18 +1143,13 @@ if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostnam
 
 /* ---------- Events ---------- */
 const A={
-  slg(d){UI.lg=d.v;LS.set('fm_lg',d.v);saveName();render()},
-  hlg(d){send({type:'league',lg:d.v})},
   speed(d){send({type:'speed',v:+d.v})},
-  create(){if(!saveName()){toast('ใส่ชื่อก่อนนะ');$('#nm').focus();return}hostStart(false,UI.lg)},
-  solo(){if(!saveName())myName='ผู้จัดการ';hostStart(true,UI.lg)},
-  resume(){saveName();if(!myName)myName='ผู้จัดการ';resumeHost()},
-  join(d){if(!saveName()){toast('ใส่ชื่อก่อนนะ');$('#nm').focus();return}joinRoom(d.v||($('#jc')&&$('#jc').value))},
-  leave(){if(isHost&&S&&!S.solo&&!confirm('ออกจากห้อง? เพื่อนจะหลุดจากเกม (เกมยังถูกบันทึกในเครื่องนี้)'))return;goHome()},
+  newgame(){if(loadSave()&&!confirm('เริ่มเกมใหม่? เกมที่บันทึกไว้จะถูกลบ'))return;if(!saveName())myName='ผู้จัดการ';LS.del('fm_host2');startGame()},
+  resume(){saveName();resumeGame()},
+  leave(){goHome()},
   tab(d){UI.tab=d.v;render();window.scrollTo(0,0)},
   pick(d){send({type:'pick',team:+d.v})},
   start(){send({type:'start'})},
-  ready(d){send({type:'ready',v:d.v==='1'});if(!isHost&&me()){me().ready=d.v==='1';render()}},
   play(){send({type:'play'})},
   skiplive(){send({type:'skiplive'})},
   skip(){if(S.lv)UI.skip[S.lv.id]=1;render()},
@@ -1242,17 +1171,17 @@ const A={
   bulk(){showBulk()},
   dobulk(){send({type:'bulk',txt:$('#bk').value});closeModal();if(!isHost)toast('ส่งรายชื่อแล้ว')},
   tbl(d){UI.tbl=d.v;render()},fxr(d){UI.fxR=+d.v;render()},
-  share(d){shareLink(d.v)},copy(d){copyText(d.v)},
+  copy(d){copyText(d.v)},
   snd(){UI.sound=!UI.sound;LS.set('fm_snd',UI.sound?'1':'0');AU.unlock();AU.applyVol();if(UI.sound)AU.cheer();render()},
   mus(){UI.music=!UI.music;LS.set('fm_mus',UI.music?'1':'0');AU.unlock();render()},
   mute(){UI.mute=!UI.mute;LS.set('fm_mute',UI.mute?'1':'0');AU.unlock();AU.applyVol();toast(UI.mute?'ปิดเสียงทั้งหมด':'เปิดเสียงแล้ว');render()},
   install(){installApp()},shareapp(){shareApp()},instx(){LS.set('fm_instx','1');render()},
-  guideclose(){closeGuide()},copylink(){copyText(location.origin+location.pathname)},
+  guideclose(){closeGuide()},export(){exportSave()},copylink(){copyText(location.origin+location.pathname)},
   /* live */
   ltac(d){send({type:'ltac',v:+d.v});const T=myTeam();if(!isHost&&T){T.tac=+d.v;render()}},
   lform(d){send({type:'lform',f:d.v})},
-  pause(){send({type:'pause'})},resume(){send({type:'resume'})},
-  subopen(){UI.subOpen=true;UI.subOff=null;drawSub()},
+  pause(){send({type:'pause'})},lresume(){send({type:'resume'})},
+  subopen(){if(S.lv&&S.lv.st==='run'){act(uid,{type:'pause'});UI.autoP=true}UI.subOpen=true;UI.subOff=null;drawSub()},
   suboff(d){UI.subOff=+d.v;drawSub()},suback(){UI.subOff=null;drawSub()},
   subon(d){send({type:'sub',off:UI.subOff,on:+d.v});UI.subOff=null;const T=myTeam(),mine=myLive(T);
     if(mine&&MAX_SUBS-mine.m.sb[mine.s]<=1){closeModal()}else drawSub()},
@@ -1261,7 +1190,7 @@ const A={
   closebg(d,el,e){if(e.target===el)closeModal()}
 };
 document.addEventListener('click',e=>{if(e.target.closest('#pop')){nextPop();return}const el=e.target.closest('[data-a]');if(!el)return;const f=A[el.dataset.a];if(!f||el.disabled)return;f(el.dataset,el,e)});
-document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='jc')A.join({})});
+document.addEventListener('change',e=>{if(e.target.id==='impf'&&e.target.files[0])importSave(e.target.files[0])});
 document.addEventListener('input',e=>{if(e.target.id==='mkq'){UI.mkQ=e.target.value;clearTimeout(UI.mqT);UI.mqT=setTimeout(()=>{render();setTimeout(()=>{const el=$('#mkq');if(el){el.focus();el.setSelectionRange(el.value.length,el.value.length)}},20)},350)}});
 setInterval(()=>{if(S&&S.lv&&(S.lv.st==='pause'||S.lv.st==='ht')&&UI.tab==='home')render()},1000);
 window.addEventListener('pagehide',saveGame);

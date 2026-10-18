@@ -1,7 +1,7 @@
 /* KG ผู้จัดการทีม — Service Worker (ทำให้ติดตั้งเป็นแอปได้ + เปิดเร็ว) */
-const V='kgfm-v3';
+const V='kgfm-v5';
 const CORE=['./','./index.html','./manifest.json','./icon-192.png','./icon-512.png','./icon-180.png'];
-const CDN=['fonts.googleapis.com','fonts.gstatic.com','unpkg.com'];
+const CDN=['fonts.googleapis.com','fonts.gstatic.com'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))});
 self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==V).map(k=>caches.delete(k)))).then(()=>self.clients.claim()))});
 self.addEventListener('fetch',e=>{
@@ -11,5 +11,4 @@ self.addEventListener('fetch',e=>{
   if(u.origin===location.origin||CDN.includes(u.hostname)){
     e.respondWith(caches.match(r).then(hit=>{const net=fetch(r).then(res=>{if(res&&(res.ok||res.type==='opaque')){const c=res.clone();caches.open(V).then(x=>x.put(r,c))}return res}).catch(()=>hit);return hit||net}));
   }
-  // อย่างอื่น (เช่นเซิร์ฟเวอร์เชื่อมต่อห้อง PeerJS) ปล่อยผ่านตามปกติ
 });

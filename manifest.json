@@ -1,7 +1,7 @@
 {
-  "name": "KG ผู้จัดการทีม — ไทยลีก & พรีเมียร์ลีก",
+  "name": "KG ผู้จัดการทีม — พรีเมียร์ลีก",
   "short_name": "KG Manager",
-  "description": "เกมผู้จัดการทีมฟุตบอล เล่นกับเพื่อนแบบเรียลไทม์",
+  "description": "เกมผู้จัดการทีมฟุตบอลพรีเมียร์ลีก คุมทีมจริง แก้เกมสดระหว่างแข่ง",
   "id": "./",
   "start_url": "./",
   "scope": "./",
@@ -10,10 +10,28 @@
   "background_color": "#07140d",
   "theme_color": "#0a1d12",
   "lang": "th",
-  "categories": ["games", "sports"],
+  "categories": [
+    "games",
+    "sports"
+  ],
   "icons": [
-    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
-    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
-    {"src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-maskable-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
   ]
 }
