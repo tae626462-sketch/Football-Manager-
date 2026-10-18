@@ -4,7 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0a1d12">
+<meta name="description" content="เกมผู้จัดการทีมฟุตบอล ไทยลีก 1 & พรีเมียร์ลีก เล่นกับเพื่อนแบบเรียลไทม์">
 <title>KG ผู้จัดการทีม</title>
+<link rel="manifest" href="manifest.json">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-180.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="KG Manager">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -163,11 +171,54 @@ table.tb{width:100%;border-collapse:collapse;font-size:13px}
 .ctl{border-color:#2e8b52}
 .mini{cursor:pointer}.mini.me{background:#12301f;border-radius:6px}
 code{background:#0a1c11;padding:1px 5px;border-radius:5px}
+.mute{background:none;border:0;font-size:20px;padding:4px;cursor:pointer;flex:none}
+#pop{position:fixed;left:0;right:0;top:calc(70px + env(safe-area-inset-top));z-index:40;display:flex;justify-content:center;pointer-events:none;padding:0 14px}
+#pop.on{pointer-events:auto}
+#pop .pc{position:relative;overflow:hidden;width:100%;max-width:420px;border-radius:22px;padding:18px 16px 14px;text-align:center;
+ background:linear-gradient(rgba(0,0,0,.28),rgba(0,0,0,.28)),radial-gradient(110% 70% at 50% 0%,var(--c1),#0b1a10 88%);border:2px solid rgba(255,255,255,.35);box-shadow:0 18px 50px rgba(0,0,0,.6),0 0 0 4px rgba(0,0,0,.25);
+ animation:popIn .45s cubic-bezier(.2,1.4,.4,1) both;color:#fff;text-shadow:0 2px 6px rgba(0,0,0,.55)}
+#pop.out .pc{animation:popOut .35s ease-in both}
+@keyframes popIn{0%{transform:translateY(-30px) scale(.6);opacity:0}100%{transform:none;opacity:1}}
+@keyframes popOut{to{transform:translateY(-20px) scale(.9);opacity:0}}
+#pop .pk{font-size:54px;line-height:1;animation:pk 1s ease-in-out infinite alternate}
+@keyframes pk{to{transform:scale(1.15) rotate(-8deg)}}
+#pop .ph{font-size:30px;font-weight:700;letter-spacing:.5px;margin:6px 0 4px;line-height:1.1}
+#pop .good .ph,#pop.good .ph{background:linear-gradient(#fff,#fde68a);-webkit-background-clip:text;background-clip:text;color:transparent}
+#pop .pt{display:flex;align-items:center;justify-content:center;gap:8px;font-size:15px}
+#pop .pn{font-size:22px;font-weight:600;margin-top:6px}
+#pop .ps{font-size:13px;opacity:.9}
+#pop .psc{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;background:rgba(0,0,0,.35);border-radius:12px;padding:6px 10px;font-size:14px}
+#pop .psc b{font-size:22px}#pop .psc small{opacity:.8;margin-left:4px}
+#pop .pbar{height:4px;background:rgba(0,0,0,.3);border-radius:2px;margin-top:12px;overflow:hidden}
+#pop .pbar i{display:block;height:100%;background:#fff;animation:pbar var(--ms) linear both}
+@keyframes pbar{from{width:100%}to{width:0}}
+#pop .ptap{font-size:10px;opacity:.6;margin-top:4px}
+#pop.small .pc{padding:10px 12px;border-radius:16px;max-width:360px}
+#pop.small .pk{font-size:28px;animation:none}#pop.small .ph{font-size:16px}#pop.small .pn{font-size:16px}#pop.small .psc b{font-size:17px}
+#pop.pn0 .pc{--c1:#2f7a4f}
+#pop.bad .pc{filter:saturate(.7)}
+#pop.bad .pk{animation:shake .5s ease-in-out 3}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+#pop .conf i{position:absolute;top:-10px;width:8px;height:12px;border-radius:2px;opacity:.95;animation:conf 2.4s ease-in forwards}
+@keyframes conf{to{transform:translateY(340px) rotate(540deg);opacity:0}}
+#guide{position:fixed;inset:0;z-index:50;display:none;background:rgba(0,0,0,.72);align-items:center;justify-content:center;padding:16px}
+#guide.on{display:flex}
+#guide .gd{background:var(--pan);border:1px solid var(--line);border-radius:18px;padding:18px;max-width:400px;width:100%}
+#guide h2{margin:0 0 8px;font-size:19px}#guide ol{padding-left:20px;margin:8px 0;line-height:1.9}
+#guide .ico{display:inline-block;background:#1e3a8a;color:#fff;border-radius:6px;padding:0 6px}
+#guide .garrow{position:fixed;bottom:calc(8px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);font-size:40px;animation:bounce 1s infinite}
+@keyframes bounce{50%{transform:translate(-50%,-12px)}}
+.ibar{position:fixed;left:12px;right:12px;bottom:calc(12px + env(safe-area-inset-bottom));z-index:15;max-width:536px;margin:0 auto;display:flex;align-items:center;gap:10px;background:#123a24;border:1px solid var(--ac);border-radius:16px;padding:10px 12px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+.ibar>span{font-size:28px}.ibar b{display:block;font-size:14px}.ibar small{color:var(--mut);font-size:12px}
+.ibar .ix{background:none;border:0;color:var(--mut);font-size:18px;padding:4px 6px;cursor:pointer}
+.card.inst{border-color:#2e8b52;background:linear-gradient(135deg,#123a24,#0f2418)}
 </style>
 </head>
 <body>
 <div id="app"></div>
 <div id="modal"></div>
+<div id="pop"></div>
+<div id="guide"></div>
 <div id="toast"></div>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <script>
@@ -355,7 +406,7 @@ function stepMinute(m,min){
       const sh=wpick(shooters,id=>({FW:6,MF:3,DF:1})[posIn(m,s,id)]*Math.pow(S.pl[id].o/60,2));if(sh==null)continue;
       let as=null;if(rnd()<0.7){as=wpick(shooters.filter(id=>id!==sh),id=>({MF:5,FW:3,DF:2})[posIn(m,s,id)])}
       m.sc[s]++;m.sh[s]++;m.ot[s]++;m.gs.push(sh);if(as)m.as.push(as);
-      m.ev.push({m:min,s,k:'g',x:fill(pick(TXT.g),{p:nm(sh),t:T.name})+(as?' (แอสซิสต์ '+nm(as)+')':'')+' — '+m.sc[0]+'-'+m.sc[1]});
+      m.ev.push({m:min,s,k:'g',p:sh,a:as,sc:m.sc.slice(),x:fill(pick(TXT.g),{p:nm(sh),t:T.name})+(as?' (แอสซิสต์ '+nm(as)+')':'')+' — '+m.sc[0]+'-'+m.sc[1]});
     }else if(rnd()<lam*5.5){
       const p=wpick(shooters,id=>({FW:5,MF:3,DF:1})[posIn(m,s,id)]);if(p==null)continue;m.sh[s]++;
       const gk=m.on[1-s][0];
@@ -363,11 +414,11 @@ function stepMinute(m,min){
       else m.ev.push({m:min,s,k:'c',x:fill(pick(TXT.c),{p:nm(p)})});
     }
     if(rnd()<0.021){const p=pick(act);m.yel[p]=(m.yel[p]||0)+1;m.cd[s]++;
-      if(m.yel[p]>=2){m.out.push(p);m.red.push(p);m.ev.push({m:min,s,k:'r',x:'🟥 '+nm(p)+' ('+T.sh+') ใบเหลืองใบที่สอง โดนไล่ออก!'})}
+      if(m.yel[p]>=2){m.out.push(p);m.red.push(p);m.ev.push({m:min,s,k:'r',p,x:'🟥 '+nm(p)+' ('+T.sh+') ใบเหลืองใบที่สอง โดนไล่ออก!'})}
       else m.ev.push({m:min,s,k:'y',x:'🟨 '+nm(p)+' ('+T.sh+') รับใบเหลือง'})}
-    else if(rnd()<0.0009){const p=pick(act);m.out.push(p);m.red.push(p);m.cd[s]++;m.ev.push({m:min,s,k:'r',x:'🟥 ใบแดงตรงๆ! '+nm(p)+' ('+T.sh+') ต้องออกจากสนาม'})}
+    else if(rnd()<0.0009){const p=pick(act);m.out.push(p);m.red.push(p);m.cd[s]++;m.ev.push({m:min,s,k:'r',p,x:'🟥 ใบแดงตรงๆ! '+nm(p)+' ('+T.sh+') ต้องออกจากสนาม'})}
     if(rnd()<0.0017){const p=pick(active(m,s));if(p&&!m.inj.includes(p)){m.inj.push(p);
-      m.ev.push({m:min,s,k:'i',x:'🚑 '+nm(p)+' ('+T.sh+') บาดเจ็บ'});
+      m.ev.push({m:min,s,k:'i',p,x:'🚑 '+nm(p)+' ('+T.sh+') บาดเจ็บ'});
       const rep=m.sb[s]<MAX_SUBS?bestBench(m,s,posIn(m,s,p)):null;
       if(rep)doSub(m,s,p,rep,'บาดเจ็บ');else m.out.push(p)}}
   }
@@ -468,7 +519,7 @@ function startRound(){
   Object.values(S.humans).forEach(h=>h.ready=false);
   S.phase='live';bump();runTicker();
 }
-function runTicker(){clearInterval(tickT);tickT=setInterval(tick,SPEED[S.spd||1].t)}
+function runTicker(){clearInterval(tickT);tickT=setInterval(tick,SPEED[S.spd??1].t)}
 function tick(force){
   const V=S&&S.lv;if(!V||S.phase!=='live'){clearInterval(tickT);return}
   const now=Date.now();
@@ -483,7 +534,7 @@ function tick(force){
     stepMinute(m,V.min);aiMatch(m,V.min);
     if(V.min>=93)m.ev.push({m:93,s:-1,k:'ft',x:'🏁 จบเกม '+S.teams[m.h].name+' '+m.sc[0]+'-'+m.sc[1]+' '+S.teams[m.a].name});
     d.push(i,n0)});
-  if(V.min===45&&!force){V.st='ht';V.htu=now+SPEED[S.spd||1].ht}
+  if(V.min===45&&!force){V.st='ht';V.htu=now+SPEED[S.spd??1].ht}
   if(V.min>=93){finishRound();return}
   if(!force)liveSend(d);
 }
@@ -668,7 +719,7 @@ function goHome(){
 /* ==========================================================
    UI
    ========================================================== */
-const UI={tab:'home',lg:LS.get('fm_lg','th'),mkPos:'ALL',mkSrc:'all',mkSort:'o',tbl:'table',fxR:null,skip:{},sound:LS.get('fm_snd','1')==='1',liveSel:null,subOff:null};
+const UI={tab:'home',lg:LS.get('fm_lg','th'),mkPos:'ALL',mkSrc:'all',mkSort:'o',tbl:'table',fxR:null,skip:{},sound:LS.get('fm_snd','1')==='1',music:LS.get('fm_mus','1')==='1',mute:LS.get('fm_mute','0')==='1',liveSel:null,subOff:null};
 let rq=false;
 function render(){if(rq)return;rq=true;requestAnimationFrame(()=>{rq=false;draw()})}
 function badge(T,sz){sz=sz||38;return '<span class="badge" style="width:'+sz+'px;height:'+sz+'px;background:'+T.c1+';border-color:'+T.c2+';color:'+(lum(T.c1)>0.6?'#111':'#fff')+';font-size:'+Math.round(sz*0.28)+'px">'+T.sh+'</span>'}
@@ -681,14 +732,14 @@ const amHost=()=>S&&S.host===uid&&isHost;
 const liveShown=()=>S&&S.phase==='live'&&S.lv&&!UI.skip[S.lv.id];
 
 function draw(){
-  const app=$('#app');
-  if(!S){app.innerHTML=joinCode&&!isHost&&!leaving?vConnecting():vStart();return}
+  const app=$('#app');AU.sync();
+  if(!S){app.innerHTML=joinCode&&!isHost&&!leaving?vConnecting():vStart()+vInstallBar();return}
   if(S.phase==='lobby'){app.innerHTML=vLobby();return}
   let body='';
   if(UI.tab==='home')body=liveShown()?vLive():S.phase==='end'?vEnd():vHome();
   else if(UI.tab==='team')body=vTeam();else if(UI.tab==='market')body=vMarket();else if(UI.tab==='table')body=vTable();else body=vRoom();
   const sy=window.scrollY;app.innerHTML=vTop()+'<div class="sec">'+body+'</div>'+vNav();
-  if(UI.tab==='home'&&liveShown())liveSound();
+  liveWatch();
   if(UI.subOff!=null||UI.subOpen)drawSub();
 }
 function vTop(){
@@ -696,6 +747,7 @@ function vTop(){
   const st=S.phase==='end'?'จบฤดูกาล '+seasonLabel(S.season):S.phase==='live'?'🔴 กำลังแข่ง นัดที่ '+(S.lv.r+1):'นัดที่ '+(S.round+1)+'/'+nR()+' · '+seasonLabel(S.season);
   return '<div class="top">'+(T?badge(T):'<span style="font-size:30px">⚽</span>')+
    '<div class="tt"><b>'+(T?esc(T.name):'ผู้ชม')+'</b><small>'+(S.solo?'':'<span class="dot'+(off?' off':'')+'"></span>')+L().flag+' '+st+'</small></div>'+
+   '<button class="mute" data-a="mute" aria-label="เสียง">'+(UI.mute?'🔇':'🔊')+'</button>'+
    (T?'<div class="money">'+money(T.budget)+'<small>งบประมาณ</small></div>':'')+'</div>';
 }
 function vNav(){
@@ -715,7 +767,7 @@ function vStart(){
   '<div class="row" style="margin-top:10px"><input class="in grow" id="jc" maxlength="6" placeholder="รหัสห้อง" style="text-transform:uppercase;letter-spacing:3px" value="'+esc(qroom||'')+'"><button class="btn" data-a="join">เข้าห้อง</button></div>'+
   (last&&last!==qroom?'<button class="btn blk" style="margin-top:8px" data-a="join" data-v="'+esc(last)+'">↩️ เข้าห้องล่าสุด '+esc(last)+'</button>':'')+'</div>'+
   '<div class="card"><h3>เล่นคนเดียว</h3><button class="btn blk" data-a="solo">🎮 เริ่มเกมคนเดียว (แข่งกับ AI)</button></div>'+
-  (hsInfo?'<div class="card"><h3>เกมที่บันทึกไว้ (คุณเป็นเจ้าของห้อง)</h3><p class="mut sm" style="margin:0 0 8px">'+esc(hsInfo)+'</p><button class="btn gold blk" data-a="resume">▶️ เล่นต่อ</button></div>':'')+
+  vInstallCard()+(hsInfo?'<div class="card"><h3>เกมที่บันทึกไว้ (คุณเป็นเจ้าของห้อง)</h3><p class="mut sm" style="margin:0 0 8px">'+esc(hsInfo)+'</p><button class="btn gold blk" data-a="resume">▶️ เล่นต่อ</button></div>':'')+
   '<p class="mut sm">รายชื่อนักเตะจริงตามข้อมูลต้นฤดูกาล 2026/27 ค่าพลังเป็นค่าประเมินในเกม ฟรีเอเย่นต์และเด็กปั้นเป็นชื่อสมมติ — แก้ชื่อได้ในแท็บ “ทีม”</p>'+
   '<div class="foot">KG Football Manager · By Thitipong Srisomwong</div></div>';
 }
@@ -818,15 +870,6 @@ function drawSub(){
   h+='<button class="btn blk" style="margin-top:10px" data-a="subclose">ปิด</button>';
   const cur=$('#modal .sh');if(cur){cur.innerHTML=h}else openModal(h);
 }
-let lastGoalKey='';
-function liveSound(){
-  if(!UI.sound)return;const T=myTeam();const mine=myLive(T);if(!mine)return;const m=mine.m;
-  const n=m.sc[0]+m.sc[1];const key=S.lv.id+':'+n;
-  if(key!==lastGoalKey){const prev=lastGoalKey.split(':');lastGoalKey=key;if(prev[0]===S.lv.id&&n>+prev[1]){const g=m.ev.filter(e=>e.k==='g').pop();if(g)beep(g.s===mine.s)}}
-}
-let actx=null;
-function beep(good){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();const t=actx.currentTime;
-  (good?[523,659,784,1047]:[330,262]).forEach((f,i)=>{const o=actx.createOscillator(),g=actx.createGain();o.type=good?'triangle':'sawtooth';o.frequency.value=f;g.gain.setValueAtTime(0.0001,t+i*0.12);g.gain.exponentialRampToValueAtTime(0.18,t+i*0.12+0.02);g.gain.exponentialRampToValueAtTime(0.0001,t+i*0.12+0.25);o.connect(g).connect(actx.destination);o.start(t+i*0.12);o.stop(t+i*0.12+0.3)})}catch(e){}}
 function vEnd(){
   const F=S.final;if(!F)return'';const C=S.teams[F.tb[0]];const T=myTeam();const myPos=T?F.tb.indexOf(T.id)+1:0;
   return '<div class="card champ"><div class="tro">🏆</div><div class="mut sm">แชมป์'+L().name+' ฤดูกาล '+seasonLabel(S.season)+'</div><div style="margin:8px 0">'+badge(C,64)+'</div><h2 style="margin:4px 0">'+esc(C.name)+'</h2>'+(C.owner&&S.humans[C.owner]?'<div>👔 '+esc(S.humans[C.owner].name)+'</div>':'')+'</div>'+
@@ -937,7 +980,8 @@ function vRoom(){
    '<div class="card"><h3>ผู้จัดการ ('+hs.length+')</h3><div class="hl">'+hs.map(([u,x])=>'<div class="hu"><span class="dot'+(x.on?'':' off')+'"></span><b>'+esc(x.name)+'</b>'+(u===S.host?'<span class="mut sm">👑</span>':'')+'<span class="grow"></span>'+(x.team!=null?badge(S.teams[x.team],24)+' <span class="sm">'+esc(S.teams[x.team].sh)+'</span>':'<span class="mut sm">ผู้ชม</span>')+'</div>').join('')+'</div></div>';
   if(amHost())html+='<div class="card"><h3>ความเร็วแมตช์สด</h3>'+speedSeg()+'</div>';
   html+='<div class="card"><h3>'+(T?'ย้ายไปคุมทีมอื่น':'เลือกทีมที่ยังว่าง')+'</h3><div class="mut sm" style="margin-bottom:8px">ทีมเดิมจะกลับไปให้ AI คุม</div>'+vTeamGrid()+'</div>';
-  html+='<div class="card"><h3>ตั้งค่า</h3><button class="btn blk" data-a="snd">'+(UI.sound?'🔊 เสียงตอนยิงประตู: เปิด':'🔇 เสียงตอนยิงประตู: ปิด')+'</button></div>';
+  html+='<div class="card"><h3>เสียง</h3><div class="row"><button class="btn grow'+(UI.music?' pri':'')+'" data-a="mus">'+(UI.music?'🎵 เพลง: เปิด':'🎵 เพลง: ปิด')+'</button><button class="btn grow'+(UI.sound?' pri':'')+'" data-a="snd">'+(UI.sound?'📣 เสียงเชียร์: เปิด':'📣 เสียงเชียร์: ปิด')+'</button></div><div class="mut sm" style="margin-top:6px">เพลงเล่นนอกเวลาแข่ง · ระหว่างแข่งเป็นเสียงกองเชียร์ นกหวีด และเสียงเฮตอนยิงประตู</div></div>';
+  html+=vInstallCard();
   html+='<div class="card"><h3>วิธีเล่น</h3><div class="sm mut">1) จัดตัวจริง 11 คน + ตัวสำรอง '+BENCH+' คน เลือกแผนและแท็กติกในแท็บ “ทีม”<br>2) ซื้อ-ขายนักเตะในแท็บ “ตลาด”<br>3) กด “พร้อมเตะ” — ทุกคู่แข่งพร้อมกันแบบสด<br>4) ระหว่างแข่ง: เปลี่ยนตัวได้ '+MAX_SUBS+' คน เปลี่ยนแผน/แท็กติกได้ตลอด และขอเวลานอกได้ '+TIMEOUTS+' ครั้ง/นัด (หยุดทุกสนาม '+PAUSE_MS/1000+' วิ)<br>5) นักเตะเหนื่อยลงระหว่างเกม เปลี่ยนตัวสดช่วงท้ายเกมช่วยได้มาก<br>6) จบฤดูกาลรับเงินรางวัลตามอันดับ</div></div>';
   html+='<button class="btn red blk" data-a="leave">🚪 ออกจากห้อง</button>';
   if(isHost)html+='<p class="mut sm" style="text-align:center">เกมถูกบันทึกในเครื่องนี้ กลับมาเล่นต่อได้จากหน้าแรก</p>';
@@ -982,6 +1026,187 @@ async function shareLink(link){
 function copyText(t){if(navigator.clipboard)navigator.clipboard.writeText(t).then(()=>toast('คัดลอกแล้ว'),()=>prompt('คัดลอกลิงก์นี้',t));else prompt('คัดลอกลิงก์นี้',t)}
 function saveName(){const el=$('#nm');if(el){myName=el.value.trim().slice(0,16);LS.set('fm_name',myName)}return myName}
 
+/* ==========================================================
+   เสียง (สังเคราะห์ด้วย Web Audio — ไม่ต้องมีไฟล์เสียง)
+   ========================================================== */
+const AU={ctx:null,master:null,mus:null,sfx:null,amb:null,nb:null,ambSrc:null,mode:null,
+  musOn:false,step:0,next:0,loop:0,timer:null,bpm:118};
+AU.unlock=function(){
+  try{
+    if(!AU.ctx){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const c=AU.ctx=new AC();
+      AU.master=c.createGain();AU.master.connect(c.destination);
+      AU.mus=c.createGain();AU.mus.gain.value=0.55;AU.mus.connect(AU.master);
+      AU.sfx=c.createGain();AU.sfx.gain.value=0.9;AU.sfx.connect(AU.master);
+      AU.amb=c.createGain();AU.amb.gain.value=0;AU.amb.connect(AU.master);
+      const n=c.sampleRate*2,b=c.createBuffer(1,n,c.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=Math.random()*2-1;AU.nb=b;
+      AU.applyVol();}
+    if(AU.ctx.state==='suspended'&&!document.hidden)AU.ctx.resume();
+    AU.sync();
+  }catch(e){}
+};
+AU.applyVol=function(){if(!AU.ctx)return;const t=AU.ctx.currentTime;AU.master.gain.setTargetAtTime(UI.mute?0:0.9,t,0.05);AU.sfx.gain.setTargetAtTime(UI.sound?0.9:0,t,0.05)};
+AU.tone=function(f,t,d,o){o=o||{};const c=AU.ctx;const os=c.createOscillator(),g=c.createGain();os.type=o.type||'sine';os.frequency.setValueAtTime(f,t);
+  if(o.slide)os.frequency.exponentialRampToValueAtTime(o.slide,t+d);const a=o.a||0.01,r=Math.min(o.r||0.1,d*0.8),G=o.g||0.2;
+  g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(G,t+a);g.gain.setValueAtTime(G,t+Math.max(a,d-r));g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+  let node=os;if(o.lp){const f2=c.createBiquadFilter();f2.type='lowpass';f2.frequency.value=o.lp;os.connect(f2);node=f2}
+  node.connect(g).connect(o.dest||AU.sfx);os.start(t);os.stop(t+d+0.05);return os};
+AU.noise=function(t,d,o){o=o||{};const c=AU.ctx;const s=c.createBufferSource();s.buffer=AU.nb;s.loop=true;const f=c.createBiquadFilter();f.type=o.type||'bandpass';
+  f.frequency.setValueAtTime(o.f||1000,t);if(o.slide)f.frequency.exponentialRampToValueAtTime(o.slide,t+d);f.Q.value=o.q||1;
+  const g=c.createGain();const a=o.a||0.01,r=Math.min(o.r||0.1,d*0.9),G=o.g||0.3;g.gain.setValueAtTime(0.0001,t);g.gain.exponentialRampToValueAtTime(G,t+a);g.gain.setValueAtTime(G,t+Math.max(a,d-r));g.gain.exponentialRampToValueAtTime(0.0001,t+d);
+  s.connect(f).connect(g).connect(o.dest||AU.sfx);s.start(t,Math.random()*1.5);s.stop(t+d+0.05)};
+AU.ok=()=>AU.ctx&&AU.ctx.state==='running'&&UI.sound&&!UI.mute;
+AU.whistle=function(n){if(!AU.ok())return;const c=AU.ctx;let t=c.currentTime+0.02;const pat=n===3?[0.22,0.22,0.9]:n===2?[0.25,0.25]:[0.35];
+  pat.forEach(d=>{const o=AU.tone(2750,t,d,{g:0.12,a:0.01,r:0.05});const l=c.createOscillator(),lg=c.createGain();l.frequency.value=32;lg.gain.value=140;l.connect(lg).connect(o.frequency);l.start(t);l.stop(t+d);t+=d+0.12})};
+AU.cheer=function(){if(!AU.ok())return;const t=AU.ctx.currentTime+0.02;
+  [[650,0.6,0.5],[1300,0.9,0.42],[2600,1.4,0.22]].forEach(([f,q,g])=>AU.noise(t,4.2,{f,q,g,a:0.35,r:2.6}));
+  AU.noise(t+0.2,3.5,{f:900,q:3,g:0.18,a:0.6,r:2,slide:1300});
+  [0,0.38,0.76].forEach((o,i)=>{[349,440,523].forEach(f=>AU.tone(f,t+0.15+o,i===2?0.7:0.3,{type:'sawtooth',g:0.05,a:0.02,r:0.08,lp:2200}))});
+  [0,0.18].forEach(o=>AU.tone(120,t+o,0.35,{g:0.5,slide:45,a:0.005,r:0.3}))};
+AU.groan=function(){if(!AU.ok())return;const t=AU.ctx.currentTime+0.02;
+  AU.noise(t,2.2,{f:520,q:1.2,g:0.4,a:0.2,r:1.4,slide:220});AU.noise(t,2,{f:1100,q:1,g:0.15,a:0.25,r:1.3,slide:500})};
+AU.boo=function(){if(!AU.ok())return;const t=AU.ctx.currentTime+0.3;
+  AU.noise(t,1.8,{f:320,q:3,g:0.4,a:0.3,r:0.9});AU.tone(140,t,1.6,{type:'sawtooth',g:0.05,a:0.3,r:0.8,lp:500})};
+AU.ding=function(){if(!AU.ok())return;const t=AU.ctx.currentTime+0.02;AU.tone(880,t,0.25,{g:0.15});AU.tone(1318,t+0.12,0.4,{g:0.12})};
+AU.ooh=function(){if(!AU.ok())return;const t=AU.ctx.currentTime+0.02;AU.noise(t,1.3,{f:700,q:2.5,g:0.25,a:0.15,r:0.9,slide:450})};
+/* ---- บรรยากาศกองเชียร์ระหว่างแข่ง ---- */
+AU.ambStart=function(){if(!AU.ctx||AU.ambSrc)return;const c=AU.ctx;const s=c.createBufferSource();s.buffer=AU.nb;s.loop=true;
+  const f=c.createBiquadFilter();f.type='bandpass';f.frequency.value=700;f.Q.value=0.5;const g=c.createGain();g.gain.value=0.07;
+  const l=c.createOscillator(),lg=c.createGain();l.frequency.value=0.13;lg.gain.value=0.03;l.connect(lg).connect(g.gain);l.start();
+  s.connect(f).connect(g).connect(AU.amb);s.start();AU.ambSrc=[s,l]};
+AU.ambStop=function(){if(!AU.ambSrc)return;AU.ambSrc.forEach(x=>{try{x.stop()}catch(e){}});AU.ambSrc=null};
+/* ---- เพลงประกอบ (วนลูป 4 ห้อง C-G-Am-F) ---- */
+const MCH=[[36,[60,64,67]],[43,[59,62,67]],[45,[60,64,69]],[41,[60,65,69]]];
+const MMEL=[[72,0,72,0,76,0,79,0,79,0,76,0,74,0,72,0],[74,0,74,0,79,0,83,0,81,0,79,0,74,0,0,0],[72,0,72,0,76,0,81,0,79,0,76,0,72,0,69,0],[69,0,72,0,77,0,76,0,74,0,72,0,71,0,0,0]];
+const mtof=n=>440*Math.pow(2,(n-69)/12);
+AU.musStart=function(){if(!AU.ctx||AU.musOn)return;AU.musOn=true;AU.next=AU.ctx.currentTime+0.1;AU.timer=setInterval(AU.sched,25)};
+AU.musStop=function(){AU.musOn=false;clearInterval(AU.timer)};
+AU.sched=function(){const c=AU.ctx;if(!c||c.state!=='running')return;const sp=60/AU.bpm/4;
+  while(AU.next<c.currentTime+0.12){AU.playStep(AU.step,AU.next);AU.next+=sp;AU.step=(AU.step+1)%64;if(AU.step===0)AU.loop++}};
+AU.playStep=function(st,t){
+  const D=AU.mus,bar=st>>4,s=st&15,[root,ch]=MCH[bar],sp=60/AU.bpm/4;
+  if(s%4===0)AU.tone(140,t,0.28,{g:0.5,slide:42,a:0.003,r:0.25,dest:D});
+  if(s===4||s===12){AU.noise(t,0.16,{type:'highpass',f:1600,g:0.16,a:0.002,r:0.12,dest:D});AU.tone(190,t,0.1,{g:0.1,a:0.002,r:0.08,dest:D})}
+  if(s%2===0)AU.noise(t,0.04,{type:'highpass',f:7500,g:s%4===2?0.07:0.035,a:0.001,r:0.03,dest:D});
+  if(s%2===0)AU.tone(mtof(root+(s%8===6?7:0)),t,sp*1.7,{type:'sawtooth',g:0.07,a:0.005,r:0.08,lp:700,dest:D});
+  if(s===0||s===8)ch.forEach(n=>AU.tone(mtof(n),t,sp*7.6,{type:'triangle',g:0.028,a:0.04,r:0.25,dest:D}));
+  if(s===2||s===6||s===10||s===14)ch.forEach(n=>AU.tone(mtof(n+12),t,sp*0.8,{type:'square',g:0.012,a:0.003,r:0.05,lp:2500,dest:D}));
+  const mn=MMEL[bar][s];if(mn&&AU.loop%4!==3)AU.tone(mtof(mn),t,sp*1.8,{type:'square',g:0.035,a:0.01,r:0.1,lp:2800,dest:D});
+};
+AU.sync=function(){
+  if(!AU.ctx)return;AU.applyVol();
+  const live=!!(S&&S.phase==='live'&&S.lv&&S.lv.st!=='ft');
+  const wantMus=UI.music&&!UI.mute&&!live,wantAmb=UI.sound&&!UI.mute&&live;
+  if(wantMus)AU.musStart();else AU.musStop();
+  if(wantAmb){AU.ambStart();AU.amb.gain.setTargetAtTime(S.lv.st==='run'?1:0.45,AU.ctx.currentTime,0.4)}else{AU.amb.gain.setTargetAtTime(0,AU.ctx.currentTime,0.3);if(!live&&AU.ambSrc&&!AU.ambT)AU.ambT=setTimeout(()=>{AU.ambT=null;if(!(S&&S.phase==='live'))AU.ambStop()},1200)}
+};
+document.addEventListener('pointerdown',AU.unlock,{passive:true});
+document.addEventListener('keydown',AU.unlock);
+document.addEventListener('visibilitychange',()=>{if(!AU.ctx)return;if(document.hidden)AU.ctx.suspend();else AU.ctx.resume()});
+
+/* ==========================================================
+   ป๊อปอัพเหตุการณ์สำคัญ (5 วินาที)
+   ========================================================== */
+const POPQ=[];let popT=null,popCur=null;
+function pop(o){if(POPQ.length>=4)POPQ.splice(POPQ.findIndex(x=>!x.big)>=0?POPQ.findIndex(x=>!x.big):0,1);POPQ.push(o);if(!popCur)nextPop()}
+function nextPop(){
+  clearTimeout(popT);const el=$('#pop');const o=POPQ.shift();
+  if(!o){popCur=null;el.className='';el.innerHTML='';return}
+  popCur=o;el.className='';void el.offsetWidth;el.innerHTML=popHtml(o);el.className='on '+(o.cls||'');
+  if(navigator.vibrate&&o.vib)try{navigator.vibrate(o.vib)}catch(e){}
+  const ms=o.ms||5000;popT=setTimeout(()=>{el.classList.add('out');popT=setTimeout(nextPop,350)},ms);
+}
+function popHtml(o){
+  const conf=o.conf?'<div class="conf">'+Array.from({length:28},(_,i)=>'<i style="left:'+Math.round(Math.random()*100)+'%;animation-delay:'+(Math.random()*0.8).toFixed(2)+'s;background:'+['#facc15','#22c55e','#f8fafc','#38bdf8','#f97316',o.c1||'#facc15'][i%6]+'"></i>').join('')+'</div>':'';
+  return '<div class="pc" style="--c1:'+(o.c1||'#22c55e')+';--c2:'+(o.c2||'#0f2418')+';--ms:'+((o.ms||5000)/1000)+'s">'+conf+
+   '<div class="pk">'+o.icon+'</div><div class="ph">'+o.title+'</div>'+
+   (o.team?'<div class="pt">'+badge(o.team,30)+'<b>'+esc(o.team.name)+'</b></div>':'')+
+   (o.main?'<div class="pn">'+esc(o.main)+'</div>':'')+(o.sub?'<div class="ps">'+esc(o.sub)+'</div>':'')+
+   (o.score?'<div class="psc">'+o.score+'</div>':'')+
+   '<div class="pbar"><i></i></div><div class="ptap">แตะเพื่อปิด</div></div>';
+}
+function scoreLine(m,sc,min){const H=S.teams[m.h],A=S.teams[m.a];return badge(H,24)+'<span>'+H.sh+'</span><b>'+sc[0]+' - '+sc[1]+'</b><span>'+A.sh+'</span>'+badge(A,24)+(min!=null?'<small>'+(min>90?'90+'+(min-90):min)+"'</small>":'')}
+const LW={id:null,seen:[],min:0,st:null};
+function liveWatch(){
+  if(!S||!S.lv){LW.id=null;return}
+  const V=S.lv;
+  if(LW.id!==V.id){LW.id=V.id;LW.seen=V.ms.map(m=>m.ev.length);LW.min=V.min;LW.st=V.st;if(V.min<=2)AU.whistle(1);return}
+  const jump=V.min-LW.min>6;const T=myTeam();const mine=myLive(T);
+  const feat=mine?mine.i:(UI.liveSel&&UI.liveSel.id===V.id?UI.liveSel.i:0);
+  V.ms.forEach((m,i)=>{const n0=LW.seen[i]||0;if(m.ev.length>n0&&!jump)m.ev.slice(n0).forEach(e=>onLiveEvent(m,i,e,mine,feat));LW.seen[i]=m.ev.length});
+  if(V.st!==LW.st){
+    const m=V.ms[feat];
+    if(V.st==='ht'&&!jump){AU.whistle(2);pop({icon:'⏸️',title:'หมดครึ่งแรก',score:scoreLine(m,m.sc),ms:3500,cls:'pn0'})}
+    else if(V.st==='ft'){AU.whistle(3);
+      if(mine){const d=m.sc[mine.s]-m.sc[1-mine.s];const T2=S.teams[mine.s?m.a:m.h];
+        if(d>0)AU.cheer();else if(d<0)AU.groan();
+        pop({icon:d>0?'🎉':d<0?'😞':'🤝',title:d>0?'ชนะแล้ว!':d<0?'แพ้ไปนัดนี้':'เสมอกัน',team:T2,c1:T2.c1,c2:T2.c2,score:scoreLine(m,m.sc),big:1,conf:d>0,cls:d>0?'good':d<0?'bad':'pn0',vib:d>0?[80,60,80]:null})}
+      else pop({icon:'🏁',title:'จบเกม',score:scoreLine(m,m.sc),ms:3500,cls:'pn0'})}
+    else if(V.st==='pause'&&V.pu){pop({icon:'⏸️',title:'ขอเวลานอก',main:V.pu.by,sub:'ทุกสนามหยุดชั่วคราว '+PAUSE_MS/1000+' วินาที',ms:3500,cls:'pn0'})}
+  }
+  LW.min=V.min;LW.st=V.st;
+}
+function onLiveEvent(m,i,e,mine,feat){
+  const isMy=mine&&mine.i===i,isFeat=i===feat;const side=e.s;const T=side>=0?S.teams[side?m.a:m.h]:null;
+  const friend=[m.h,m.a].some(t=>S.teams[t].owner&&S.teams[t].owner!==uid);
+  const pn=id=>S.pl[id]?S.pl[id].n:'';
+  if(e.k==='g'){
+    const sc=e.sc||m.sc;
+    if(isMy||isFeat){const good=isMy?side===mine.s:true;
+      if(good)AU.cheer();else AU.groan();
+      pop({icon:'⚽',title:good?(isMy?'GOAL! ประตู!':'GOAL!'):'เสียประตู!',team:T,c1:T.c1,c2:T.c2,main:pn(e.p),sub:e.a?'แอสซิสต์: '+pn(e.a):'',score:scoreLine(m,sc,e.m),big:1,conf:good,cls:good?'good':'bad',vib:good?[120,80,120]:[200]});
+    }else if(friend){AU.ding();pop({icon:'⚽',title:'สนามอื่น: '+T.name+' ยิงได้',main:pn(e.p),score:scoreLine(m,sc,e.m),ms:3500,cls:'small'})}
+  }else if(e.k==='r'&&(isMy||isFeat)){AU.whistle(1);AU.boo();
+    pop({icon:'🟥',title:'ใบแดง!',team:T,c1:'#dc2626',c2:'#3b0a0a',main:pn(e.p),sub:'ต้องเล่นด้วย 10 คน',score:scoreLine(m,m.sc,e.m),big:1,cls:'red',vib:[300]});
+  }else if(e.k==='i'&&(isMy||isFeat)){AU.whistle(1);AU.ooh();
+    pop({icon:'🚑',title:'บาดเจ็บ',team:T,c1:'#f59e0b',c2:'#3a2a07',main:pn(e.p),sub:isMy&&side===mine.s?'ตรวจตัวสำรองในแผงแก้เกม':'',score:scoreLine(m,m.sc,e.m),cls:'warnp'});
+  }
+}
+
+/* ==========================================================
+   ติดตั้งเป็นแอป (PWA)
+   ========================================================== */
+let deferredPrompt=null;
+const UA=navigator.userAgent;
+const isIOS=/iphone|ipad|ipod/i.test(UA)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
+const isAndroid=/android/i.test(UA);
+const inApp=/Line\/|FBAN|FBAV|FB_IAB|Instagram|TikTok|musical_ly/i.test(UA);
+const isStandalone=()=>{try{return matchMedia('(display-mode: standalone)').matches||navigator.standalone===true}catch(e){return false}};
+// เปิดจาก LINE → พาไปเปิดในเบราว์เซอร์จริงอัตโนมัติ (ติดตั้งแอปและเล่นออนไลน์ได้เสถียรกว่า)
+if(/Line\//i.test(UA)&&!QS.get('openExternalBrowser')){try{const u=new URL(location.href);u.searchParams.set('openExternalBrowser','1');location.replace(u.toString())}catch(e){}}
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredPrompt=e;render()});
+window.addEventListener('appinstalled',()=>{deferredPrompt=null;LS.set('fm_inst','1');closeGuide();toast('ติดตั้งแอปแล้ว 🎉 เปิดได้จากหน้าจอโฮม');render()});
+const canShowInstall=()=>!isStandalone()&&location.protocol!=='file:';
+function installApp(){
+  if(isStandalone()){toast('เปิดเป็นแอปอยู่แล้ว 👍');return}
+  if(deferredPrompt){const p=deferredPrompt;deferredPrompt=null;p.prompt();p.userChoice.then(c=>{if(c.outcome!=='accepted')deferredPrompt=p;render()}).catch(()=>{});return}
+  if(inApp){if(isAndroid){location.href='intent://'+location.host+location.pathname+location.search+'#Intent;scheme=https;package=com.android.chrome;end';return}showGuide('inapp');return}
+  if(isIOS){showGuide('ios');return}
+  showGuide('other');
+}
+function showGuide(k){
+  const g=$('#guide');let h='';
+  if(k==='ios')h='<div class="gd"><h2>📲 ติดตั้งแอปบน iPhone / iPad</h2><ol><li>แตะปุ่ม <b class="ico">⬆︎</b> <b>แชร์</b> ด้านล่างของ Safari</li><li>เลื่อนแล้วเลือก <b>“เพิ่มไปยังหน้าจอโฮม”</b></li><li>แตะ <b>“เพิ่ม”</b> มุมขวาบน — เสร็จ!</li></ol><p class="mut sm">ต้องเปิดด้วย Safari เท่านั้น</p><button class="btn pri blk" data-a="guideclose">เข้าใจแล้ว</button></div><div class="garrow">⬇️</div>';
+  else if(k==='inapp')h='<div class="gd"><h2>เปิดในเบราว์เซอร์ก่อน</h2><p>แอปที่เปิดอยู่ (เช่น Facebook/IG) ติดตั้งแอปไม่ได้<br>แตะ <b>⋯</b> มุมขวาบน แล้วเลือก <b>“เปิดใน Safari/เบราว์เซอร์”</b> จากนั้นกดติดตั้งอีกครั้ง</p><button class="btn blk" data-a="copylink">📋 คัดลอกลิงก์</button><button class="btn pri blk" style="margin-top:8px" data-a="guideclose">ตกลง</button></div>';
+  else h='<div class="gd"><h2>📲 ติดตั้งแอป</h2><p>แตะเมนู <b>⋮</b> ของเบราว์เซอร์ แล้วเลือก <b>“ติดตั้งแอป”</b> หรือ <b>“เพิ่มลงในหน้าจอหลัก”</b></p><p class="mut sm">ถ้าไม่เห็นเมนูนี้ ให้เปิดลิงก์ด้วย Chrome</p><button class="btn pri blk" data-a="guideclose">ตกลง</button></div>';
+  g.innerHTML=h;g.className='on '+k;
+}
+function closeGuide(){const g=$('#guide');if(g){g.className='';g.innerHTML=''}}
+async function shareApp(){
+  const url=location.origin+location.pathname;const text='เกมผู้จัดการทีมฟุตบอล ไทยลีก & พรีเมียร์ลีก เล่นกับเพื่อนได้ 👉';
+  if(navigator.share){try{await navigator.share({title:'KG ผู้จัดการทีม',text,url});return}catch(e){if(e&&e.name==='AbortError')return}}
+  copyText(url);
+}
+function vInstallCard(){
+  if(!canShowInstall())return'';
+  return '<div class="card inst"><div class="row"><span style="font-size:34px">📲</span><div class="grow"><b>ติดตั้งเป็นแอปบนมือถือ</b><div class="mut sm">เปิดเร็ว เต็มจอ ไม่ต้องหาลิงก์</div></div></div>'+
+    '<div class="row" style="margin-top:8px"><button class="btn pri grow" data-a="install">ติดตั้งแอป</button><button class="btn grow" data-a="shareapp">📤 แชร์แอป</button></div></div>';
+}
+function vInstallBar(){
+  if(!canShowInstall()||LS.get('fm_instx','')==='1')return'';if(!deferredPrompt&&!isIOS&&!inApp)return'';
+  return '<div class="ibar"><span>📲</span><div class="grow"><b>ติดตั้ง KG ผู้จัดการทีม</b><small>เป็นแอปบนหน้าจอโฮม</small></div><button class="btn sm pri" data-a="install">ติดตั้ง</button><button class="ix" data-a="instx">✕</button></div>';
+}
+if('serviceWorker' in navigator&&(location.protocol==='https:'||location.hostname==='localhost')){window.addEventListener('load',()=>{navigator.serviceWorker.register('./sw.js').catch(()=>{})})}
+
 /* ---------- Events ---------- */
 const A={
   slg(d){UI.lg=d.v;LS.set('fm_lg',d.v);saveName();render()},
@@ -1018,7 +1243,11 @@ const A={
   dobulk(){send({type:'bulk',txt:$('#bk').value});closeModal();if(!isHost)toast('ส่งรายชื่อแล้ว')},
   tbl(d){UI.tbl=d.v;render()},fxr(d){UI.fxR=+d.v;render()},
   share(d){shareLink(d.v)},copy(d){copyText(d.v)},
-  snd(){UI.sound=!UI.sound;LS.set('fm_snd',UI.sound?'1':'0');if(UI.sound)beep(true);render()},
+  snd(){UI.sound=!UI.sound;LS.set('fm_snd',UI.sound?'1':'0');AU.unlock();AU.applyVol();if(UI.sound)AU.cheer();render()},
+  mus(){UI.music=!UI.music;LS.set('fm_mus',UI.music?'1':'0');AU.unlock();render()},
+  mute(){UI.mute=!UI.mute;LS.set('fm_mute',UI.mute?'1':'0');AU.unlock();AU.applyVol();toast(UI.mute?'ปิดเสียงทั้งหมด':'เปิดเสียงแล้ว');render()},
+  install(){installApp()},shareapp(){shareApp()},instx(){LS.set('fm_instx','1');render()},
+  guideclose(){closeGuide()},copylink(){copyText(location.origin+location.pathname)},
   /* live */
   ltac(d){send({type:'ltac',v:+d.v});const T=myTeam();if(!isHost&&T){T.tac=+d.v;render()}},
   lform(d){send({type:'lform',f:d.v})},
@@ -1031,7 +1260,7 @@ const A={
   close(){closeModal()},
   closebg(d,el,e){if(e.target===el)closeModal()}
 };
-document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el)return;const f=A[el.dataset.a];if(!f||el.disabled)return;f(el.dataset,el,e)});
+document.addEventListener('click',e=>{if(e.target.closest('#pop')){nextPop();return}const el=e.target.closest('[data-a]');if(!el)return;const f=A[el.dataset.a];if(!f||el.disabled)return;f(el.dataset,el,e)});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target.id==='jc')A.join({})});
 document.addEventListener('input',e=>{if(e.target.id==='mkq'){UI.mkQ=e.target.value;clearTimeout(UI.mqT);UI.mqT=setTimeout(()=>{render();setTimeout(()=>{const el=$('#mkq');if(el){el.focus();el.setSelectionRange(el.value.length,el.value.length)}},20)},350)}});
 setInterval(()=>{if(S&&S.lv&&(S.lv.st==='pause'||S.lv.st==='ht')&&UI.tab==='home')render()},1000);
