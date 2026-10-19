@@ -1,5 +1,5 @@
 /* KG ผู้จัดการทีม — Service Worker (ทำให้ติดตั้งเป็นแอปได้ + เปิดเร็ว) */
-const V='kgfm-v7';
+const V='kgfm-v8';
 const CORE=['./','./index.html','./manifest.json','./icon-192.png','./icon-512.png','./icon-180.png'];
 const CDN=['fonts.googleapis.com','fonts.gstatic.com'];
 self.addEventListener('install',e=>{e.waitUntil(caches.open(V).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting()))});

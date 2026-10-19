@@ -227,6 +227,23 @@ code{background:#0a1c11;padding:1px 5px;border-radius:5px}
 .pitchHost{margin:0 0 12px;border-radius:14px;overflow:hidden;border:2px solid #2f8a50;background:#0e3b22;line-height:0;box-shadow:0 6px 18px rgba(0,0,0,.35)}
 .pitchHost canvas{display:block;width:100%}
 .live .vs .mid{font-size:26px}
+/* ข่าวนักเตะ + ข้อเสนอ */
+.news.pn{display:flex;gap:8px;align-items:flex-start;justify-content:space-between;cursor:default}
+.news.pn[data-a]{cursor:pointer}
+.news.pn small{flex:none;color:var(--mut,#8aa);font-size:11px;margin-top:2px}
+.news.pn.mine span{color:#ffe08a}
+.card.offers{border:1px solid #c9a227;background:linear-gradient(180deg,rgba(201,162,39,.13),transparent)}
+.pl.offer{cursor:pointer}
+.pl.offer .price,.pl .price{margin-left:auto;text-align:right;display:flex;flex-direction:column;align-items:flex-end}
+.pl.offer .price span{font-size:11px}
+.nav button i{position:relative}
+.nb{position:absolute;top:-6px;right:-12px;background:#e53935;color:#fff;font-style:normal;font-size:10px;font-weight:700;min-width:16px;height:16px;line-height:16px;border-radius:8px;padding:0 3px;text-align:center}
+.nego{display:flex;flex-direction:column;gap:4px;margin:6px 0 10px;max-height:150px;overflow:auto}
+.nego div{font-size:13px;padding:6px 10px;border-radius:10px;max-width:85%}
+.nego .them{background:#1b3826;align-self:flex-start}
+.nego .me{background:#3a2f0b;align-self:flex-end}
+.ints{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0}
+.ints span{display:flex;align-items:center;gap:6px;font-size:12px;background:#132a1c;border-radius:999px;padding:3px 10px 3px 3px}
 </style>
 </head>
 <body>
@@ -330,7 +347,7 @@ function leagueFx(ids){const r=rrRounds(ids);return r.concat(shuffle(r.map(m=>m.
 
 function newGame(){
   S={v:VER,lg:'epl',solo:true,host:uid,phase:'lobby',season:2026,nid:1,teams:[],pl:{},humans:{},news:[],seq:0,spd:1,champs:[],final:null,
-     div:{pl:[],ch:[]},eu:[],uclT:[],lgx:{},cup:{},cal:[],day:0,lastD:0,lv:null,last:null,hist:[]};
+     div:{pl:[],ch:[]},eu:[],uclT:[],lgx:{},cup:{},cal:[],day:0,lastD:0,lv:null,last:null,hist:[],pnews:[],offers:[],interest:[],ofid:1};
   const mk=(t,div)=>{const id=S.teams.length;const T={id,name:t[0],sh:t[1],c1:t[2],c2:t[3],rep:t[4],div,cty:t[6]||'ENG',budget:budgetFor(div,t[4]),form:'4-4-2',tac:1,xi:[],bn:[],owner:null,st:aiStaffLv(t[4]),tp:1};
     S.teams.push(T);if(div==='eu')S.eu.push(id);else S.div[div].push(id);
     t[5].split(';').forEach(s=>{const [pos,n,nat,ag,o,fk]=s.split('|');addPlayer(id,pos,n,nat,+ag,+o,fk==='1')});return T};
@@ -364,6 +381,7 @@ function setupSeason(){
   const by={};items.forEach(x=>(by[x.d]=by[x.d]||[]).push({c:x.c,r:x.r}));
   S.cal=Object.keys(by).map(Number).sort((a,b)=>a-b).map(d=>({d,it:by[d]}));
   S.day=0;S.lastD=S.cal[0].d-7;
+  if(S.offers){S.offers.forEach(o=>{if(o.st==='open'||o.st==='agreed')o.st='expired'});S.offers=S.offers.filter(o=>o.st==='open');S.interest=(S.interest||[]).map(x=>({pid:x.pid,tid:x.tid,d:S.lastD}))}
   S.uclT.forEach(id=>{T_(id).budget=r1(T_(id).budget+15)}); // เงินร่วมแข่ง UCL
 }
 const lgDone=c=>S.lgx[c].res.filter(Boolean).length>=S.lgx[c].fx.length;
@@ -599,6 +617,7 @@ function postMatches(ms){
     m.red.forEach(id=>{const p=S.pl[id];if(p)p.sp=1});
     if(!m.n){const H=T_(m.h);H.budget=r1(H.budget+Math.max(0.2,(H.rep-60)*0.1)*(H.div==='eu'?1:1))}
   });
+  mkMatchNews(ms);
 }
 /* ---------------- เวลาผ่านไป: ฟื้นฟู/พัฒนา/บาดเจ็บ/ค่าใช้จ่าย ---------------- */
 function passDays(dd){
@@ -607,12 +626,13 @@ function passDays(dd){
   Object.values(S.pl).forEach(p=>{
     const T=p.t>=0?T_(p.t):null;const st=T?T.st:{med:0,fit:0,trn:0};const tp=TPLAN[T?T.tp:1];
     p.ft=Math.min(100,p.ft+dd*(2.4+0.45*st.fit+tp.rec));
-    if(p.ij>0)p.ij=Math.max(0,p.ij-dd*(1+0.12*st.med));
+    const wasInj=p.ij>0;if(p.ij>0)p.ij=Math.max(0,p.ij-dd*(1+0.12*st.med));
     if(T&&tp.inj&&p.ij<=0&&rnd()<tp.inj*dd*(1-0.12*st.med)){p.ij=ri(3,10);if(T.owner)addNews('🏋️ '+p.n+' เจ็บจากการซ้อมหนัก พัก '+p.ij+' วัน')}
     const pl=p._pl;p._pl=0;let ch=0;const g=(1+0.1*st.trn)*tp.gr*f7*0.65*(p.o>=85?0.6:1);
     if(p.ag<=21){if(p.o<p.pt&&rnd()<(pl?0.16:0.07)*g)ch=1}else if(p.ag<=25){if(p.o<p.pt&&rnd()<(pl?0.09:0.03)*g)ch=1}
     else if(p.ag>=33){if(rnd()<0.06*f7*(1-0.08*st.trn))ch=-1}else if(p.ag>=30){if(rnd()<0.03*f7*(1-0.08*st.trn))ch=-1}
     if(ch){p.o=clamp(p.o+ch,35,94);p.v=valueOf(p)}
+    mkDayNews(p,wasInj,ch);
   });
   S.teams.forEach(T=>{
     if(T.div==='eu')return;
@@ -633,13 +653,124 @@ function aiMarket(){
   });
 }
 
+/* ==========================================================
+   ข่าวนักเตะ + ทีมอื่นสนใจ/ยื่นข้อเสนอซื้อ + ต่อรองราคา
+   ========================================================== */
+const PN_TYPES={all:'ทั้งหมด',my:'⭐ ทีมเรา',rumor:'🔎 ข่าวลือ',offer:'📨 ข้อเสนอ',deal:'✍️ ย้ายทีม',inj:'🚑 บาดเจ็บ',form:'🔥 ฟอร์ม'};
+function mkInit(){S.pnews=S.pnews||[];S.offers=S.offers||[];S.interest=S.interest||[];S.ofid=S.ofid||1}
+const today=()=>S.lastD||0;
+function addPN(type,txt,o){mkInit();o=o||{};const T=myTeam();
+  const mine=!!(T&&((o.pid!=null&&S.pl[o.pid]&&S.pl[o.pid].t===T.id)||o.tid===T.id||o.mine));
+  S.pnews.unshift({d:today(),s:S.season,type,txt,pid:o.pid,mine});if(S.pnews.length>150)S.pnews.length=150}
+const pnTeam=p=>p&&p.t>=0?T_(p.t).name:'ฟรีเอเย่นต์';
+const RUMOR=['🔎 {c} ส่งแมวมองจับตาดู {p} ({t})','📰 สื่ออังกฤษรายงาน {c} สนใจคว้าตัว {p} จาก {t}','💬 {p} ({t}) ถูกโยงย้ายไป {c}','🗞️ {c} เตรียมยื่นข้อเสนอให้ {p} ของ {t}','👀 ผู้อำนวยการกีฬา {c} บินไปดู {p} ({t}) กับตา'];
+const DEALNEWS=['✍️ {c} ปิดดีลคว้า {p} จาก {t} ค่าตัว {m}','✍️ ทางการ! {p} ย้ายจาก {t} สู่ {c} ด้วยค่าตัว {m}'];
+const fillN=(tpl,o)=>tpl.replace(/\{(\w)\}/g,(_,k)=>o[k]);
+/* ทีมที่น่าจะสนใจนักเตะคนนี้ */
+function suitors(p,excl){
+  return S.teams.filter(T=>{if(T.id===p.t||T.owner||excl&&excl.includes(T.id))return false;
+    if(T.div==='ch'&&p.o>=76)return false;if(p.v>45&&T.rep<83)return false;if(p.v>90&&T.rep<87)return false;if(T.rep<p.o-7)return false;if(T.budget<p.v*0.85)return false;
+    const same=squad(T.id).filter(q=>q.pos===p.pos).sort((a,b)=>b.o-a.o);const need=same.length<3?99:same[Math.min(same.length-1,p.pos==='GK'?0:2)].o;
+    return p.o>=need-1});
+}
+function mkTick(dd){
+  mkInit();if(dd<=0)return;const f7=dd/7;const T=myTeam();const now=today();
+  // ข้อเสนอหมดอายุ
+  S.offers.forEach(o=>{if((o.st==='open'||o.st==='agreed')&&now>o.exp){o.st='expired';addPN('offer','⌛ ข้อเสนอของ '+T_(o.from).name+' สำหรับ '+(S.pl[o.pid]?S.pl[o.pid].n:'')+' หมดอายุแล้ว',{pid:o.pid,mine:1})}});
+  S.offers.forEach(o=>{if((o.st==='open'||o.st==='agreed')&&(!S.pl[o.pid]||!T||S.pl[o.pid].t!==T.id))o.st='void'});
+  if(S.offers.length>40)S.offers=S.offers.filter(o=>o.st==='open'||o.st==='agreed'||now-o.d<60);
+  S.interest=S.interest.filter(x=>S.pl[x.pid]&&T&&S.pl[x.pid].t===T.id&&now-x.d<70);
+  const win=(now<=17||(now>=139&&now<=170))?1.6:1; // ช่วงตลาดซื้อขาย (ส.ค./ม.ค.) คึกคักกว่า
+  if(T){
+    const sq=squad(T.id);
+    // 1) ทีมอื่นเริ่มสนใจนักเตะของเรา
+    if(sq.length&&rnd()<0.55*f7*win){
+      const p=wpick(sq,q=>Math.pow(Math.max(1,q.v),0.8)*(q.ag<=23?1.4:1)*(q.g>=5?1.3:1)*(q.lock?0.5:1));
+      const already=S.interest.filter(x=>x.pid===p.id).map(x=>x.tid).concat(S.offers.filter(o=>o.pid===p.id&&o.st==='open').map(o=>o.from));
+      const c=pick(suitors(p,already)||[]);
+      if(c){S.interest.push({pid:p.id,tid:c.id,d:now});addPN('rumor',fillN(pick(RUMOR),{c:c.name,p:p.n,t:T.name}),{pid:p.id})}
+    }
+    // 2) ความสนใจกลายเป็นข้อเสนอจริง
+    S.interest.slice().forEach(x=>{
+      if(now-x.d<4)return;const p=S.pl[x.pid],c=T_(x.tid);if(!p||!c)return;
+      if(S.offers.some(o=>o.st==='open'&&o.pid===p.id&&o.from===c.id))return;
+      if(rnd()<0.32*f7*(p.lock?0.45:1)){
+        S.interest=S.interest.filter(y=>y!==x);
+        if(c.budget<p.v*0.8)return;
+        const base=p.v*(p.lock?1.2:1);const amt=r1(Math.max(0.3,base*(0.8+rnd()*0.3)));
+        const max=r1(Math.max(amt,Math.min(c.budget*0.85,base*(1.15+rnd()*0.45))));
+        const o={id:S.ofid++,pid:p.id,from:c.id,amt,max,d:now,exp:now+12,st:'open',r:0,log:[{w:'c',a:amt}]};S.offers.push(o);
+        addPN('offer','📨 '+c.name+' ยื่นข้อเสนอ '+money(amt)+' ขอซื้อ '+p.n,{pid:p.id});
+        UI.newOffer=(UI.newOffer||0)+1;
+      }
+    });
+  }
+  // 3) ดีลระหว่างทีม AI (ข่าวสีสัน + ย้ายจริงเป็นครั้งคราว)
+  if(rnd()<0.22*f7*win){
+    const star=wpick(Object.values(S.pl).filter(p=>p.t>=0&&!T_(p.t).owner&&p.o>=80),p=>p.o-79);
+    if(star){const c=pick(suitors(star)||[]);if(c)addPN('rumor',fillN(pick(RUMOR),{c:c.name,p:star.n,t:pnTeam(star)}),{pid:star.id})}
+  }
+  if(rnd()<0.14*f7*win){
+    const buyers=S.teams.filter(B=>!B.owner&&B.div!=='ch'&&B.budget>30);const B=pick(buyers);
+    if(B){const cands=Object.values(S.pl).filter(p=>p.t>=0&&p.t!==B.id&&!T_(p.t).owner&&p.o>=74&&p.v<=B.budget*0.55&&squad(p.t).length>19&&suitors(p).includes(B));
+      const p=pick(cands);if(p){const from=T_(p.t);const fee=r1(p.v*(1.05+rnd()*0.35));B.budget=r1(B.budget-fee);from.budget=r1(from.budget+fee);
+        from.xi=from.xi.map(x=>x===p.id?null:x);from.bn=from.bn.filter(x=>x!==p.id);p.t=B.id;fixXI(from);fixBench(from);
+        addPN('deal',fillN(pick(DEALNEWS),{c:B.name,p:p.n,t:from.name,m:money(fee)}),{pid:p.id})}}
+  }
+}
+/* ผลบอล → ข่าวฟอร์ม/บาดเจ็บ */
+function mkMatchNews(ms){
+  mkInit();const T=myTeam();
+  ms.forEach(m=>{
+    const cnt={};m.gs.forEach(id=>cnt[id]=(cnt[id]||0)+1);
+    Object.keys(cnt).forEach(id=>{const p=S.pl[id];if(!p)return;
+      if(cnt[id]>=3)addPN('form','🎩 แฮตทริก! '+p.n+' ('+pnTeam(p)+') ซัด '+cnt[id]+' ประตูใส่ '+T_(p.t===m.h?m.a:m.h).name,{pid:p.id});
+      else if([10,15,20,25,30,35].includes(p.g)&&p.g-cnt[id]<p.g&&(T_(p.t).div!=='eu'||p.g>=15))addPN('form','🔥 '+p.n+' ('+pnTeam(p)+') ยิงครบ '+p.g+' ประตูแล้วฤดูกาลนี้',{pid:p.id})});
+    m.inj.forEach(id=>{const p=S.pl[id];if(!p)return;const mine=T&&p.t===T.id;
+      if(mine||p.o>=79)addPN('inj','🚑 '+p.n+' ('+pnTeam(p)+') บาดเจ็บ คาดพักราว '+Math.ceil(p.ij)+' วัน',{pid:p.id})});
+    m.red.forEach(id=>{const p=S.pl[id];if(p&&T&&p.t===T.id)addPN('form','🟥 '+p.n+' โดนใบแดง ติดโทษแบน 1 นัด',{pid:p.id})});
+  });
+}
+/* ระหว่างวัน: หายเจ็บ / ดาวรุ่งพัฒนา (เรียกจาก passDays) */
+function mkDayNews(p,wasInj,ch){
+  const T=myTeam();const mine=T&&p.t===T.id;
+  if(wasInj&&p.ij<=0&&(mine||p.o>=80))addPN('inj','✅ '+p.n+' ('+pnTeam(p)+') หายเจ็บ กลับมาซ้อมกับทีมแล้ว',{pid:p.id});
+  if(ch>0&&p.ag<=21&&p.o>=72&&(mine||p.o>=80)&&rnd()<(mine?0.5:0.2))addPN('form','🌟 ดาวรุ่ง '+p.n+' ('+pnTeam(p)+') พัฒนาฝีเท้าขึ้นเป็น '+p.o,{pid:p.id});
+}
+/* การตอบข้อเสนอ */
+function offerAct(m){
+  mkInit();const T=myTeam();const o=S.offers.find(x=>x.id===+m.oid);if(!o||!T)return'ไม่พบข้อเสนอ';
+  const p=S.pl[o.pid],c=T_(o.from);if(!p||p.t!==T.id){o.st='void';return'นักเตะคนนี้ไม่ได้อยู่ในทีมแล้ว'}
+  if(S.phase==='live')return'ตอบข้อเสนอได้หลังจบนัด';
+  if(m.type==='ofreject'){if(o.st!=='open'&&o.st!=='agreed')return;o.st='rejected';o.log.push({w:'u',a:0,x:'ปฏิเสธ'});
+    addPN('offer','🙅 คุณปฏิเสธข้อเสนอ '+money(o.amt)+' ของ '+c.name+' สำหรับ '+p.n,{pid:p.id});
+    if(rnd()<0.3&&o.amt<o.max)S.interest.push({pid:p.id,tid:c.id,d:today()+4});return}
+  if(m.type==='ofaccept'){if(o.st!=='open'&&o.st!=='agreed')return;
+    if(squad(T.id).length<=MIN_SQUAD)return'ต้องมีนักเตะอย่างน้อย '+MIN_SQUAD+' คน';
+    if(c.budget<o.amt*0.6)return c.name+' ไม่มีงบพอแล้ว';
+    T.budget=r1(T.budget+o.amt);c.budget=r1(c.budget-o.amt);
+    T.xi=T.xi.map(x=>x===p.id?null:x);T.bn=T.bn.filter(x=>x!==p.id);p.t=c.id;p.lock=0;fixXI(T);fixBench(T);if(!c.owner){fixXI(c);fixBench(c)}
+    o.st='sold';S.offers.forEach(x=>{if(x!==o&&x.pid===p.id&&x.st==='open')x.st='void'});S.interest=S.interest.filter(x=>x.pid!==p.id);
+    addPN('deal','✍️ '+T.name+' ขาย '+p.n+' ให้ '+c.name+' ค่าตัว '+money(o.amt),{pid:p.id,mine:1});
+    addNews('💰 ขาย '+p.n+' ให้ '+c.name+' '+money(o.amt));return}
+  if(m.type==='ofcounter'){if(o.st!=='open')return;const ask=r1(+m.amt);if(!(ask>0))return'ใส่ราคาที่ต้องการ';
+    if(ask<=o.amt){return offerAct({type:'ofaccept',oid:o.id})}
+    o.r++;o.log.push({w:'u',a:ask});
+    if(ask<=o.max){o.amt=ask;o.st='agreed';o.exp=Math.max(o.exp,today()+5);o.log.push({w:'c',a:ask,x:'ตกลง'});addPN('offer','🤝 '+c.name+' ยอมจ่าย '+money(ask)+' สำหรับ '+p.n+' — รอคุณยืนยัน',{pid:p.id});return}
+    if(ask>o.max*1.45||o.r>=3||rnd()<0.12*o.r){o.st='walked';o.log.push({w:'c',a:0,x:'ถอนตัว'});addPN('offer','🚪 '+c.name+' ถอนตัวจากการเจรจาซื้อ '+p.n+(ask>o.max*1.45?' (ราคาที่ขอสูงเกินไป)':''),{pid:p.id});return}
+    const gap=o.max-o.amt;const nw=r1(Math.min(o.max,o.amt+gap*(o.r>=2?1:0.45+rnd()*0.3)));o.amt=nw;o.exp=Math.max(o.exp,today()+7);
+    const fin=nw>=o.max-0.05;o.fin=fin?1:0;o.log.push({w:'c',a:nw,x:fin?'ข้อเสนอสุดท้าย':''});
+    addPN('offer','📨 '+c.name+' ขยับข้อเสนอเป็น '+money(nw)+' สำหรับ '+p.n+(fin?' (ข้อเสนอสุดท้าย)':''),{pid:p.id});return}
+}
+const openOffers=()=>{mkInit();return S.offers.filter(o=>o.st==='open'||o.st==='agreed')};
+
 /* ---------------- วงจรวันแข่ง ---------------- */
 let tickT=null,playTimer=null,endT=null;
 function prepTeams(ms){
   const ids=new Set();ms.forEach(f=>{ids.add(f.h);ids.add(f.a)});
   ids.forEach(id=>{const T=T_(id);if(!T.owner){if(rnd()<0.1)T.form=bestForm(T);T.tac=1;autoXI(T)}else{fixXI(T);fixBench(T)}});
 }
-function slotBegin(slot){passDays(slot.d-S.lastD);S.lastD=slot.d}
+function slotBegin(slot){const dd=slot.d-S.lastD;passDays(dd);S.lastD=slot.d;mkTick(dd)}
 function simItemInstant(it){
   const fs=matchesOf(it);prepTeams(fs);const ms=fs.map(newLiveMatch);const ctx={min:0,ms};
   while(!minuteAll(ctx)&&ctx.min<130){}
@@ -787,7 +918,10 @@ function act(u,m){
     case 'sell':{if(!T)return;if(S.phase==='live')return'ซื้อขายได้หลังจบนัด';const p=S.pl[m.pid];if(!p||p.t!==T.id)return;
       if(squad(T.id).length<=MIN_SQUAD)return'ต้องมีนักเตะอย่างน้อย '+MIN_SQUAD+' คน';
       const g=r1(p.v*0.75);T.budget=r1(T.budget+g);p.t=-1;T.xi=T.xi.map(x=>x===p.id?null:x);T.bn=T.bn.filter(x=>x!==p.id);
+      mkInit();S.offers.forEach(o=>{if(o.pid===p.id&&(o.st==='open'||o.st==='agreed'))o.st='void'});S.interest=S.interest.filter(x=>x.pid!==p.id);p.lock=0;
       addNews('💸 '+T.name+' ขาย '+p.n+' ได้ '+money(g));break}
+    case 'ofaccept':case 'ofreject':case 'ofcounter':{const r=offerAct(m);bump();return r}
+    case 'lock':{const p=S.pl[m.pid];if(p&&T&&p.t===T.id)p.lock=p.lock?0:1;break}
     case 'rename':{const p=S.pl[m.pid];if(!p)return;const n=String(m.n||'').replace(/\s+/g,' ').trim().slice(0,28);if(!n)return;p.n=n;p.cu=1;break}
     case 'bulk':{if(!T)return;const r=bulkRename(T,String(m.txt||''));bump();return r.msg}
     case 'start':{if(S.phase!=='lobby'||!T)return;S.phase='pre';addNews('📣 '+h.name+' เริ่มคุม '+T.name+' ฤดูกาล '+seasonLabel(S.season));autoAdvance();break}
@@ -839,7 +973,7 @@ function loadSave(){let o=null;try{o=JSON.parse(LS.get(SAVE_KEY,'null'))}catch(e
 function startGame(){leaving=false;newGame();S.sid=rid();act(uid,{type:'hello',name:myName||'ผู้จัดการ'});UI.tab='home';bump()}
 function resumeGame(){
   const o=loadSave();if(!o){toast('ไม่พบเกมที่บันทึกไว้');return}
-  S=o;leaving=false;S.host=uid;if(!S.humans[uid])S.humans[uid]={name:myName||'ผู้จัดการ',team:null,on:true};
+  S=o;leaving=false;S.host=uid;mkInit();if(!S.humans[uid])S.humans[uid]={name:myName||'ผู้จัดการ',team:null,on:true};
   if(S.phase==='live'){if(!S.lv)S.phase='pre';else if(S.lv.st==='ft'){endLive()}else{S.lv.st='pause';S.lv.pu={by:'',u:uid,until:Date.now()+864e5};runTicker()}}
   UI.tab='home';bump();wake();
 }
@@ -1087,6 +1221,7 @@ function draw(){
   else if(UI.tab==='team')body=vTeam();else if(UI.tab==='staff')body=vStaff();else if(UI.tab==='market')body=vMarket();else if(UI.tab==='table')body=vTable();else body=vRoom();
   app.innerHTML=vTop()+'<div class="sec">'+body+'</div>'+vNav();
   liveWatch();endPops();
+  if(UI.newOffer>0&&S.phase!=='live'){const n=UI.newOffer;UI.newOffer=0;const L_=openOffers();const o=L_[L_.length-1];if(o&&S.pl[o.pid]){const c=T_(o.from);pop({icon:'📨',title:n>1?'มีข้อเสนอใหม่ '+n+' รายการ':'มีข้อเสนอซื้อนักเตะ!',sub:c.name+' เสนอ '+money(o.amt)+' ซื้อ '+S.pl[o.pid].n,team:c,c1:c.c1,c2:c.c2,ms:3500});AU.whistle&&AU.whistle()}}
   if(UI.tab==='home'&&liveShown())MV.attach();else MV.stop();
   if(UI.subOff!=null||UI.subOpen)drawSub();
 }
@@ -1100,7 +1235,8 @@ function vTop(){
 }
 function vNav(){
   const it=[['home','🏟️','หน้าหลัก'],['team','👕','ทีม'],['staff','🏥','สตาฟฟ์'],['market','🛒','ตลาด'],['table','📊','ตาราง'],['room','⚙️','ตั้งค่า']];
-  return '<div class="nav">'+it.map(([k,i,l])=>'<button class="'+(UI.tab===k?'on':'')+'" data-a="tab" data-v="'+k+'"><i>'+i+'</i>'+l+'</button>').join('')+'</div>';
+  const no=S&&myTeam()?openOffers().length:0;
+  return '<div class="nav">'+it.map(([k,i,l])=>'<button class="'+(UI.tab===k?'on':'')+'" data-a="tab" data-v="'+k+'"><i>'+i+(k==='market'&&no?'<em class="nb">'+no+'</em>':'')+'</i>'+l+'</button>').join('')+'</div>';
 }
 function vStart(){
   let info='';const o=loadSave();
@@ -1139,6 +1275,7 @@ function venue(f,T){return f.n?'🏟️ สนามกลาง':f.h===T.id?'�
 function vHome(){
   const T=myTeam();let html='';
   if(!T)html+='<div class="warn">คุณยังไม่มีทีม — เลือกทีมได้ในแท็บ “ตั้งค่า”</div>';
+  if(T&&S.phase!=='live')html+=vOffersCard();
   if(S.phase==='live')html+='<div class="card row"><b class="grow">🔴 '+COMP[S.lv.it.c].n+' กำลังแข่ง ('+clockLabel(S.lv)+')</b><button class="btn sm pri" data-a="unskip">ดูสด / แก้เกม</button></div>';
   if(T&&S.phase==='pre'){
     const nx=nextFixtures(T,4);const N=nx[0];
@@ -1159,7 +1296,7 @@ function vHome(){
     html+='<div class="card" style="margin-top:12px"><div class="row"><div class="grow"><b>'+COMP[T.div].i+' '+COMP[T.div].n+'</b><div class="mut sm">แข่ง '+r.p+' นัด · ชนะ '+r.w+' เสมอ '+r.d+' แพ้ '+r.l+'</div></div><div class="kv" style="margin:0;grid-template-columns:1fr 1fr"><div><b>'+pos+'</b><small>อันดับ</small></div><div><b>'+r.pts+'</b><small>แต้ม</small></div></div></div></div>';
   }
   html+=vLastResults();
-  html+='<div class="card"><h3>📰 ข่าว</h3>'+(S.news.slice(0,10).map(n=>'<div class="news">'+esc(n.txt)+'</div>').join('')||'<div class="mut sm">ยังไม่มีข่าว</div>')+'</div>';
+  html+=vNewsCard();
   return html;
 }
 function vLastResults(){
@@ -1330,7 +1467,7 @@ function vMarket(){
     if(UI.mkQ&&!p.n.toLowerCase().includes(UI.mkQ.toLowerCase()))return false;return true});
   const s=UI.mkSort;list.sort((a,b)=>s==='o'?b.o-a.o:s==='p'?priceOf(a)-priceOf(b):s==='a'?a.ag-b.ag:(b.pt-b.o)-(a.pt-a.o));
   const n=list.length;list=list.slice(0,60);
-  return (S.phase==='live'?'<div class="warn">กำลังแข่ง — ซื้อขายได้หลังจบนัด</div>':'')+
+  return (S.phase==='live'?'<div class="warn">กำลังแข่ง — ซื้อขายได้หลังจบนัด</div>':vOffersCard())+
    '<div class="card"><div class="row"><div class="grow"><b>ตลาดซื้อขาย</b><div class="mut sm">นักเตะในทีม '+squad(T.id).length+'/'+MAX_SQUAD+'</div></div><div class="money">'+money(T.budget)+'<small>งบที่มี</small></div></div>'+
    '<input class="in" id="mkq" placeholder="🔎 ค้นหาชื่อนักเตะ" style="margin-top:8px" value="'+esc(UI.mkQ||'')+'"></div>'+
    '<div class="chips">'+[['all','ทุกลีก'],['pl','👑 พรีเมียร์ลีก'],['ch','🦁 แชมเปี้ยนชิพ'],['eu','⭐ ยุโรป']].map(([k,l])=>'<button class="chip'+(UI.mkLg===k?' on':'')+'" data-a="mklg" data-v="'+k+'">'+l+'</button>').join('')+'</div>'+
@@ -1426,6 +1563,52 @@ function vRoom(){
   return html;
 }
 /* ---------- Modal ---------- */
+/* ---------- UI: ข่าวนักเตะ + ข้อเสนอ ---------- */
+function pnList(n,filter){
+  mkInit();const f=filter||UI.pnf||'all';
+  return S.pnews.filter(x=>f==='all'||(f==='my'?x.mine:x.type===f)).slice(0,n);
+}
+function pnHtml(x){const dd=today()-x.d;return '<div class="news pn'+(x.mine?' mine':'')+'"'+(x.pid!=null&&S.pl[x.pid]?' data-a="pl" data-v="'+x.pid+'"':'')+'><span>'+esc(x.txt)+'</span><small>'+(x.s!==S.season?seasonLabel(x.s):dd<=0?'วันนี้':dd+' วันก่อน')+'</small></div>'}
+function vNewsCard(){
+  const f=UI.pnf||'all';const list=pnList(8,f);
+  return '<div class="card"><h3>📰 ข่าวนักเตะ</h3><div class="chips" style="margin-bottom:6px">'+Object.entries(PN_TYPES).map(([k,l])=>'<button class="chip'+(f===k?' on':'')+'" data-a="pnf" data-v="'+k+'">'+l+'</button>').join('')+'</div>'+
+   (list.map(pnHtml).join('')||'<div class="mut sm">ยังไม่มีข่าวในหมวดนี้</div>')+
+   '<button class="btn sm blk" style="margin-top:8px" data-a="newsall">ดูข่าวทั้งหมด</button></div>'+
+   (S.news.length?'<div class="card"><h3>🏟️ ข่าวสโมสร & ผลการแข่งขัน</h3>'+S.news.slice(0,6).map(n=>'<div class="news">'+esc(n.txt)+'</div>').join('')+'</div>':'');
+}
+function showNews(){
+  const f=UI.pnf||'all';const list=pnList(80,f);
+  openModal('<h2>📰 ข่าวนักเตะ</h2><div class="chips" style="margin:6px 0">'+Object.entries(PN_TYPES).map(([k,l])=>'<button class="chip'+(f===k?' on':'')+'" data-a="pnfm" data-v="'+k+'">'+l+'</button>').join('')+'</div>'+
+    (list.map(pnHtml).join('')||'<div class="mut">ยังไม่มีข่าว</div>')+'<button class="btn blk" style="margin-top:10px" data-a="close">ปิด</button>');
+}
+function offerRow(o){const p=S.pl[o.pid],c=T_(o.from);if(!p||!c)return'';const left=o.exp-today();
+  return '<div class="pl offer" data-a="offer" data-v="'+o.id+'">'+badge(c,32)+'<div class="pm"><b>'+esc(p.n)+'</b><small>'+posTag(p)+esc(c.name)+' · '+(o.st==='agreed'?'🤝 รอยืนยัน':'เหลือ '+Math.max(0,left)+' วัน')+'</small></div><div class="price"><b>'+money(o.amt)+'</b><span class="mut">มูลค่า '+money(p.v)+'</span></div></div>'}
+function vOffersCard(){
+  const L_=openOffers();if(!L_.length)return'';
+  return '<div class="card offers"><h3>📨 ข้อเสนอซื้อนักเตะของคุณ ('+L_.length+')</h3>'+L_.map(offerRow).join('')+'<div class="mut sm">แตะเพื่อดูรายละเอียด ยอมรับ ปฏิเสธ หรือต่อรองราคา</div></div>';
+}
+function showOffer(id){
+  const o=S.offers.find(x=>x.id===+id);if(!o)return closeModal();const p=S.pl[o.pid],c=T_(o.from);const T=myTeam();if(!p||!c||!T)return closeModal();
+  const open=o.st==='open',agreed=o.st==='agreed';const ratio=o.amt/Math.max(0.1,p.v);
+  const verdict=ratio>=1.3?'💰 ข้อเสนอดีมาก':ratio>=1.05?'👍 สูงกว่ามูลค่า':ratio>=0.9?'⚖️ ใกล้เคียงมูลค่า':'👎 ต่ำกว่ามูลค่า';
+  const stTxt={sold:'✅ ขายแล้ว',rejected:'🙅 ปฏิเสธแล้ว',walked:'🚪 อีกฝ่ายถอนตัว',expired:'⌛ หมดอายุ',void:'— ยกเลิก'}[o.st]||'';
+  const q=[1.1,1.25,1.5].map(k=>r1(o.amt*k));
+  openModal('<div class="row">'+badge(c,44)+'<div class="grow"><h2>ข้อเสนอจาก '+esc(c.name)+'</h2><div class="mut sm">'+COMP[c.div==='eu'?'ucl':c.div].n+' · งบ '+money(c.budget)+'</div></div></div>'+
+   '<div class="pl" style="margin-top:10px" data-a="pl" data-v="'+p.id+'">'+posTag(p)+'<div class="pm"><b>'+esc(p.n)+(p.lock?' 🔒':'')+'</b><small>'+p.ag+' ปี · พลัง '+p.o+' · ⚽'+p.g+' · ลงเล่น '+p.ap+'</small></div><div class="price"><b>'+money(p.v)+'</b><span class="mut">มูลค่า</span></div></div>'+
+   '<div class="kv"><div><b style="color:var(--ac2)">'+money(o.amt)+'</b><small>ข้อเสนอตอนนี้</small></div><div><b>'+Math.round(ratio*100)+'%</b><small>ของมูลค่า</small></div><div><b>'+(open?Math.max(0,o.exp-today())+' วัน':stTxt||'🤝')+'</b><small>'+(open?'หมดอายุใน':'สถานะ')+'</small></div></div>'+
+   '<div class="mut sm" style="margin-bottom:6px">'+verdict+(o.fin?' · ⚠️ ข้อเสนอสุดท้าย — ถ้าต่อรองอีกอาจถอนตัว':'')+'</div>'+
+   '<div class="gh"><span>💬 การเจรจา</span><span>รอบ '+o.r+'/3</span></div><div class="nego">'+o.log.map(l=>'<div class="'+(l.w==='u'?'me':'them')+'"><b>'+(l.w==='u'?'คุณ':esc(c.sh))+'</b> '+(l.a?money(l.a):'')+(l.x?' · '+esc(l.x):'')+'</div>').join('')+'</div>'+
+   (open||agreed?
+     (agreed?'<button class="btn pri blk" data-a="ofacc" data-v="'+o.id+'">✅ ยืนยันขาย '+money(o.amt)+'</button>':
+      '<button class="btn pri blk" data-a="ofacc" data-v="'+o.id+'">✅ ยอมรับ '+money(o.amt)+'</button>'+
+      '<div class="gh"><span>🤝 ต่อรองราคา</span></div><div class="chips">'+q.map((v,i)=>'<button class="chip" data-a="ofq" data-v="'+v+'">+'+[10,25,50][i]+'% · '+money(v)+'</button>').join('')+'</div>'+
+      '<div class="row" style="margin-top:6px"><input class="in grow" id="ofamt" type="number" inputmode="decimal" step="0.1" min="0" value="'+q[1]+'"><span class="mut">£m</span><button class="btn gold" data-a="ofcnt" data-v="'+o.id+'">ส่งราคา</button></div>')+
+     '<button class="btn red blk" style="margin-top:8px" data-a="ofrej" data-v="'+o.id+'">🙅 ปฏิเสธ</button>'
+   :'<div class="warn" style="text-align:center">'+stTxt+'</div>')+
+   '<button class="btn blk" style="margin-top:8px" data-a="close">ปิด</button>');
+}
+function interestOf(pid){mkInit();return S.interest.filter(x=>x.pid===pid).map(x=>T_(x.tid)).concat(S.offers.filter(o=>o.pid===pid&&(o.st==='open'||o.st==='agreed')).map(o=>T_(o.from)))}
+
 function showPlayer(pid){
   const p=S.pl[pid];if(!p)return;const T=myTeam();const own=p.t>=0?T_(p.t):null;const mine=T&&p.t===T.id;
   const buyable=T&&!mine&&S.phase!=='live';
@@ -1434,6 +1617,7 @@ function showPlayer(pid){
    '<div><b>'+Math.round(p.ft)+'%</b><small>ความฟิต</small></div><div><b>'+money(p.v)+'</b><small>มูลค่า</small></div><div><b>'+p.ap+'</b><small>ลงเล่น</small></div>'+
    '<div><b>'+p.g+'</b><small>ประตู</small></div><div><b>'+p.as+'</b><small>แอสซิสต์</small></div><div><b>'+(p.ij>0?'🚑 '+injD(p)+' วัน':p.sp?'🟥 แบน':'✅')+'</b><small>สถานะ</small></div></div>'+
    '<label class="lb">เปลี่ยนชื่อ</label><div class="row"><input class="in grow" id="rn" maxlength="28" value="'+esc(p.n)+'"><button class="btn" data-a="rename" data-v="'+p.id+'">บันทึก</button></div>'+
+   (mine?(()=>{const iv=[...new Set(interestOf(p.id).filter(Boolean))];const of=openOffers().filter(o=>o.pid===p.id);return (iv.length?'<div class="gh"><span>👀 ทีมที่สนใจ</span></div><div class="ints">'+iv.map(c=>'<span>'+badge(c,22)+esc(c.name)+'</span>').join('')+'</div>':'')+of.map(o=>'<button class="btn gold blk" style="margin-top:6px" data-a="offer" data-v="'+o.id+'">📨 ข้อเสนอจาก '+esc(T_(o.from).name)+' '+money(o.amt)+'</button>').join('')+'<button class="btn blk" style="margin-top:8px" data-a="lock" data-v="'+p.id+'">'+(p.lock?'🔓 ยกเลิก “ไม่ขาย”':'🔒 ตั้งเป็นนักเตะไม่ขาย (ลดข้อเสนอ)')+'</button>'})():'')+
    (mine&&S.phase!=='live'?'<button class="btn red blk" style="margin-top:10px" data-a="sell" data-v="'+p.id+'">💸 ขายให้ตลาด รับ '+money(p.v*0.75)+'</button>':'')+
    (buyable?'<button class="btn pri blk" style="margin-top:10px" data-a="buy" data-v="'+p.id+'"'+(T.budget>=priceOf(p)?'':' disabled')+'>✍️ ซื้อ '+money(priceOf(p))+'</button>':'')+
    '<button class="btn blk" style="margin-top:8px" data-a="close">ปิด</button>');
@@ -1736,6 +1920,14 @@ const A={
   gkf(d){send({type:'gkfield',pid:+d.v});UI.subMode=null;drawSub()},
   gkon(d){UI.gkOn=+d.v;drawSub()},
   gkoff(d){send({type:'gksub',off:+d.v,on:UI.gkOn});UI.subMode=null;UI.gkOn=null;drawSub()},
+  offer(d){showOffer(+d.v)},
+  ofacc(d){const o=S.offers.find(x=>x.id===+d.v);const p=o&&S.pl[o.pid];if(!o||!p)return;if(!confirm('ขาย '+p.n+' ให้ '+T_(o.from).name+' '+money(o.amt)+'?'))return;const e=act(uid,{type:'ofaccept',oid:o.id});if(e){toast(e);showOffer(o.id)}else{closeModal();AU.cheer&&AU.cheer();toast('✍️ ขาย '+p.n+' สำเร็จ +'+money(o.amt))}},
+  ofrej(d){const e=act(uid,{type:'ofreject',oid:+d.v});if(e)toast(e);closeModal();if(!e)toast('ปฏิเสธข้อเสนอแล้ว')},
+  ofq(d){const el=$('#ofamt');if(el)el.value=d.v},
+  ofcnt(d){const el=$('#ofamt');const e=act(uid,{type:'ofcounter',oid:+d.v,amt:el?+el.value:0});if(e)toast(e);const o=S.offers.find(x=>x.id===+d.v);
+    if(o){if(o.st==='agreed')toast('🤝 อีกฝ่ายยอมจ่าย '+money(o.amt)+' — กดยืนยันเพื่อขาย');else if(o.st==='walked')toast('🚪 '+T_(o.from).name+' ถอนตัวแล้ว');else if(o.st==='open')toast('📨 อีกฝ่ายขยับเป็น '+money(o.amt));if(o.st!=='sold')showOffer(o.id);else closeModal()}},
+  pnf(d){UI.pnf=d.v;render()},pnfm(d){UI.pnf=d.v;showNews();render()},newsall(){showNews()},
+  lock(d){send({type:'lock',pid:+d.v});showPlayer(+d.v)},
   close(){closeModal()},
   closebg(d,el,e){if(e.target===el)closeModal()}
 };
